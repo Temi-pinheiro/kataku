@@ -26,6 +26,7 @@ import { recognizer, voiceEngine } from '../services/instances';
 import { teacherReply, monthSpendUsd, type ChatTurn } from '../services/teacher';
 import { ttsToFile } from '../services/tts';
 import { getOpenAIKey } from '../services/keys';
+import { parseMarked, targetOnly } from '../lib/teacher-markup';
 
 /**
  * The lesson IS a conversation (owner pivot): the teacher writes, you can
@@ -182,8 +183,12 @@ export function TeacherScreen() {
       }
       stopListening();
       voiceEngine.stop();
+      // Owner rule: never speak English. Play ONLY the «target» spans,
+      // with the voice locked to the learning language.
+      const speakable = targetOnly(text);
+      if (!speakable) return;
       setPlayingIdx(idx);
-      const uri = await ttsToFile(text);
+      const uri = await ttsToFile(speakable, language);
       if (!uri) {
         setPlayingIdx(null);
         setNotice('Audio unavailable right now — the text has everything.');
@@ -193,7 +198,7 @@ export function TeacherScreen() {
       setPlayingIdx((cur) => (cur === idx ? null : cur));
       void refreshSpend();
     },
-    [playingIdx, stopListening, refreshSpend],
+    [playingIdx, stopListening, refreshSpend, language],
   );
 
   const restart = useCallback(() => {
@@ -243,17 +248,39 @@ export function TeacherScreen() {
       <ScrollView ref={scrollRef} style={styles.chat} contentContainerStyle={styles.chatContent}>
         {turns.map((turn, idx) =>
           turn.role === 'teacher' ? (
-            <Animated.View key={idx} entering={FadeInDown.duration(200)} style={styles.teacherRow}>
-              <View style={styles.teacherBubble}>
-                <Text style={styles.teacherText}>{turn.text}</Text>
-              </View>
-              <Pressable style={styles.playBtn} onPress={() => playTurn(idx, turn.text)} hitSlop={8}>
-                {playingIdx === idx ? (
-                  <ActivityIndicator size="small" color={p.accent} />
-                ) : (
-                  <SymbolView name="play.circle.fill" size={28} tintColor={p.accent} />
-                )}
-              </Pressable>
+            // English narration sits flat on the background (the learner
+            // reads English perfectly); only the target language gets a
+            // box — the focal content, with the play control living on it.
+            <Animated.View key={idx} entering={FadeInDown.duration(200)} style={styles.teacherTurn}>
+              {(() => {
+                const segments = parseMarked(turn.text);
+                let firstTarget = true;
+                return segments.map((seg, si) => {
+                  if (!seg.target) {
+                    return (
+                      <Text key={si} style={styles.ambient}>
+                        {seg.text.trim()}
+                      </Text>
+                    );
+                  }
+                  const withPlay = firstTarget;
+                  firstTarget = false;
+                  return (
+                    <View key={si} style={styles.targetCard}>
+                      <Text style={styles.targetText}>{seg.text.trim()}</Text>
+                      {withPlay && (
+                        <Pressable style={styles.playBtn} onPress={() => playTurn(idx, turn.text)} hitSlop={10}>
+                          {playingIdx === idx ? (
+                            <ActivityIndicator size="small" color={p.accent} />
+                          ) : (
+                            <SymbolView name="play.circle.fill" size={30} tintColor={p.accent} />
+                          )}
+                        </Pressable>
+                      )}
+                    </View>
+                  );
+                });
+              })()}
             </Animated.View>
           ) : (
             <Animated.View key={idx} entering={FadeInDown.duration(200)} style={styles.learnerRow}>
@@ -264,10 +291,8 @@ export function TeacherScreen() {
           ),
         )}
         {busy && (
-          <View style={styles.teacherRow}>
-            <View style={[styles.teacherBubble, { paddingVertical: space.m }]}>
-              <TutorDots />
-            </View>
+          <View style={[styles.targetCard, { borderColor: 'transparent' }]}>
+            <TutorDots />
           </View>
         )}
         {notice && (
@@ -328,17 +353,22 @@ const makeStyles = (p: Palette) =>
     chat: { flex: 1 },
     chatContent: { padding: space.m, gap: space.s, paddingBottom: space.l },
 
-    teacherRow: { flexDirection: 'row', alignItems: 'flex-end', gap: space.s, maxWidth: '100%' },
-    teacherBubble: {
+    teacherTurn: { gap: space.s, marginBottom: space.s, maxWidth: '94%' },
+    ambient: { color: p.dim, fontSize: type.small, lineHeight: 21 },
+    targetCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: space.m,
+      alignSelf: 'flex-start',
       backgroundColor: p.card,
-      borderRadius: radii.l,
-      borderBottomLeftRadius: radii.s,
-      padding: space.m,
-      flexShrink: 1,
-      maxWidth: '82%',
+      borderRadius: radii.m,
+      borderWidth: 1,
+      borderColor: p.stroke,
+      paddingVertical: space.m,
+      paddingHorizontal: space.m,
     },
-    teacherText: { color: p.text, fontSize: type.body, lineHeight: 24 },
-    playBtn: { paddingBottom: 2 },
+    targetText: { color: p.text, fontSize: type.heading, fontWeight: '800', flexShrink: 1, lineHeight: 28 },
+    playBtn: { marginLeft: 'auto' },
 
     learnerRow: { flexDirection: 'row', justifyContent: 'flex-end' },
     learnerBubble: {

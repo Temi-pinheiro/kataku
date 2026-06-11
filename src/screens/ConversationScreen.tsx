@@ -16,6 +16,7 @@ import { debrief, partnerReply, SCENARIOS, type Mood, type Scenario } from '../s
 import type { ChatTurn } from '../services/teacher';
 import { ttsToFile } from '../services/tts';
 import { getOpenAIKey } from '../services/keys';
+import { stripMarks } from '../lib/teacher-markup';
 
 /**
  * Conversation mode (S1): fully spoken, back and forth — the one place
@@ -80,7 +81,8 @@ export function ConversationScreen() {
       const next: ChatTurn[] = [...history, { role: 'teacher', text: result.text }];
       setTurns(next);
       setPhase({ kind: 'partner_speaking' });
-      const uri = await ttsToFile(result.text);
+      // Partner speech is wholly target-language; the voice stays locked to it.
+      const uri = await ttsToFile(stripMarks(result.text), language);
       if (!aliveRef.current) return;
       if (uri) await voiceEngine.play({ uri });
       if (!aliveRef.current) return;
@@ -171,9 +173,8 @@ export function ConversationScreen() {
     const result = await debrief(language, turnsRef.current, settings.monthlyCapUsd);
     if (!aliveRef.current) return;
     const text = result.kind === 'ok' ? result.text : 'No debrief this time — but you just held a conversation. That counts.';
-    setPhase({ kind: 'debrief', text });
-    const uri = await ttsToFile(text);
-    if (uri && aliveRef.current) void voiceEngine.play({ uri });
+    // Debrief is English narration — displayed, never spoken (owner rule).
+    setPhase({ kind: 'debrief', text: stripMarks(text) });
   }, [language, settings.monthlyCapUsd]);
 
   const lastPartnerLine = [...turns].reverse().find((t) => t.role === 'teacher')?.text ?? '';
@@ -276,7 +277,7 @@ export function ConversationScreen() {
       <View style={styles.stage}>
         {lastPartnerLine ? (
           <Animated.Text key={lastPartnerLine} entering={FadeIn.duration(250)} style={styles.partnerLine}>
-            {lastPartnerLine}
+            {stripMarks(lastPartnerLine)}
           </Animated.Text>
         ) : null}
 

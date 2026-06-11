@@ -16,11 +16,27 @@ import { getOpenAIKey } from './keys';
 
 const VOICE = 'coral';
 const MODEL = 'gpt-4o-mini-tts';
-const INSTRUCTIONS =
-  'You are the voice of a calm language teacher. Read the text naturally. ' +
-  'Pronounce Indonesian, Spanish, or French words and phrases with authentic ' +
-  'native pronunciation and rhythm; read English with a neutral accent. ' +
-  'Leave a small beat before and after foreign words so the learner hears them clearly.';
+
+const LANGUAGE_NAMES: Record<string, string> = {
+  id: 'Indonesian',
+  es: 'Spanish',
+  fr: 'French',
+};
+
+/**
+ * Locked to ONE language per clip (owner: never speak English, never
+ * accent-switch). The input is target-language words/phrases only — one
+ * per line — extracted from the «marked» teacher text.
+ */
+function instructionsFor(lang: string): string {
+  const name = LANGUAGE_NAMES[lang] ?? 'the target language';
+  return (
+    `You are a native ${name} speaker and language teacher. The text is ${name} only — ` +
+    `speak it with fully authentic native ${name} pronunciation, rhythm, and intonation, ` +
+    `at a calm, clear teaching pace. Leave a distinct pause between lines. ` +
+    `Never use an English accent or read anything as English.`
+  );
+}
 
 function cacheDir(): Directory {
   return new Directory(Paths.cache, 'tts');
@@ -33,13 +49,13 @@ function hash(s: string): string {
   return h.toString(36);
 }
 
-export async function ttsToFile(text: string): Promise<string | null> {
+export async function ttsToFile(text: string, lang: string): Promise<string | null> {
   const trimmed = text.trim();
   if (!trimmed) return null;
   try {
     const dir = cacheDir();
     if (!dir.exists) dir.create({ intermediates: true });
-    const file = new File(dir, `${hash(`${MODEL}|${VOICE}|${trimmed}`)}.mp3`);
+    const file = new File(dir, `${hash(`${MODEL}|${VOICE}|${lang}|v2|${trimmed}`)}.mp3`);
     if (file.exists) return file.uri;
 
     const key = await getOpenAIKey();
@@ -52,7 +68,7 @@ export async function ttsToFile(text: string): Promise<string | null> {
         model: MODEL,
         voice: VOICE,
         input: trimmed,
-        instructions: INSTRUCTIONS,
+        instructions: instructionsFor(lang),
         response_format: 'mp3',
       }),
     });
