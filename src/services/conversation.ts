@@ -37,13 +37,17 @@ const LEVEL: Record<InstalledLanguage, string> = {
   fr: "Assume only early-protocol French: c'est/ce n'est pas, cognates, je voudrais/je veux/je peux/je dois/je vais + infinitives, ne…pas, est-ce que + question words, pour moi/avec/mais/parce que, time anchors (maintenant, aujourd'hui), vous forms and politeness.",
 };
 
-function systemPrompt(lang: InstalledLanguage, scenario: Scenario, mood: Mood): string {
+function systemPrompt(lang: InstalledLanguage, scenario: Scenario, mood: Mood, whitelist: string[]): string {
   const name = LANGUAGE_NAMES[lang];
+  const vocab =
+    whitelist.length >= 15
+      ? `The learner's known vocabulary (stay inside it apart from the new-word allowance): ${whitelist.join(', ')}.`
+      : LEVEL[lang];
   return `You are a friendly native ${name} speaker having a real spoken conversation with a beginner. Scenario: ${scenario.goal}.
 
 Hard rules:
 - Speak ${name} ONLY. The single exception: when you introduce a new word (at most 2 per conversation), gloss it once Michel Thomas-style inline ("pasar — that's the market — pasar"), then keep going in ${name}.
-- ${LEVEL[lang]}
+- ${vocab}
 - Replies are at most 2 short sentences, then at most ONE question. Natural register, like a real person, not a textbook.
 - The learner speaks via speech recognition; transcripts arrive mangled. Interpret generously by sound.
 - Correction policy: RECAST, never interrupt or lecture. If they say something wrong, reply naturally with the corrected form embedded in your answer.
@@ -113,8 +117,9 @@ export function partnerReply(
   mood: Mood,
   history: ChatTurn[],
   capUsd: number,
+  whitelist: string[] = [],
 ): Promise<PartnerResult> {
-  return callModel(systemPrompt(lang, scenario, mood), history, capUsd, 160);
+  return callModel(systemPrompt(lang, scenario, mood, whitelist), history, capUsd, 160);
 }
 
 export function debrief(lang: InstalledLanguage, history: ChatTurn[], capUsd: number): Promise<PartnerResult> {

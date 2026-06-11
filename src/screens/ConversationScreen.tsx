@@ -17,6 +17,10 @@ import type { ChatTurn } from '../services/teacher';
 import { ttsToFile } from '../services/tts';
 import { getOpenAIKey } from '../services/keys';
 import { stripMarks } from '../lib/teacher-markup';
+import { buildWhitelist, digestProgress, markPracticeSession } from '../services/progress';
+
+/** A conversation with this many learner turns marks the day done. */
+const DAY_MARK_LEARNER_TURNS = 6;
 
 /**
  * Conversation mode (S1): fully spoken, back and forth — the one place
@@ -50,6 +54,8 @@ export function ConversationScreen() {
   const aliveRef = useRef(true);
   const turnsRef = useRef<ChatTurn[]>([]);
   turnsRef.current = turns;
+  const whitelistRef = useRef<string[]>([]);
+  const startedAtRef = useRef(new Date().toISOString());
 
   useEffect(() => {
     aliveRef.current = true;
@@ -64,7 +70,7 @@ export function ConversationScreen() {
     async (history: ChatTurn[]) => {
       if (!aliveRef.current) return;
       setPhase({ kind: 'partner_thinking' });
-      const result = await partnerReply(language, scenario, mood, history, settings.monthlyCapUsd);
+      const result = await partnerReply(language, scenario, mood, history, settings.monthlyCapUsd, whitelistRef.current);
       if (!aliveRef.current) return;
       if (result.kind === 'no_key') {
         setPhase({ kind: 'no_key' });
@@ -162,14 +168,23 @@ export function ConversationScreen() {
     }
     Haptics.selectionAsync();
     await recognizer.requestPermissions();
+    // The S1 whitelist: the partner stays inside what you actually own.
+    whitelistRef.current = await buildWhitelist(language);
+    startedAtRef.current = new Date().toISOString();
     setTurns([]);
     void partnerTurn([]);
-  }, [partnerTurn]);
+  }, [partnerTurn, language]);
 
   const endConversation = useCallback(async () => {
     recognizer.abort();
     voiceEngine.stop();
     setPhase({ kind: 'debrief', text: null });
+    // Bank the progress and (if substantial) mark the day — best-effort.
+    const learnerTurns = turnsRef.current.filter((t) => t.role === 'learner').length;
+    void digestProgress(language, turnsRef.current);
+    if (learnerTurns >= DAY_MARK_LEARNER_TURNS) {
+      void markPracticeSession(language, learnerTurns, startedAtRef.current);
+    }
     const result = await debrief(language, turnsRef.current, settings.monthlyCapUsd);
     if (!aliveRef.current) return;
     const text = result.kind === 'ok' ? result.text : 'No debrief this time — but you just held a conversation. That counts.';

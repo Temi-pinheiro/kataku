@@ -7,6 +7,7 @@ import { radii, space, type, type Palette } from '../theme';
 import { useTheme } from '../hooks/useTheme';
 import { allPrompts } from '../lib/content/types';
 import { masteredItemIds } from '../lib/scheduler/scheduler';
+import { isItemOfLanguage } from '../lib/progress/chat-items';
 import { roundSpeakable, speakableCountForPack } from '../lib/review/speakable';
 import { formatUsd, monthToDateUsd } from '../lib/cost/meter';
 import { getAllMastery, openDb, spendEvents } from '../db';
@@ -40,7 +41,7 @@ export function WeeklyReviewScreen() {
       monthStart.setUTCHours(0, 0, 0, 0);
 
       const mastery = await getAllMastery();
-      const mastered = new Set(masteredItemIds(mastery).filter((id) => id.startsWith(`${language}-`)));
+      const mastered = new Set(masteredItemIds(mastery).filter((id) => isItemOfLanguage(id, language)));
       const speakable = roundSpeakable(speakableCountForPack(PACK, mastered));
 
       const sessionRows = await db.getAllAsync<{ started_at: string; ended_at: string | null }>(

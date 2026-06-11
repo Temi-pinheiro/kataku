@@ -10,6 +10,7 @@ import { useTheme } from '../hooks/useTheme';
 import { allLessons } from '../lib/content/types';
 import { buildSession } from '../lib/session/builder';
 import { masteredItemIds } from '../lib/scheduler/scheduler';
+import { isItemOfLanguage } from '../lib/progress/chat-items';
 import { roundSpeakable, speakableCountForPack } from '../lib/review/speakable';
 import { completedChunkCount, getAllMastery, loadSessionProgress, openDb } from '../db';
 
@@ -42,7 +43,7 @@ export function HomeScreen() {
       today,
     );
     const plan = buildSession(PACKS[language], chunksDone, mastery, new Date());
-    const mastered = new Set(masteredItemIds(mastery).filter((id) => id.startsWith(`${language}-`)));
+    const mastered = new Set(masteredItemIds(mastery).filter((id) => isItemOfLanguage(id, language)));
     setData({
       chunksDone,
       doneToday: (row?.n ?? 0) > 0,

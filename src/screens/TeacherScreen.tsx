@@ -27,6 +27,12 @@ import { teacherReply, monthSpendUsd, type ChatTurn } from '../services/teacher'
 import { ttsToFile } from '../services/tts';
 import { getOpenAIKey } from '../services/keys';
 import { parseMarked, targetOnly } from '../lib/teacher-markup';
+import { digestProgress, markPracticeSession } from '../services/progress';
+
+/** Digest the transcript window every N learner turns (and on exit/restart). */
+const DIGEST_EVERY_LEARNER_TURNS = 8;
+/** A sitting with this many answers marks the day done. */
+const DAY_MARK_LEARNER_TURNS = 10;
 
 /**
  * The lesson IS a conversation (owner pivot): the teacher writes, you can
@@ -43,6 +49,8 @@ export function TeacherScreen() {
 
   const [status, setStatus] = useState<Status>('checking');
   const [turns, setTurns] = useState<ChatTurn[]>([]);
+  const turnsRef = useRef<ChatTurn[]>([]);
+  turnsRef.current = turns;
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [input, setInput] = useState('');
@@ -51,6 +59,21 @@ export function TeacherScreen() {
   const [spendLabel, setSpendLabel] = useState('');
   const scrollRef = useRef<ScrollView>(null);
   const storageKey = `teacher_chat.${language}`;
+  const digestedUpToRef = useRef(0);
+  const sittingStartRef = useRef(new Date().toISOString());
+  const sittingTurnsRef = useRef(0);
+
+  /** Best-effort, non-blocking: progress bookkeeping never touches the lesson. */
+  const runDigest = useCallback(
+    (allTurns: ChatTurn[]) => {
+      const window = allTurns.slice(digestedUpToRef.current);
+      if (window.filter((t) => t.role === 'learner').length === 0) return;
+      digestedUpToRef.current = allTurns.length;
+      void setSetting(`${storageKey}.digested`, String(digestedUpToRef.current));
+      void digestProgress(language, window);
+    },
+    [language, storageKey],
+  );
 
   const persist = useCallback(
     (next: ChatTurn[]) => {
@@ -109,6 +132,10 @@ export function TeacherScreen() {
         }
       }
       setTurns(history);
+      const digested = parseInt(await getSetting(`${storageKey}.digested`, '0'), 10);
+      digestedUpToRef.current = Number.isFinite(digested) ? Math.min(digested, history.length) : 0;
+      sittingStartRef.current = new Date().toISOString();
+      sittingTurnsRef.current = 0;
       if (history.length === 0) {
         void askTeacher([]);
       }
@@ -117,6 +144,19 @@ export function TeacherScreen() {
       cancelled = true;
       recognizer.abort();
       voiceEngine.stop();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language]);
+
+  // Leaving mid-conversation still banks the progress.
+  useEffect(() => {
+    return () => {
+      const all = turnsRef.current;
+      const window = all.slice(digestedUpToRef.current);
+      if (window.some((t) => t.role === 'learner')) {
+        void digestProgress(language, window);
+        void setSetting(`${storageKey}.digested`, String(all.length));
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
@@ -135,9 +175,20 @@ export function TeacherScreen() {
     const next: ChatTurn[] = [...turns, { role: 'learner', text }];
     setTurns(next);
     persist(next);
+
+    // Progress bookkeeping (all best-effort, never blocking the lesson):
+    sittingTurnsRef.current += 1;
+    if (sittingTurnsRef.current === DAY_MARK_LEARNER_TURNS) {
+      void markPracticeSession(language, sittingTurnsRef.current, sittingStartRef.current);
+    }
+    const undigestedLearnerTurns = next.slice(digestedUpToRef.current).filter((t) => t.role === 'learner').length;
+    if (undigestedLearnerTurns >= DIGEST_EVERY_LEARNER_TURNS) {
+      runDigest(next);
+    }
+
     void askTeacher(next);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input, busy, turns, persist, askTeacher]);
+  }, [input, busy, turns, persist, askTeacher, language, runDigest]);
 
   // ---- voice input: listen first, transcript lands in the editable field ----
 
@@ -208,6 +259,9 @@ export function TeacherScreen() {
         text: 'Restart',
         style: 'destructive',
         onPress: () => {
+          runDigest(turnsRef.current); // bank what this lesson earned first
+          digestedUpToRef.current = 0;
+          void setSetting(`${storageKey}.digested`, '0');
           setTurns([]);
           persist([]);
           void askTeacher([]);
