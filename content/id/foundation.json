@@ -1,0 +1,1204 @@
+{
+  "language": "id",
+  "phase": "foundation",
+  "version": 1,
+  "units": [
+    {
+      "index": 1,
+      "title": "Foundation — Week 1",
+      "lessons": [
+        {
+          "index": 1,
+          "items": [
+            {
+              "id": "id-f-001",
+              "type": "block",
+              "concept_en": "I",
+              "target_text": "saya",
+              "romanization": null,
+              "teach_script": "The word for 'I' in Indonesian is 'saya'. Saya.",
+              "audio": { "teach": "id-f-001-t" }
+            },
+            {
+              "id": "id-f-002",
+              "type": "block",
+              "concept_en": "to want",
+              "target_text": "mau",
+              "romanization": null,
+              "teach_script": "'To want' is 'mau'. Mau. So 'I want' is — saya mau.",
+              "audio": { "teach": "id-f-002-t" }
+            },
+            {
+              "id": "id-f-003",
+              "type": "block",
+              "concept_en": "to eat",
+              "target_text": "makan",
+              "romanization": null,
+              "teach_script": "'To eat' is 'makan'. Makan.",
+              "audio": { "teach": "id-f-003-t" }
+            },
+            {
+              "id": "id-f-004",
+              "type": "block",
+              "concept_en": "to drink",
+              "target_text": "minum",
+              "romanization": null,
+              "teach_script": "'To drink' is 'minum'. Minum.",
+              "audio": { "teach": "id-f-004-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "id-f-p-001",
+              "cue_en": "How would you say: I want?",
+              "expected": ["saya mau", "aku mau"],
+              "components": ["id-f-001", "id-f-002"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-001-c", "answer": "id-f-p-001-a", "answer_slow": "id-f-p-001-s" }
+            },
+            {
+              "id": "id-f-p-002",
+              "cue_en": "How would you say: I want to eat?",
+              "expected": ["saya mau makan", "aku mau makan", "mau makan"],
+              "components": ["id-f-001", "id-f-002", "id-f-003"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-002-c", "answer": "id-f-p-002-a", "answer_slow": "id-f-p-002-s" }
+            },
+            {
+              "id": "id-f-p-003",
+              "cue_en": "And: I want to drink?",
+              "expected": ["saya mau minum", "aku mau minum", "mau minum"],
+              "components": ["id-f-001", "id-f-002", "id-f-004"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-003-c", "answer": "id-f-p-003-a", "answer_slow": "id-f-p-003-s" }
+            },
+            {
+              "id": "id-f-p-004",
+              "cue_en": "Just the word: to eat.",
+              "expected": ["makan"],
+              "components": ["id-f-003"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-004-c", "answer": "id-f-p-004-a", "answer_slow": "id-f-p-004-s" }
+            },
+            {
+              "id": "id-f-p-005",
+              "cue_en": "Just the word: to drink.",
+              "expected": ["minum"],
+              "components": ["id-f-004"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-005-c", "answer": "id-f-p-005-a", "answer_slow": "id-f-p-005-s" }
+            },
+            {
+              "id": "id-f-p-006",
+              "cue_en": "Again — I want to eat.",
+              "expected": ["saya mau makan", "aku mau makan", "mau makan"],
+              "components": ["id-f-001", "id-f-002", "id-f-003"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-006-c", "answer": "id-f-p-006-a", "answer_slow": "id-f-p-006-s" }
+            },
+            {
+              "id": "id-f-p-007",
+              "cue_en": "And again — I want to drink.",
+              "expected": ["saya mau minum", "aku mau minum", "mau minum"],
+              "components": ["id-f-001", "id-f-002", "id-f-004"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-007-c", "answer": "id-f-p-007-a", "answer_slow": "id-f-p-007-s" }
+            },
+            {
+              "id": "id-f-p-008",
+              "cue_en": "Just: I.",
+              "expected": ["saya", "aku"],
+              "components": ["id-f-001"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-008-c", "answer": "id-f-p-008-a", "answer_slow": "id-f-p-008-s" }
+            },
+            {
+              "id": "id-f-p-009",
+              "cue_en": "Just: want.",
+              "expected": ["mau"],
+              "components": ["id-f-002"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-009-c", "answer": "id-f-p-009-a", "answer_slow": "id-f-p-009-s" }
+            },
+            {
+              "id": "id-f-p-010",
+              "cue_en": "One more time, the whole thing: I want to eat.",
+              "expected": ["saya mau makan", "aku mau makan"],
+              "components": ["id-f-001", "id-f-002", "id-f-003"],
+              "difficulty": 2,
+              "decompose_script": "Piece by piece: saya — mau — makan.",
+              "audio": { "cue": "id-f-p-010-c", "answer": "id-f-p-010-a", "answer_slow": "id-f-p-010-s" }
+            },
+            {
+              "id": "id-f-p-011",
+              "cue_en": "Build it: I want to drink.",
+              "expected": ["saya mau minum", "aku mau minum"],
+              "components": ["id-f-001", "id-f-002", "id-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Piece by piece: saya — mau — minum.",
+              "audio": { "cue": "id-f-p-011-c", "answer": "id-f-p-011-a", "answer_slow": "id-f-p-011-s" }
+            },
+            {
+              "id": "id-f-p-012",
+              "cue_en": "Last one for today: I want to eat.",
+              "expected": ["saya mau makan", "aku mau makan"],
+              "components": ["id-f-001", "id-f-002", "id-f-003"],
+              "difficulty": 2,
+              "decompose_script": "Saya mau — I want — then makan.",
+              "audio": { "cue": "id-f-p-012-c", "answer": "id-f-p-012-a", "answer_slow": "id-f-p-012-s" }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "items": [
+            {
+              "id": "id-f-005",
+              "type": "block",
+              "concept_en": "you",
+              "target_text": "kamu",
+              "romanization": null,
+              "teach_script": "'You' is 'kamu'. Kamu.",
+              "audio": { "teach": "id-f-005-t" }
+            },
+            {
+              "id": "id-f-006",
+              "type": "block",
+              "concept_en": "not",
+              "target_text": "tidak",
+              "romanization": null,
+              "teach_script": "'Not' is 'tidak'. Tidak. It sits right before the word it cancels: saya tidak mau — I don't want.",
+              "audio": { "teach": "id-f-006-t" }
+            },
+            {
+              "id": "id-f-007",
+              "type": "pattern",
+              "concept_en": "questions by intonation",
+              "target_text": "kamu mau makan",
+              "romanization": null,
+              "teach_script": "Indonesian questions are free. Say the sentence and let your voice rise at the end: kamu mau makan? — do you want to eat? Nothing else changes.",
+              "audio": { "teach": "id-f-007-t" }
+            },
+            {
+              "id": "id-f-008",
+              "type": "usage_note",
+              "concept_en": "dropping pronouns",
+              "target_text": "mau makan",
+              "romanization": null,
+              "teach_script": "In everyday speech, when it's obvious who you mean, Indonesians drop the pronoun. 'Mau makan?' — want to eat? Both ways are right; you'll hear the short one constantly.",
+              "audio": { "teach": "id-f-008-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "id-f-p-013",
+              "cue_en": "A statement: you want to eat.",
+              "expected": ["kamu mau makan"],
+              "components": ["id-f-005", "id-f-002", "id-f-003"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-013-c", "answer": "id-f-p-013-a", "answer_slow": "id-f-p-013-s" }
+            },
+            {
+              "id": "id-f-p-014",
+              "cue_en": "Now make it a question — do you want to eat?",
+              "expected": ["kamu mau makan", "mau makan"],
+              "components": ["id-f-005", "id-f-002", "id-f-003", "id-f-007"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-014-c", "answer": "id-f-p-014-a", "answer_slow": "id-f-p-014-s" }
+            },
+            {
+              "id": "id-f-p-015",
+              "cue_en": "How would you say: I don't want?",
+              "expected": ["saya tidak mau", "aku tidak mau", "tidak mau"],
+              "components": ["id-f-001", "id-f-006", "id-f-002"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-015-c", "answer": "id-f-p-015-a", "answer_slow": "id-f-p-015-s" }
+            },
+            {
+              "id": "id-f-p-016",
+              "cue_en": "I don't want to eat.",
+              "expected": ["saya tidak mau makan", "aku tidak mau makan", "tidak mau makan"],
+              "components": ["id-f-001", "id-f-006", "id-f-002", "id-f-003"],
+              "difficulty": 2,
+              "decompose_script": "Tidak sits right before mau: saya — tidak mau — makan.",
+              "audio": { "cue": "id-f-p-016-c", "answer": "id-f-p-016-a", "answer_slow": "id-f-p-016-s" }
+            },
+            {
+              "id": "id-f-p-017",
+              "cue_en": "I don't want to drink.",
+              "expected": ["saya tidak mau minum", "aku tidak mau minum", "tidak mau minum"],
+              "components": ["id-f-001", "id-f-006", "id-f-002", "id-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Same shape: saya — tidak mau — minum.",
+              "audio": { "cue": "id-f-p-017-c", "answer": "id-f-p-017-a", "answer_slow": "id-f-p-017-s" }
+            },
+            {
+              "id": "id-f-p-018",
+              "cue_en": "Ask me: do you want to drink?",
+              "expected": ["kamu mau minum", "mau minum"],
+              "components": ["id-f-005", "id-f-002", "id-f-004", "id-f-007"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-018-c", "answer": "id-f-p-018-a", "answer_slow": "id-f-p-018-s" }
+            },
+            {
+              "id": "id-f-p-019",
+              "cue_en": "Tell me: you don't want to eat.",
+              "expected": ["kamu tidak mau makan"],
+              "components": ["id-f-005", "id-f-006", "id-f-002", "id-f-003"],
+              "difficulty": 2,
+              "decompose_script": "Kamu, then tidak mau, then makan.",
+              "audio": { "cue": "id-f-p-019-c", "answer": "id-f-p-019-a", "answer_slow": "id-f-p-019-s" }
+            },
+            {
+              "id": "id-f-p-020",
+              "cue_en": "Two words, like to a friend: want to eat?",
+              "expected": ["mau makan"],
+              "components": ["id-f-008", "id-f-002", "id-f-003", "id-f-007"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-020-c", "answer": "id-f-p-020-a", "answer_slow": "id-f-p-020-s" }
+            },
+            {
+              "id": "id-f-p-021",
+              "cue_en": "Ask me: don't you want to drink?",
+              "expected": ["kamu tidak mau minum", "tidak mau minum"],
+              "components": ["id-f-005", "id-f-006", "id-f-002", "id-f-004", "id-f-007"],
+              "difficulty": 2,
+              "decompose_script": "It's the statement with rising voice: kamu tidak mau minum?",
+              "audio": { "cue": "id-f-p-021-c", "answer": "id-f-p-021-a", "answer_slow": "id-f-p-021-s" }
+            },
+            {
+              "id": "id-f-p-022",
+              "cue_en": "Just: you.",
+              "expected": ["kamu"],
+              "components": ["id-f-005"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-022-c", "answer": "id-f-p-022-a", "answer_slow": "id-f-p-022-s" }
+            },
+            {
+              "id": "id-f-p-023",
+              "cue_en": "Quick: not.",
+              "expected": ["tidak"],
+              "components": ["id-f-006"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-023-c", "answer": "id-f-p-023-a", "answer_slow": "id-f-p-023-s" }
+            },
+            {
+              "id": "id-f-p-024",
+              "cue_en": "You don't want to drink.",
+              "expected": ["kamu tidak mau minum"],
+              "components": ["id-f-005", "id-f-006", "id-f-002", "id-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Kamu — tidak mau — minum.",
+              "audio": { "cue": "id-f-p-024-c", "answer": "id-f-p-024-a", "answer_slow": "id-f-p-024-s" }
+            },
+            {
+              "id": "id-f-p-025",
+              "cue_en": "Ask me: do you want to eat?",
+              "expected": ["kamu mau makan", "mau makan"],
+              "components": ["id-f-005", "id-f-002", "id-f-003", "id-f-007"],
+              "difficulty": 2,
+              "audio": { "cue": "id-f-p-025-c", "answer": "id-f-p-025-a", "answer_slow": "id-f-p-025-s" }
+            },
+            {
+              "id": "id-f-p-026",
+              "cue_en": "And: I don't want to eat.",
+              "expected": ["saya tidak mau makan", "aku tidak mau makan"],
+              "components": ["id-f-001", "id-f-006", "id-f-002", "id-f-003"],
+              "difficulty": 2,
+              "decompose_script": "Saya — tidak mau — makan.",
+              "audio": { "cue": "id-f-p-026-c", "answer": "id-f-p-026-a", "answer_slow": "id-f-p-026-s" }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "items": [
+            {
+              "id": "id-f-009",
+              "type": "block",
+              "concept_en": "to go",
+              "target_text": "pergi",
+              "romanization": null,
+              "teach_script": "'To go' is 'pergi'. Pergi.",
+              "audio": { "teach": "id-f-009-t" }
+            },
+            {
+              "id": "id-f-010",
+              "type": "block",
+              "concept_en": "to (toward)",
+              "target_text": "ke",
+              "romanization": null,
+              "teach_script": "'To' — toward a place — is 'ke'. Ke.",
+              "audio": { "teach": "id-f-010-t" }
+            },
+            {
+              "id": "id-f-011",
+              "type": "block",
+              "concept_en": "the market",
+              "target_text": "pasar",
+              "romanization": null,
+              "teach_script": "'The market' is 'pasar'. Pasar. So 'to the market' — ke pasar.",
+              "audio": { "teach": "id-f-011-t" }
+            },
+            {
+              "id": "id-f-012",
+              "type": "block",
+              "concept_en": "now",
+              "target_text": "sekarang",
+              "romanization": null,
+              "teach_script": "'Now' is 'sekarang'. Sekarang. Time words like this usually sit at the end of the sentence.",
+              "audio": { "teach": "id-f-012-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "id-f-p-027",
+              "cue_en": "How would you say: I want to go?",
+              "expected": ["saya mau pergi", "aku mau pergi", "mau pergi"],
+              "components": ["id-f-001", "id-f-002", "id-f-009"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-027-c", "answer": "id-f-p-027-a", "answer_slow": "id-f-p-027-s" }
+            },
+            {
+              "id": "id-f-p-028",
+              "cue_en": "To the market — I want to go to the market.",
+              "expected": ["saya mau pergi ke pasar", "aku mau pergi ke pasar", "mau pergi ke pasar"],
+              "components": ["id-f-001", "id-f-002", "id-f-009", "id-f-010", "id-f-011"],
+              "difficulty": 2,
+              "decompose_script": "The journey is one chunk: pergi ke pasar — go to the market.",
+              "audio": { "cue": "id-f-p-028-c", "answer": "id-f-p-028-a", "answer_slow": "id-f-p-028-s" }
+            },
+            {
+              "id": "id-f-p-029",
+              "cue_en": "Just: now.",
+              "expected": ["sekarang"],
+              "components": ["id-f-012"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-029-c", "answer": "id-f-p-029-a", "answer_slow": "id-f-p-029-s" }
+            },
+            {
+              "id": "id-f-p-030",
+              "cue_en": "I want to eat now.",
+              "expected": ["saya mau makan sekarang", "aku mau makan sekarang", "mau makan sekarang"],
+              "components": ["id-f-001", "id-f-002", "id-f-003", "id-f-012"],
+              "difficulty": 2,
+              "decompose_script": "Sekarang — now — goes at the end: saya mau makan, then sekarang.",
+              "audio": { "cue": "id-f-p-030-c", "answer": "id-f-p-030-a", "answer_slow": "id-f-p-030-s" }
+            },
+            {
+              "id": "id-f-p-031",
+              "cue_en": "I want to go now.",
+              "expected": ["saya mau pergi sekarang", "aku mau pergi sekarang"],
+              "components": ["id-f-001", "id-f-002", "id-f-009", "id-f-012"],
+              "difficulty": 2,
+              "decompose_script": "Saya mau pergi — then sekarang at the end.",
+              "audio": { "cue": "id-f-p-031-c", "answer": "id-f-p-031-a", "answer_slow": "id-f-p-031-s" }
+            },
+            {
+              "id": "id-f-p-032",
+              "cue_en": "Ask me: do you want to go to the market?",
+              "expected": ["kamu mau pergi ke pasar", "mau pergi ke pasar"],
+              "components": ["id-f-005", "id-f-002", "id-f-009", "id-f-010", "id-f-011", "id-f-007"],
+              "difficulty": 2,
+              "decompose_script": "Statement plus rising voice: kamu mau — pergi ke pasar?",
+              "audio": { "cue": "id-f-p-032-c", "answer": "id-f-p-032-a", "answer_slow": "id-f-p-032-s" }
+            },
+            {
+              "id": "id-f-p-033",
+              "cue_en": "I don't want to go now.",
+              "expected": ["saya tidak mau pergi sekarang", "aku tidak mau pergi sekarang", "tidak mau pergi sekarang"],
+              "components": ["id-f-001", "id-f-006", "id-f-002", "id-f-009", "id-f-012"],
+              "difficulty": 2,
+              "decompose_script": "Two chunks: tidak mau — pergi sekarang.",
+              "audio": { "cue": "id-f-p-033-c", "answer": "id-f-p-033-a", "answer_slow": "id-f-p-033-s" }
+            },
+            {
+              "id": "id-f-p-034",
+              "cue_en": "Just: the market.",
+              "expected": ["pasar"],
+              "components": ["id-f-011"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-034-c", "answer": "id-f-p-034-a", "answer_slow": "id-f-p-034-s" }
+            },
+            {
+              "id": "id-f-p-035",
+              "cue_en": "Ask me: do you want to drink now?",
+              "expected": ["kamu mau minum sekarang", "mau minum sekarang"],
+              "components": ["id-f-005", "id-f-002", "id-f-004", "id-f-012", "id-f-007"],
+              "difficulty": 2,
+              "audio": { "cue": "id-f-p-035-c", "answer": "id-f-p-035-a", "answer_slow": "id-f-p-035-s" }
+            },
+            {
+              "id": "id-f-p-036",
+              "cue_en": "I don't want to go to the market.",
+              "expected": ["saya tidak mau pergi ke pasar", "aku tidak mau pergi ke pasar", "tidak mau pergi ke pasar"],
+              "components": ["id-f-001", "id-f-006", "id-f-002", "id-f-009", "id-f-010", "id-f-011"],
+              "difficulty": 2,
+              "decompose_script": "Tidak mau, then the journey: pergi ke pasar.",
+              "audio": { "cue": "id-f-p-036-c", "answer": "id-f-p-036-a", "answer_slow": "id-f-p-036-s" }
+            },
+            {
+              "id": "id-f-p-037",
+              "cue_en": "Again: I want to go.",
+              "expected": ["saya mau pergi", "aku mau pergi"],
+              "components": ["id-f-001", "id-f-002", "id-f-009"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-037-c", "answer": "id-f-p-037-a", "answer_slow": "id-f-p-037-s" }
+            },
+            {
+              "id": "id-f-p-038",
+              "cue_en": "Now the whole thing: I want to go to the market now.",
+              "expected": ["saya mau pergi ke pasar sekarang", "aku mau pergi ke pasar sekarang"],
+              "components": ["id-f-001", "id-f-002", "id-f-009", "id-f-010", "id-f-011", "id-f-012"],
+              "difficulty": 3,
+              "decompose_script": "Three pieces: saya mau — pergi ke pasar — sekarang.",
+              "audio": { "cue": "id-f-p-038-c", "answer": "id-f-p-038-a", "answer_slow": "id-f-p-038-s" }
+            },
+            {
+              "id": "id-f-p-039",
+              "cue_en": "Ask me: do you want to go to the market now?",
+              "expected": ["kamu mau pergi ke pasar sekarang", "mau pergi ke pasar sekarang"],
+              "components": ["id-f-005", "id-f-002", "id-f-009", "id-f-010", "id-f-011", "id-f-012", "id-f-007"],
+              "difficulty": 3,
+              "decompose_script": "Kamu mau — pergi ke pasar — sekarang — and let it rise.",
+              "audio": { "cue": "id-f-p-039-c", "answer": "id-f-p-039-a", "answer_slow": "id-f-p-039-s" }
+            },
+            {
+              "id": "id-f-p-040",
+              "cue_en": "And: I don't want to go to the market now.",
+              "expected": ["saya tidak mau pergi ke pasar sekarang", "aku tidak mau pergi ke pasar sekarang"],
+              "components": ["id-f-001", "id-f-006", "id-f-002", "id-f-009", "id-f-010", "id-f-011", "id-f-012"],
+              "difficulty": 3,
+              "decompose_script": "Tidak mau, then pergi ke pasar, then sekarang at the end.",
+              "audio": { "cue": "id-f-p-040-c", "answer": "id-f-p-040-a", "answer_slow": "id-f-p-040-s" }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "items": [
+            {
+              "id": "id-f-013",
+              "type": "block",
+              "concept_en": "can",
+              "target_text": "bisa",
+              "romanization": null,
+              "teach_script": "'Can' is 'bisa'. Bisa. It works exactly like mau: saya bisa — I can.",
+              "audio": { "teach": "id-f-013-t" }
+            },
+            {
+              "id": "id-f-014",
+              "type": "block",
+              "concept_en": "have to",
+              "target_text": "harus",
+              "romanization": null,
+              "teach_script": "'Have to' — must — is 'harus'. Harus.",
+              "audio": { "teach": "id-f-014-t" }
+            },
+            {
+              "id": "id-f-015",
+              "type": "block",
+              "concept_en": "later",
+              "target_text": "nanti",
+              "romanization": null,
+              "teach_script": "'Later' is 'nanti'. Nanti. Another time word — it goes at the end, like sekarang.",
+              "audio": { "teach": "id-f-015-t" }
+            },
+            {
+              "id": "id-f-016",
+              "type": "block",
+              "concept_en": "to go home",
+              "target_text": "pulang",
+              "romanization": null,
+              "teach_script": "'To go home' has its own word: 'pulang'. Pulang. Not 'go to house' — just pulang.",
+              "audio": { "teach": "id-f-016-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "id-f-p-041",
+              "cue_en": "How would you say: I can?",
+              "expected": ["saya bisa", "aku bisa", "bisa"],
+              "components": ["id-f-001", "id-f-013"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-041-c", "answer": "id-f-p-041-a", "answer_slow": "id-f-p-041-s" }
+            },
+            {
+              "id": "id-f-p-042",
+              "cue_en": "I can go now.",
+              "expected": ["saya bisa pergi sekarang", "aku bisa pergi sekarang", "bisa pergi sekarang"],
+              "components": ["id-f-001", "id-f-013", "id-f-009", "id-f-012"],
+              "difficulty": 2,
+              "decompose_script": "Bisa where mau would sit: saya bisa — pergi — sekarang.",
+              "audio": { "cue": "id-f-p-042-c", "answer": "id-f-p-042-a", "answer_slow": "id-f-p-042-s" }
+            },
+            {
+              "id": "id-f-p-043",
+              "cue_en": "I have to eat.",
+              "expected": ["saya harus makan", "aku harus makan", "harus makan"],
+              "components": ["id-f-001", "id-f-014", "id-f-003"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-043-c", "answer": "id-f-p-043-a", "answer_slow": "id-f-p-043-s" }
+            },
+            {
+              "id": "id-f-p-044",
+              "cue_en": "Just: to go home.",
+              "expected": ["pulang"],
+              "components": ["id-f-016"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-044-c", "answer": "id-f-p-044-a", "answer_slow": "id-f-p-044-s" }
+            },
+            {
+              "id": "id-f-p-045",
+              "cue_en": "I want to go home.",
+              "expected": ["saya mau pulang", "aku mau pulang", "mau pulang"],
+              "components": ["id-f-001", "id-f-002", "id-f-016"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-045-c", "answer": "id-f-p-045-a", "answer_slow": "id-f-p-045-s" }
+            },
+            {
+              "id": "id-f-p-046",
+              "cue_en": "I have to go home now.",
+              "expected": ["saya harus pulang sekarang", "aku harus pulang sekarang", "harus pulang sekarang"],
+              "components": ["id-f-001", "id-f-014", "id-f-016", "id-f-012"],
+              "difficulty": 2,
+              "decompose_script": "Harus — have to — then pulang, then sekarang at the end.",
+              "audio": { "cue": "id-f-p-046-c", "answer": "id-f-p-046-a", "answer_slow": "id-f-p-046-s" }
+            },
+            {
+              "id": "id-f-p-047",
+              "cue_en": "Just: later.",
+              "expected": ["nanti"],
+              "components": ["id-f-015"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-047-c", "answer": "id-f-p-047-a", "answer_slow": "id-f-p-047-s" }
+            },
+            {
+              "id": "id-f-p-048",
+              "cue_en": "I can eat later.",
+              "expected": ["saya bisa makan nanti", "aku bisa makan nanti", "bisa makan nanti"],
+              "components": ["id-f-001", "id-f-013", "id-f-003", "id-f-015"],
+              "difficulty": 2,
+              "audio": { "cue": "id-f-p-048-c", "answer": "id-f-p-048-a", "answer_slow": "id-f-p-048-s" }
+            },
+            {
+              "id": "id-f-p-049",
+              "cue_en": "Ask me: can you go to the market later?",
+              "expected": ["kamu bisa pergi ke pasar nanti", "bisa pergi ke pasar nanti"],
+              "components": ["id-f-005", "id-f-013", "id-f-009", "id-f-010", "id-f-011", "id-f-015", "id-f-007"],
+              "difficulty": 3,
+              "decompose_script": "Kamu bisa — pergi ke pasar — nanti — rising at the end.",
+              "audio": { "cue": "id-f-p-049-c", "answer": "id-f-p-049-a", "answer_slow": "id-f-p-049-s" }
+            },
+            {
+              "id": "id-f-p-050",
+              "cue_en": "I can't go now.",
+              "expected": ["saya tidak bisa pergi sekarang", "aku tidak bisa pergi sekarang", "tidak bisa pergi sekarang"],
+              "components": ["id-f-001", "id-f-006", "id-f-013", "id-f-009", "id-f-012"],
+              "difficulty": 2,
+              "decompose_script": "Tidak bisa — can't: saya tidak bisa — pergi sekarang.",
+              "audio": { "cue": "id-f-p-050-c", "answer": "id-f-p-050-a", "answer_slow": "id-f-p-050-s" }
+            },
+            {
+              "id": "id-f-p-051",
+              "cue_en": "Ask me: do you have to go home?",
+              "expected": ["kamu harus pulang", "harus pulang"],
+              "components": ["id-f-005", "id-f-014", "id-f-016", "id-f-007"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-051-c", "answer": "id-f-p-051-a", "answer_slow": "id-f-p-051-s" }
+            },
+            {
+              "id": "id-f-p-052",
+              "cue_en": "The big one: I can't go to the market now.",
+              "expected": ["saya tidak bisa pergi ke pasar sekarang", "aku tidak bisa pergi ke pasar sekarang"],
+              "components": ["id-f-001", "id-f-006", "id-f-013", "id-f-009", "id-f-010", "id-f-011", "id-f-012"],
+              "difficulty": 3,
+              "decompose_script": "Tidak bisa, then the journey — pergi ke pasar — then sekarang.",
+              "audio": { "cue": "id-f-p-052-c", "answer": "id-f-p-052-a", "answer_slow": "id-f-p-052-s" }
+            },
+            {
+              "id": "id-f-p-053",
+              "cue_en": "Tell me: you have to go home now.",
+              "expected": ["kamu harus pulang sekarang"],
+              "components": ["id-f-005", "id-f-014", "id-f-016", "id-f-012"],
+              "difficulty": 3,
+              "audio": { "cue": "id-f-p-053-c", "answer": "id-f-p-053-a", "answer_slow": "id-f-p-053-s" }
+            },
+            {
+              "id": "id-f-p-054",
+              "cue_en": "And: I don't want to go to the market later.",
+              "expected": ["saya tidak mau pergi ke pasar nanti", "aku tidak mau pergi ke pasar nanti"],
+              "components": ["id-f-001", "id-f-006", "id-f-002", "id-f-009", "id-f-010", "id-f-011", "id-f-015"],
+              "difficulty": 3,
+              "decompose_script": "Tidak mau — pergi ke pasar — nanti.",
+              "audio": { "cue": "id-f-p-054-c", "answer": "id-f-p-054-a", "answer_slow": "id-f-p-054-s" }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "items": [
+            {
+              "id": "id-f-017",
+              "type": "block",
+              "concept_en": "this",
+              "target_text": "ini",
+              "romanization": null,
+              "teach_script": "'This' is 'ini'. Ini.",
+              "audio": { "teach": "id-f-017-t" }
+            },
+            {
+              "id": "id-f-018",
+              "type": "block",
+              "concept_en": "that",
+              "target_text": "itu",
+              "romanization": null,
+              "teach_script": "'That' is 'itu'. Itu.",
+              "audio": { "teach": "id-f-018-t" }
+            },
+            {
+              "id": "id-f-019",
+              "type": "block",
+              "concept_en": "good",
+              "target_text": "bagus",
+              "romanization": null,
+              "teach_script": "'Good' — for things — is 'bagus'. Bagus. And there's no word for 'is': ini bagus — this is good. Just point and say it.",
+              "audio": { "teach": "id-f-019-t" }
+            },
+            {
+              "id": "id-f-020",
+              "type": "block",
+              "concept_en": "but",
+              "target_text": "tapi",
+              "romanization": null,
+              "teach_script": "'But' is 'tapi'. Tapi. It glues two little sentences together.",
+              "audio": { "teach": "id-f-020-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "id-f-p-055",
+              "cue_en": "How would you say: this is good?",
+              "expected": ["ini bagus"],
+              "components": ["id-f-017", "id-f-019"],
+              "difficulty": 1,
+              "decompose_script": "No word for 'is' — just: ini bagus.",
+              "audio": { "cue": "id-f-p-055-c", "answer": "id-f-p-055-a", "answer_slow": "id-f-p-055-s" }
+            },
+            {
+              "id": "id-f-p-056",
+              "cue_en": "That is good.",
+              "expected": ["itu bagus"],
+              "components": ["id-f-018", "id-f-019"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-056-c", "answer": "id-f-p-056-a", "answer_slow": "id-f-p-056-s" }
+            },
+            {
+              "id": "id-f-p-057",
+              "cue_en": "This is not good.",
+              "expected": ["ini tidak bagus"],
+              "components": ["id-f-017", "id-f-006", "id-f-019"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-057-c", "answer": "id-f-p-057-a", "answer_slow": "id-f-p-057-s" }
+            },
+            {
+              "id": "id-f-p-058",
+              "cue_en": "I want this.",
+              "expected": ["saya mau ini", "aku mau ini", "mau ini"],
+              "components": ["id-f-001", "id-f-002", "id-f-017"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-058-c", "answer": "id-f-p-058-a", "answer_slow": "id-f-p-058-s" }
+            },
+            {
+              "id": "id-f-p-059",
+              "cue_en": "I want that.",
+              "expected": ["saya mau itu", "aku mau itu", "mau itu"],
+              "components": ["id-f-001", "id-f-002", "id-f-018"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-059-c", "answer": "id-f-p-059-a", "answer_slow": "id-f-p-059-s" }
+            },
+            {
+              "id": "id-f-p-060",
+              "cue_en": "Ask me: do you want this?",
+              "expected": ["kamu mau ini", "mau ini"],
+              "components": ["id-f-005", "id-f-002", "id-f-017", "id-f-007"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-060-c", "answer": "id-f-p-060-a", "answer_slow": "id-f-p-060-s" }
+            },
+            {
+              "id": "id-f-p-061",
+              "cue_en": "I don't want that.",
+              "expected": ["saya tidak mau itu", "aku tidak mau itu", "tidak mau itu"],
+              "components": ["id-f-001", "id-f-006", "id-f-002", "id-f-018"],
+              "difficulty": 2,
+              "audio": { "cue": "id-f-p-061-c", "answer": "id-f-p-061-a", "answer_slow": "id-f-p-061-s" }
+            },
+            {
+              "id": "id-f-p-062",
+              "cue_en": "Just: but.",
+              "expected": ["tapi"],
+              "components": ["id-f-020"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-062-c", "answer": "id-f-p-062-a", "answer_slow": "id-f-p-062-s" }
+            },
+            {
+              "id": "id-f-p-063",
+              "cue_en": "That is good, but I want this.",
+              "expected": ["itu bagus tapi saya mau ini", "itu bagus tapi aku mau ini"],
+              "components": ["id-f-018", "id-f-019", "id-f-020", "id-f-001", "id-f-002", "id-f-017"],
+              "difficulty": 2,
+              "decompose_script": "Two small sentences glued with tapi: itu bagus — tapi — saya mau ini.",
+              "audio": { "cue": "id-f-p-063-c", "answer": "id-f-p-063-a", "answer_slow": "id-f-p-063-s" }
+            },
+            {
+              "id": "id-f-p-064",
+              "cue_en": "This is good, but that is not good.",
+              "expected": ["ini bagus tapi itu tidak bagus"],
+              "components": ["id-f-017", "id-f-019", "id-f-020", "id-f-018", "id-f-006"],
+              "difficulty": 2,
+              "decompose_script": "Ini bagus — tapi — itu tidak bagus.",
+              "audio": { "cue": "id-f-p-064-c", "answer": "id-f-p-064-a", "answer_slow": "id-f-p-064-s" }
+            },
+            {
+              "id": "id-f-p-065",
+              "cue_en": "Ask me: is that good?",
+              "expected": ["itu bagus"],
+              "components": ["id-f-018", "id-f-019", "id-f-007"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-065-c", "answer": "id-f-p-065-a", "answer_slow": "id-f-p-065-s" }
+            },
+            {
+              "id": "id-f-p-066",
+              "cue_en": "That is good, but I don't want that.",
+              "expected": ["itu bagus tapi saya tidak mau itu", "itu bagus tapi aku tidak mau itu"],
+              "components": ["id-f-018", "id-f-019", "id-f-020", "id-f-001", "id-f-006", "id-f-002"],
+              "difficulty": 3,
+              "decompose_script": "Itu bagus — tapi — saya tidak mau itu.",
+              "audio": { "cue": "id-f-p-066-c", "answer": "id-f-p-066-a", "answer_slow": "id-f-p-066-s" }
+            },
+            {
+              "id": "id-f-p-067",
+              "cue_en": "I want to go home, but I have to eat now.",
+              "expected": ["saya mau pulang tapi saya harus makan sekarang", "aku mau pulang tapi aku harus makan sekarang"],
+              "components": ["id-f-001", "id-f-002", "id-f-016", "id-f-020", "id-f-014", "id-f-003", "id-f-012"],
+              "difficulty": 3,
+              "decompose_script": "First clause, tapi, second clause — each one you already know.",
+              "audio": { "cue": "id-f-p-067-c", "answer": "id-f-p-067-a", "answer_slow": "id-f-p-067-s" }
+            },
+            {
+              "id": "id-f-p-068",
+              "cue_en": "I want to go, but I can't go now.",
+              "expected": ["saya mau pergi tapi saya tidak bisa pergi sekarang", "aku mau pergi tapi aku tidak bisa pergi sekarang"],
+              "components": ["id-f-001", "id-f-002", "id-f-009", "id-f-020", "id-f-006", "id-f-013", "id-f-012"],
+              "difficulty": 3,
+              "decompose_script": "Saya mau pergi — tapi — saya tidak bisa pergi sekarang.",
+              "audio": { "cue": "id-f-p-068-c", "answer": "id-f-p-068-a", "answer_slow": "id-f-p-068-s" }
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "items": [
+            {
+              "id": "id-f-021",
+              "type": "block",
+              "concept_en": "already (past)",
+              "target_text": "sudah",
+              "romanization": null,
+              "teach_script": "Here is the whole Indonesian past tense: 'sudah' — already. Sudah. Saya sudah makan — I already ate, I have eaten. The verb never changes.",
+              "audio": { "teach": "id-f-021-t" }
+            },
+            {
+              "id": "id-f-022",
+              "type": "block",
+              "concept_en": "not yet",
+              "target_text": "belum",
+              "romanization": null,
+              "teach_script": "'Not yet' is 'belum'. Belum. Saya belum makan — I haven't eaten yet. It sits exactly where sudah would.",
+              "audio": { "teach": "id-f-022-t" }
+            },
+            {
+              "id": "id-f-023",
+              "type": "block",
+              "concept_en": "to buy",
+              "target_text": "beli",
+              "romanization": null,
+              "teach_script": "'To buy' is 'beli'. Beli.",
+              "audio": { "teach": "id-f-023-t" }
+            },
+            {
+              "id": "id-f-024",
+              "type": "usage_note",
+              "concept_en": "answering already / not-yet questions",
+              "target_text": "belum",
+              "romanization": null,
+              "teach_script": "When someone asks a sudah question — kamu sudah makan? — you answer with the time word itself: 'Sudah' — already — or 'Belum' — not yet. Not 'yes' or 'no'.",
+              "audio": { "teach": "id-f-024-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "id-f-p-069",
+              "cue_en": "The past, in one word extra: I already ate — I've eaten.",
+              "expected": ["saya sudah makan", "aku sudah makan", "sudah makan"],
+              "components": ["id-f-001", "id-f-021", "id-f-003"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-069-c", "answer": "id-f-p-069-a", "answer_slow": "id-f-p-069-s" }
+            },
+            {
+              "id": "id-f-p-070",
+              "cue_en": "I haven't eaten yet.",
+              "expected": ["saya belum makan", "aku belum makan", "belum makan"],
+              "components": ["id-f-001", "id-f-022", "id-f-003"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-070-c", "answer": "id-f-p-070-a", "answer_slow": "id-f-p-070-s" }
+            },
+            {
+              "id": "id-f-p-071",
+              "cue_en": "Ask me: have you eaten?",
+              "expected": ["kamu sudah makan", "sudah makan"],
+              "components": ["id-f-005", "id-f-021", "id-f-003", "id-f-007"],
+              "difficulty": 1,
+              "decompose_script": "Literally: you already eat? — kamu sudah makan?",
+              "audio": { "cue": "id-f-p-071-c", "answer": "id-f-p-071-a", "answer_slow": "id-f-p-071-s" }
+            },
+            {
+              "id": "id-f-p-072",
+              "cue_en": "Answer me: yes, I have — already.",
+              "expected": ["sudah"],
+              "components": ["id-f-024", "id-f-021"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-072-c", "answer": "id-f-p-072-a", "answer_slow": "id-f-p-072-s" }
+            },
+            {
+              "id": "id-f-p-073",
+              "cue_en": "Answer me: not yet.",
+              "expected": ["belum"],
+              "components": ["id-f-024", "id-f-022"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-073-c", "answer": "id-f-p-073-a", "answer_slow": "id-f-p-073-s" }
+            },
+            {
+              "id": "id-f-p-074",
+              "cue_en": "I want to buy this.",
+              "expected": ["saya mau beli ini", "aku mau beli ini", "mau beli ini"],
+              "components": ["id-f-001", "id-f-002", "id-f-023", "id-f-017"],
+              "difficulty": 2,
+              "audio": { "cue": "id-f-p-074-c", "answer": "id-f-p-074-a", "answer_slow": "id-f-p-074-s" }
+            },
+            {
+              "id": "id-f-p-075",
+              "cue_en": "I already bought that.",
+              "expected": ["saya sudah beli itu", "aku sudah beli itu", "sudah beli itu"],
+              "components": ["id-f-001", "id-f-021", "id-f-023", "id-f-018"],
+              "difficulty": 2,
+              "decompose_script": "Sudah before the verb: saya sudah — beli itu.",
+              "audio": { "cue": "id-f-p-075-c", "answer": "id-f-p-075-a", "answer_slow": "id-f-p-075-s" }
+            },
+            {
+              "id": "id-f-p-076",
+              "cue_en": "I haven't bought that yet.",
+              "expected": ["saya belum beli itu", "aku belum beli itu", "belum beli itu"],
+              "components": ["id-f-001", "id-f-022", "id-f-023", "id-f-018"],
+              "difficulty": 2,
+              "decompose_script": "Belum sits where sudah would: saya belum — beli itu.",
+              "audio": { "cue": "id-f-p-076-c", "answer": "id-f-p-076-a", "answer_slow": "id-f-p-076-s" }
+            },
+            {
+              "id": "id-f-p-077",
+              "cue_en": "Ask me: did you already go to the market?",
+              "expected": ["kamu sudah pergi ke pasar", "sudah pergi ke pasar", "kamu sudah ke pasar"],
+              "components": ["id-f-005", "id-f-021", "id-f-009", "id-f-010", "id-f-011", "id-f-007"],
+              "difficulty": 2,
+              "decompose_script": "Kamu sudah — pergi ke pasar — rising at the end.",
+              "audio": { "cue": "id-f-p-077-c", "answer": "id-f-p-077-a", "answer_slow": "id-f-p-077-s" }
+            },
+            {
+              "id": "id-f-p-078",
+              "cue_en": "I already went to the market.",
+              "expected": ["saya sudah pergi ke pasar", "aku sudah pergi ke pasar", "saya sudah ke pasar", "sudah pergi ke pasar"],
+              "components": ["id-f-001", "id-f-021", "id-f-009", "id-f-010", "id-f-011"],
+              "difficulty": 2,
+              "audio": { "cue": "id-f-p-078-c", "answer": "id-f-p-078-a", "answer_slow": "id-f-p-078-s" }
+            },
+            {
+              "id": "id-f-p-079",
+              "cue_en": "Ask me: haven't you bought this yet?",
+              "expected": ["kamu belum beli ini", "belum beli ini"],
+              "components": ["id-f-005", "id-f-022", "id-f-023", "id-f-017", "id-f-007"],
+              "difficulty": 2,
+              "audio": { "cue": "id-f-p-079-c", "answer": "id-f-p-079-a", "answer_slow": "id-f-p-079-s" }
+            },
+            {
+              "id": "id-f-p-080",
+              "cue_en": "Big sentence: I already went to the market, but I haven't bought that yet.",
+              "expected": [
+                "saya sudah pergi ke pasar tapi saya belum beli itu",
+                "aku sudah pergi ke pasar tapi aku belum beli itu",
+                "saya sudah ke pasar tapi belum beli itu"
+              ],
+              "components": ["id-f-001", "id-f-021", "id-f-009", "id-f-010", "id-f-011", "id-f-020", "id-f-022", "id-f-023", "id-f-018"],
+              "difficulty": 3,
+              "decompose_script": "Sudah clause — tapi — belum clause.",
+              "audio": { "cue": "id-f-p-080-c", "answer": "id-f-p-080-a", "answer_slow": "id-f-p-080-s" }
+            },
+            {
+              "id": "id-f-p-081",
+              "cue_en": "I want to buy this, but this is not good.",
+              "expected": ["saya mau beli ini tapi ini tidak bagus", "aku mau beli ini tapi ini tidak bagus"],
+              "components": ["id-f-001", "id-f-002", "id-f-023", "id-f-017", "id-f-020", "id-f-006", "id-f-019"],
+              "difficulty": 3,
+              "decompose_script": "Saya mau beli ini — tapi — ini tidak bagus.",
+              "audio": { "cue": "id-f-p-081-c", "answer": "id-f-p-081-a", "answer_slow": "id-f-p-081-s" }
+            },
+            {
+              "id": "id-f-p-082",
+              "cue_en": "I haven't eaten yet, but I can eat later.",
+              "expected": ["saya belum makan tapi saya bisa makan nanti", "aku belum makan tapi aku bisa makan nanti"],
+              "components": ["id-f-001", "id-f-022", "id-f-003", "id-f-020", "id-f-013", "id-f-015"],
+              "difficulty": 3,
+              "decompose_script": "Belum makan — tapi — bisa makan nanti.",
+              "audio": { "cue": "id-f-p-082-c", "answer": "id-f-p-082-a", "answer_slow": "id-f-p-082-s" }
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "items": [
+            {
+              "id": "id-f-025",
+              "type": "block",
+              "concept_en": "will (future)",
+              "target_text": "akan",
+              "romanization": null,
+              "teach_script": "And here is the whole future tense: 'akan' — will. Akan. Saya akan pergi — I will go. Again, the verb never changes.",
+              "audio": { "teach": "id-f-025-t" }
+            },
+            {
+              "id": "id-f-026",
+              "type": "block",
+              "concept_en": "tomorrow",
+              "target_text": "besok",
+              "romanization": null,
+              "teach_script": "'Tomorrow' is 'besok'. Besok. A time word — so it goes at the end.",
+              "audio": { "teach": "id-f-026-t" }
+            },
+            {
+              "id": "id-f-027",
+              "type": "block",
+              "concept_en": "because",
+              "target_text": "karena",
+              "romanization": null,
+              "teach_script": "'Because' is 'karena'. Karena. Like tapi, it glues two sentences — and now you can give reasons.",
+              "audio": { "teach": "id-f-027-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "id-f-p-083",
+              "cue_en": "The future: I will go.",
+              "expected": ["saya akan pergi", "aku akan pergi", "akan pergi"],
+              "components": ["id-f-001", "id-f-025", "id-f-009"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-083-c", "answer": "id-f-p-083-a", "answer_slow": "id-f-p-083-s" }
+            },
+            {
+              "id": "id-f-p-084",
+              "cue_en": "Just: tomorrow.",
+              "expected": ["besok"],
+              "components": ["id-f-026"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-084-c", "answer": "id-f-p-084-a", "answer_slow": "id-f-p-084-s" }
+            },
+            {
+              "id": "id-f-p-085",
+              "cue_en": "I will go tomorrow.",
+              "expected": ["saya akan pergi besok", "aku akan pergi besok", "akan pergi besok"],
+              "components": ["id-f-001", "id-f-025", "id-f-009", "id-f-026"],
+              "difficulty": 2,
+              "decompose_script": "Akan before the verb, besok at the end.",
+              "audio": { "cue": "id-f-p-085-c", "answer": "id-f-p-085-a", "answer_slow": "id-f-p-085-s" }
+            },
+            {
+              "id": "id-f-p-086",
+              "cue_en": "I will go home tomorrow.",
+              "expected": ["saya akan pulang besok", "aku akan pulang besok"],
+              "components": ["id-f-001", "id-f-025", "id-f-016", "id-f-026"],
+              "difficulty": 2,
+              "audio": { "cue": "id-f-p-086-c", "answer": "id-f-p-086-a", "answer_slow": "id-f-p-086-s" }
+            },
+            {
+              "id": "id-f-p-087",
+              "cue_en": "Ask me: will you go to the market tomorrow?",
+              "expected": ["kamu akan pergi ke pasar besok", "akan pergi ke pasar besok"],
+              "components": ["id-f-005", "id-f-025", "id-f-009", "id-f-010", "id-f-011", "id-f-026", "id-f-007"],
+              "difficulty": 3,
+              "decompose_script": "Kamu akan — pergi ke pasar — besok — and let it rise.",
+              "audio": { "cue": "id-f-p-087-c", "answer": "id-f-p-087-a", "answer_slow": "id-f-p-087-s" }
+            },
+            {
+              "id": "id-f-p-088",
+              "cue_en": "I will buy that tomorrow.",
+              "expected": ["saya akan beli itu besok", "aku akan beli itu besok"],
+              "components": ["id-f-001", "id-f-025", "id-f-023", "id-f-018", "id-f-026"],
+              "difficulty": 2,
+              "audio": { "cue": "id-f-p-088-c", "answer": "id-f-p-088-a", "answer_slow": "id-f-p-088-s" }
+            },
+            {
+              "id": "id-f-p-089",
+              "cue_en": "Just: because.",
+              "expected": ["karena"],
+              "components": ["id-f-027"],
+              "difficulty": 1,
+              "audio": { "cue": "id-f-p-089-c", "answer": "id-f-p-089-a", "answer_slow": "id-f-p-089-s" }
+            },
+            {
+              "id": "id-f-p-090",
+              "cue_en": "I want to go home because I haven't eaten yet.",
+              "expected": ["saya mau pulang karena saya belum makan", "aku mau pulang karena aku belum makan"],
+              "components": ["id-f-001", "id-f-002", "id-f-016", "id-f-027", "id-f-022", "id-f-003"],
+              "difficulty": 3,
+              "decompose_script": "The reason comes after karena: saya mau pulang — karena — saya belum makan.",
+              "audio": { "cue": "id-f-p-090-c", "answer": "id-f-p-090-a", "answer_slow": "id-f-p-090-s" }
+            },
+            {
+              "id": "id-f-p-091",
+              "cue_en": "I can't go now because I have to eat.",
+              "expected": [
+                "saya tidak bisa pergi sekarang karena saya harus makan",
+                "aku tidak bisa pergi sekarang karena aku harus makan"
+              ],
+              "components": ["id-f-001", "id-f-006", "id-f-013", "id-f-009", "id-f-012", "id-f-027", "id-f-014", "id-f-003"],
+              "difficulty": 3,
+              "decompose_script": "First: tidak bisa pergi sekarang. Then karena. Then: saya harus makan.",
+              "audio": { "cue": "id-f-p-091-c", "answer": "id-f-p-091-a", "answer_slow": "id-f-p-091-s" }
+            },
+            {
+              "id": "id-f-p-092",
+              "cue_en": "I will eat later because I want to go now.",
+              "expected": [
+                "saya akan makan nanti karena saya mau pergi sekarang",
+                "aku akan makan nanti karena aku mau pergi sekarang"
+              ],
+              "components": ["id-f-001", "id-f-025", "id-f-003", "id-f-015", "id-f-027", "id-f-002", "id-f-009", "id-f-012"],
+              "difficulty": 3,
+              "decompose_script": "Akan makan nanti — karena — mau pergi sekarang.",
+              "audio": { "cue": "id-f-p-092-c", "answer": "id-f-p-092-a", "answer_slow": "id-f-p-092-s" }
+            },
+            {
+              "id": "id-f-p-093",
+              "cue_en": "Ask me: will you buy this?",
+              "expected": ["kamu akan beli ini", "akan beli ini"],
+              "components": ["id-f-005", "id-f-025", "id-f-023", "id-f-017", "id-f-007"],
+              "difficulty": 2,
+              "audio": { "cue": "id-f-p-093-c", "answer": "id-f-p-093-a", "answer_slow": "id-f-p-093-s" }
+            },
+            {
+              "id": "id-f-p-094",
+              "cue_en": "I won't go tomorrow.",
+              "expected": ["saya tidak akan pergi besok", "aku tidak akan pergi besok"],
+              "components": ["id-f-001", "id-f-006", "id-f-025", "id-f-009", "id-f-026"],
+              "difficulty": 2,
+              "decompose_script": "Tidak before akan: tidak akan — won't.",
+              "audio": { "cue": "id-f-p-094-c", "answer": "id-f-p-094-a", "answer_slow": "id-f-p-094-s" }
+            },
+            {
+              "id": "id-f-p-095",
+              "cue_en": "The big one: I can't go to the market now because I have to eat.",
+              "expected": [
+                "saya tidak bisa pergi ke pasar sekarang karena saya harus makan",
+                "aku tidak bisa pergi ke pasar sekarang karena aku harus makan"
+              ],
+              "components": ["id-f-001", "id-f-006", "id-f-013", "id-f-009", "id-f-010", "id-f-011", "id-f-012", "id-f-027", "id-f-014", "id-f-003"],
+              "difficulty": 3,
+              "decompose_script": "Three pieces: tidak bisa pergi ke pasar sekarang — karena — saya harus makan.",
+              "audio": { "cue": "id-f-p-095-c", "answer": "id-f-p-095-a", "answer_slow": "id-f-p-095-s" }
+            },
+            {
+              "id": "id-f-p-096",
+              "cue_en": "I will go to the market tomorrow because I haven't bought that yet.",
+              "expected": [
+                "saya akan pergi ke pasar besok karena saya belum beli itu",
+                "aku akan pergi ke pasar besok karena aku belum beli itu"
+              ],
+              "components": ["id-f-001", "id-f-025", "id-f-009", "id-f-010", "id-f-011", "id-f-026", "id-f-027", "id-f-022", "id-f-023", "id-f-018"],
+              "difficulty": 3,
+              "decompose_script": "Akan pergi ke pasar besok — karena — belum beli itu.",
+              "audio": { "cue": "id-f-p-096-c", "answer": "id-f-p-096-a", "answer_slow": "id-f-p-096-s" }
+            },
+            {
+              "id": "id-f-p-097",
+              "cue_en": "Last one this week: that is good, but I will buy this tomorrow.",
+              "expected": ["itu bagus tapi saya akan beli ini besok", "itu bagus tapi aku akan beli ini besok"],
+              "components": ["id-f-018", "id-f-019", "id-f-020", "id-f-001", "id-f-025", "id-f-023", "id-f-017", "id-f-026"],
+              "difficulty": 3,
+              "decompose_script": "Itu bagus — tapi — saya akan beli ini besok.",
+              "audio": { "cue": "id-f-p-097-c", "answer": "id-f-p-097-a", "answer_slow": "id-f-p-097-s" }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "modal-verb-time",
+      "shape": "[subject] (tidak) [modal] [verb] ([time])",
+      "slots": [
+        { "name": "subject", "fillers": ["id-f-001", "id-f-005"] },
+        { "name": "negation", "fillers": ["id-f-006"], "optional": true },
+        { "name": "modal", "fillers": ["id-f-002", "id-f-013", "id-f-014"] },
+        { "name": "verb", "fillers": ["id-f-003", "id-f-004", "id-f-009", "id-f-016", "id-f-023"] },
+        { "name": "time", "fillers": ["id-f-012", "id-f-015", "id-f-026"], "optional": true }
+      ]
+    },
+    {
+      "id": "aspect-verb",
+      "shape": "[subject] [sudah/belum/akan] [verb]",
+      "slots": [
+        { "name": "subject", "fillers": ["id-f-001", "id-f-005"] },
+        { "name": "aspect", "fillers": ["id-f-021", "id-f-022", "id-f-025"] },
+        { "name": "verb", "fillers": ["id-f-003", "id-f-004", "id-f-009", "id-f-016", "id-f-023"] }
+      ]
+    },
+    {
+      "id": "demonstrative-opinion",
+      "shape": "[ini/itu] (tidak) bagus",
+      "slots": [
+        { "name": "demonstrative", "fillers": ["id-f-017", "id-f-018"] },
+        { "name": "negation", "fillers": ["id-f-006"], "optional": true },
+        { "name": "adjective", "fillers": ["id-f-019"] }
+      ]
+    },
+    {
+      "id": "want-object",
+      "shape": "[subject] (tidak) mau [ini/itu]",
+      "slots": [
+        { "name": "subject", "fillers": ["id-f-001", "id-f-005"] },
+        { "name": "negation", "fillers": ["id-f-006"], "optional": true },
+        { "name": "want", "fillers": ["id-f-002"] },
+        { "name": "object", "fillers": ["id-f-017", "id-f-018"] }
+      ]
+    },
+    {
+      "id": "go-to-market",
+      "shape": "[subject] [modal] pergi ke pasar ([time])",
+      "slots": [
+        { "name": "subject", "fillers": ["id-f-001", "id-f-005"] },
+        { "name": "modal", "fillers": ["id-f-002", "id-f-013", "id-f-014"] },
+        { "name": "motion", "fillers": ["id-f-009"] },
+        { "name": "connector", "fillers": ["id-f-010"] },
+        { "name": "place", "fillers": ["id-f-011"] },
+        { "name": "time", "fillers": ["id-f-012", "id-f-015", "id-f-026"], "optional": true }
+      ]
+    }
+  ],
+  "system_lines": {
+    "confirm": { "text": "Yes —", "audio": "sys-confirm" },
+    "almost": { "text": "Almost — listen:", "audio": "sys-almost" },
+    "miss_intro": { "text": "Here it is again —", "audio": "sys-miss-intro" },
+    "session_open": { "text": "Ready. Here we go.", "audio": "sys-session-open" },
+    "victory_intro": { "text": "Last stretch — you build these yourself.", "audio": "sys-victory-intro" },
+    "session_close": { "text": "That's the session. You're done for today — or keep going.", "audio": "sys-session-close" }
+  }
+}
