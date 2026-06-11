@@ -45,3 +45,5 @@ yarn-error.*
 content/*/audio/
 # API keys live in .env (render scripts) or device secure storage — never in git.
 .env*
+# Bake-off audition files (regenerate with: npm run render-audio -- --bakeoff)
+content/bakeoff*/

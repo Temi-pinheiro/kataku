@@ -55,17 +55,44 @@ const VOICES: Record<string, { premium: VoiceChoice; cheap: VoiceChoice }> = {
 };
 
 /** Bake-off sample (plan §4.1): identical lines through every provider. */
-const BAKEOFF_SAMPLES: { name: string; lang: string; text: string; slow?: boolean }[] = [
+const BAKEOFF_SAMPLES: { name: string; lang: string; text: string; slow?: boolean; relaxed?: boolean }[] = [
   { name: 'id-teach', lang: 'id', text: 'Sekarang. Sekarang.' },
   { name: 'id-answer-1', lang: 'id', text: 'Saya mau makan sekarang.' },
   { name: 'id-answer-1-slow', lang: 'id', text: 'Saya mau makan sekarang.', slow: true },
   { name: 'id-answer-2', lang: 'id', text: 'Saya tidak bisa pergi ke pasar sekarang karena saya harus makan.' },
   { name: 'id-question', lang: 'id', text: 'Kamu sudah makan?' },
+  // Long multi-clause lines so pacing and rhythm are judgeable; the
+  // "relaxed" variant shows the pace knob we control after the choice.
+  {
+    name: 'id-long',
+    lang: 'id',
+    text: 'Saya sudah pergi ke pasar tapi saya belum beli itu, karena saya harus pulang sekarang dan saya akan pergi lagi besok.',
+  },
+  {
+    name: 'id-long-relaxed',
+    lang: 'id',
+    text: 'Saya sudah pergi ke pasar tapi saya belum beli itu, karena saya harus pulang sekarang dan saya akan pergi lagi besok.',
+    relaxed: true,
+  },
+  {
+    name: 'id-long-slow',
+    lang: 'id',
+    text: 'Saya sudah pergi ke pasar tapi saya belum beli itu, karena saya harus pulang sekarang.',
+    slow: true,
+  },
+  // Teach lines mix English and the target language — the premium voice
+  // must handle the switch; judge that here.
+  {
+    name: 'id-teach-long',
+    lang: 'id',
+    text: "'Tomorrow' is 'besok'. Besok. Saya akan pergi besok — I will go tomorrow.",
+  },
   { name: 'zh-teach', lang: 'zh', text: '要。要。' },
   { name: 'zh-answer-1', lang: 'zh', text: '我要吃饭。' },
   { name: 'zh-answer-1-slow', lang: 'zh', text: '我要吃饭。', slow: true },
   { name: 'zh-tone-pair', lang: 'zh', text: '买。卖。买卖。' },
   { name: 'zh-answer-2', lang: 'zh', text: '我现在不能去，因为我要吃饭。' },
+  { name: 'zh-long', lang: 'zh', text: '我今天不能去市场，因为我要吃饭，但是我明天会去买。' },
 ];
 
 const BCP47: Record<string, string> = { id: 'id-ID', zh: 'zh-CN', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', en: 'en-US' };
@@ -91,6 +118,8 @@ interface RenderOpts {
   voice: string;
   lang: string; // pack language code
   slow: boolean;
+  /** Gentler-than-default pace (the post-bake-off tuning knob). */
+  relaxed?: boolean;
 }
 
 type Renderer = (text: string, opts: RenderOpts) => Promise<Buffer>;
@@ -100,7 +129,9 @@ const renderOpenAI: Renderer = async (text, opts) => {
   if (!key) throw new Error('OPENAI_API_KEY missing (.env)');
   const instructions = opts.slow
     ? 'Speak very slowly and clearly, like a patient language teacher demonstrating a sentence word by word. Keep natural pronunciation and intonation.'
-    : 'Speak naturally at native speed, like a friendly language teacher.';
+    : opts.relaxed
+      ? 'Speak naturally with native pronunciation, but at a calm, unhurried teaching pace — clearly separated words, no rushing.'
+      : 'Speak naturally at native speed, like a friendly language teacher.';
   const res = await fetch('https://api.openai.com/v1/audio/speech', {
     method: 'POST',
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
@@ -121,7 +152,7 @@ const renderAzure: Renderer = async (text, opts) => {
   const region = ENV.AZURE_SPEECH_REGION;
   if (!key || !region) throw new Error('AZURE_SPEECH_KEY / AZURE_SPEECH_REGION missing (.env)');
   const locale = BCP47[opts.lang] ?? 'en-US';
-  const rate = opts.slow ? '-35%' : '0%';
+  const rate = opts.slow ? '-35%' : opts.relaxed ? '-12%' : '0%';
   const ssml =
     `<speak version="1.0" xml:lang="${locale}">` +
     `<voice name="${opts.voice}"><prosody rate="${rate}">${escapeXml(text)}</prosody></voice></speak>`;
@@ -147,7 +178,7 @@ const renderElevenLabs: Renderer = async (text, opts) => {
     body: JSON.stringify({
       text,
       model_id: 'eleven_multilingual_v2',
-      voice_settings: { stability: 0.5, similarity_boost: 0.75, speed: opts.slow ? 0.7 : 1.0 },
+      voice_settings: { stability: 0.5, similarity_boost: 0.75, speed: opts.slow ? 0.7 : opts.relaxed ? 0.9 : 1.0 },
     }),
   });
   if (!res.ok) throw new Error(`ElevenLabs TTS ${res.status}: ${await res.text()}`);
@@ -294,15 +325,24 @@ async function bakeoff(): Promise<void> {
     { provider: 'google', voice: { id: '', zh: '' } },
   ];
   // Blind listening: providers get shuffled letters; the mapping goes to
-  // key.json, to be read only after picking winners.
-  const letters = ['A', 'B', 'C', 'D'].sort(() => Math.random() - 0.5);
-  const key: Record<string, string> = {};
-  candidates.forEach((c, i) => {
-    key[letters[i]] = c.provider;
-  });
+  // key.json, to be read only after picking winners. An existing key.json
+  // is REUSED so re-runs (new samples, new keys in .env) never reshuffle —
+  // letters stay comparable across runs. Delete key.json + the mp3s to
+  // start a fresh blind test.
+  const keyPath = join(outDir, 'key.json');
+  const key: Record<string, string> = existsSync(keyPath) ? JSON.parse(readFileSync(keyPath, 'utf8')) : {};
+  const providerToLetter = new Map(Object.entries(key).map(([letter, provider]) => [provider, letter]));
+  const freeLetters = ['A', 'B', 'C', 'D'].filter((l) => !(l in key)).sort(() => Math.random() - 0.5);
+  for (const c of candidates) {
+    if (!providerToLetter.has(c.provider)) {
+      const letter = freeLetters.shift()!;
+      providerToLetter.set(c.provider, letter);
+      key[letter] = c.provider;
+    }
+  }
 
-  for (const [i, c] of candidates.entries()) {
-    const letter = letters[i];
+  for (const c of candidates) {
+    const letter = providerToLetter.get(c.provider)!;
     let rendered = 0;
     for (const sample of BAKEOFF_SAMPLES) {
       const file = join(outDir, `${sample.name}--${letter}.mp3`);
@@ -312,6 +352,7 @@ async function bakeoff(): Promise<void> {
           voice: c.voice[sample.lang] ?? '',
           lang: sample.lang,
           slow: sample.slow ?? false,
+          relaxed: sample.relaxed ?? false,
         });
         writeFileSync(file, audio);
         rendered++;
@@ -321,7 +362,7 @@ async function bakeoff(): Promise<void> {
     }
     console.log(`  voice ${letter}: ${rendered}/${BAKEOFF_SAMPLES.length} samples rendered`);
   }
-  writeFileSync(join(outDir, 'key.json'), JSON.stringify(key, null, 2));
+  writeFileSync(keyPath, JSON.stringify(key, null, 2));
   console.log(`\nListen in ${outDir} (don't open key.json yet!), pick the best letter per language,`);
   console.log('then check key.json and set VOICES in scripts/render-audio.ts.');
 }
