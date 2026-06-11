@@ -102,6 +102,21 @@ def split_script(script: str, vocab: set) -> list[dict]:
     return merged
 
 
+def split_target_sentences(segments: list[dict]) -> list[dict]:
+    """Each sentence of a target segment becomes its own clip, so the app
+    controls the beat between the first hearing and the echo ("mau … mau"
+    instead of the TTS rushing "mau mau")."""
+    out: list[dict] = []
+    for seg in segments:
+        if seg['lang'] != 'target':
+            out.append(seg)
+            continue
+        parts = [p for p in re.split(r'(?<=[.!?])\s+', seg['text']) if p.strip()]
+        for part in parts:
+            out.append({'text': part, 'lang': 'target'})
+    return out
+
+
 def main() -> None:
     review = []
     for lang in PACKS:
@@ -112,6 +127,7 @@ def main() -> None:
             for lesson in unit['lessons']:
                 for item in lesson['items']:
                     segs = OVERRIDES.get(item['id']) or split_script(item['teach_script'], vocab)
+                    segs = split_target_sentences(segs)
                     item['teach_segments'] = segs
                     review.append((item['id'], segs))
         json.dump(pack, open(path, 'w'), indent=2, ensure_ascii=False)

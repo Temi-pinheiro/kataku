@@ -26,7 +26,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'saya'. Saya.",
+                  "text": "'saya'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Saya.",
                   "lang": "target"
                 }
               ]
@@ -47,7 +51,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'mau'. Mau.",
+                  "text": "'mau'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Mau.",
                   "lang": "target"
                 },
                 {
@@ -76,7 +84,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'makan'. Makan.",
+                  "text": "'makan'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Makan.",
                   "lang": "target"
                 }
               ]
@@ -97,7 +109,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'minum'. Minum.",
+                  "text": "'minum'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Minum.",
                   "lang": "target"
                 }
               ]
@@ -348,7 +364,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'kamu'. Kamu.",
+                  "text": "'kamu'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Kamu.",
                   "lang": "target"
                 }
               ]
@@ -369,7 +389,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'tidak'. Tidak.",
+                  "text": "'tidak'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Tidak.",
                   "lang": "target"
                 },
                 {
@@ -735,7 +759,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'pergi'. Pergi.",
+                  "text": "'pergi'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Pergi.",
                   "lang": "target"
                 }
               ]
@@ -756,7 +784,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'ke'. Ke.",
+                  "text": "'ke'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Ke.",
                   "lang": "target"
                 }
               ]
@@ -777,7 +809,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'pasar'. Pasar.",
+                  "text": "'pasar'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Pasar.",
                   "lang": "target"
                 },
                 {
@@ -806,7 +842,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'sekarang'. Sekarang.",
+                  "text": "'sekarang'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Sekarang.",
                   "lang": "target"
                 },
                 {
@@ -1138,7 +1178,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'bisa'. Bisa.",
+                  "text": "'bisa'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Bisa.",
                   "lang": "target"
                 },
                 {
@@ -1171,7 +1215,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'harus'. Harus.",
+                  "text": "'harus'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Harus.",
                   "lang": "target"
                 }
               ]
@@ -1192,7 +1240,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'nanti'. Nanti.",
+                  "text": "'nanti'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Nanti.",
                   "lang": "target"
                 },
                 {
@@ -1221,7 +1273,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'pulang'. Pulang.",
+                  "text": "'pulang'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Pulang.",
                   "lang": "target"
                 },
                 {
@@ -1548,7 +1604,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'ini'. Ini.",
+                  "text": "'ini'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Ini.",
                   "lang": "target"
                 }
               ]
@@ -1569,7 +1629,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'itu'. Itu.",
+                  "text": "'itu'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Itu.",
                   "lang": "target"
                 }
               ]
@@ -1590,7 +1654,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'bagus'. Bagus.",
+                  "text": "'bagus'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Bagus.",
                   "lang": "target"
                 },
                 {
@@ -1623,7 +1691,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'tapi'. Tapi.",
+                  "text": "'tapi'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Tapi.",
                   "lang": "target"
                 },
                 {
@@ -1947,7 +2019,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "Sudah. Saya sudah makan",
+                  "text": "Sudah.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Saya sudah makan",
                   "lang": "target"
                 },
                 {
@@ -1972,7 +2048,15 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'belum'. Belum. Saya belum makan",
+                  "text": "'belum'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Belum.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Saya belum makan",
                   "lang": "target"
                 },
                 {
@@ -2005,7 +2089,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'beli'. Beli.",
+                  "text": "'beli'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Beli.",
                   "lang": "target"
                 }
               ]
@@ -2395,7 +2483,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "Akan. Saya akan pergi",
+                  "text": "Akan.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Saya akan pergi",
                   "lang": "target"
                 },
                 {
@@ -2420,7 +2512,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'besok'. Besok.",
+                  "text": "'besok'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Besok.",
                   "lang": "target"
                 },
                 {
@@ -2445,7 +2541,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'karena'. Karena.",
+                  "text": "'karena'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Karena.",
                   "lang": "target"
                 },
                 {

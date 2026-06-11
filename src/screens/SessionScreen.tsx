@@ -430,14 +430,23 @@ function AnnounceCard({ pack, line, onDone }: { pack: CoursePack; line: string; 
   );
 }
 
+/** The "hear it … hear it again" beat between two target-language clips. */
+const ECHO_GAP_MS = 900;
+/** Natural beat at every other clip boundary (voice switch, narration). */
+const SEGMENT_GAP_MS = 280;
+/** Audio done → auto-Next, unless the learner acts first. */
+const TEACH_AUTO_NEXT_MS = 1600;
+
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
 function TeachCard({ item, lang, onDone }: { item: ContentItem; lang: InstalledLanguage; onDone: () => void }) {
   const { p } = useTheme();
   const styles = useMemo(() => makeStyles(p), [p]);
   const [playKey, setPlayKey] = useState(0);
   const [speaking, setSpeaking] = useState(true);
 
-  // Plays the teach line, then WAITS — the learner advances (first
-  // principles: hear it, then decide: Again or Next).
+  // Hear it (with deliberate echo beats), brief pause, then flow on —
+  // Again restarts, Next jumps, doing nothing keeps the lesson moving.
   useEffect(() => {
     let cancelled = false;
     setSpeaking(true);
@@ -447,13 +456,21 @@ function TeachCard({ item, lang, onDone }: { item: ContentItem; lang: InstalledL
         : [{ text: item.teach_script, lang: 'en' as const }];
       for (const [i, seg] of segments.entries()) {
         if (cancelled) return;
+        if (i > 0) {
+          const echo = seg.lang === 'target' && segments[i - 1].lang === 'target';
+          await sleep(echo ? ECHO_GAP_MS : SEGMENT_GAP_MS);
+          if (cancelled) return;
+        }
         await voiceEngine.play({
           key: `${item.id}-t-${i}`,
           fallbackText: seg.text,
           lang: seg.lang === 'target' ? lang : 'en',
         });
       }
-      if (!cancelled) setSpeaking(false);
+      if (cancelled) return;
+      setSpeaking(false);
+      await sleep(TEACH_AUTO_NEXT_MS);
+      if (!cancelled) onDone();
     })();
     return () => {
       cancelled = true;
@@ -554,6 +571,19 @@ function PromptCard({
   const final = lastAttempt(state);
   const inFeedback = state.phase === 'feedback' || state.phase === 'done';
 
+  // Hybrid pacing: after the result audio, passes/skips/exhausted-retries
+  // flow on by themselves; a live Try-again decision holds; touching
+  // Slower means "I'm studying this" and holds too.
+  const heldRef = useRef(false);
+  const audioIdle = state.phase === 'feedback' && state.pendingAudio.length === 0;
+  useEffect(() => {
+    if (!audioIdle || canRetry(state) || heldRef.current) return;
+    const ms = state.feedbackKind === 'pass' ? 1800 : 2600;
+    const t = setTimeout(() => send({ type: 'NEXT' }), ms);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audioIdle, state.feedbackKind, state.retriesUsed]);
+
   const banner: { label: string; tint: string } = (() => {
     switch (state.phase) {
       case 'play_cue':
@@ -635,7 +665,13 @@ function PromptCard({
           left={
             canRetry(state)
               ? { label: 'Try again', onPress: () => send({ type: 'TRY_AGAIN' }) }
-              : { label: 'Slower', onPress: () => send({ type: 'SLOWER' }) }
+              : {
+                  label: 'Slower',
+                  onPress: () => {
+                    heldRef.current = true; // studying — stop the auto-flow
+                    send({ type: 'SLOWER' });
+                  },
+                }
           }
           right={{ label: 'Next', onPress: () => send({ type: 'NEXT' }), primary: true }}
           styles={styles}

@@ -26,7 +26,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'je veux'. Je veux.",
+                  "text": "'je veux'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Je veux.",
                   "lang": "target"
                 }
               ]
@@ -47,7 +51,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'manger'. Manger.",
+                  "text": "'manger'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Manger.",
                   "lang": "target"
                 }
               ]
@@ -68,7 +76,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'boire'. Boire.",
+                  "text": "'boire'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Boire.",
                   "lang": "target"
                 }
               ]
@@ -89,7 +101,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'maintenant'. Maintenant.",
+                  "text": "'maintenant'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Maintenant.",
                   "lang": "target"
                 },
                 {
@@ -330,7 +346,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'tu veux'. Tu veux.",
+                  "text": "'tu veux'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Tu veux.",
                   "lang": "target"
                 }
               ]
@@ -725,7 +745,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'aller'. Aller.",
+                  "text": "'aller'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Aller.",
                   "lang": "target"
                 }
               ]
@@ -746,7 +770,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'au'. Au.",
+                  "text": "'au'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Au.",
                   "lang": "target"
                 },
                 {
@@ -775,7 +803,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'le marché'. Marché.",
+                  "text": "'le marché'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Marché.",
                   "lang": "target"
                 }
               ]
@@ -796,7 +828,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'plus tard'. Plus tard.",
+                  "text": "'plus tard'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Plus tard.",
                   "lang": "target"
                 },
                 {
@@ -1107,7 +1143,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'je peux'. Je peux.",
+                  "text": "'je peux'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Je peux.",
                   "lang": "target"
                 },
                 {
@@ -1140,7 +1180,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'je dois'. Je dois.",
+                  "text": "'je dois'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Je dois.",
                   "lang": "target"
                 }
               ]
@@ -1161,7 +1205,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'tu peux'. Tu peux.",
+                  "text": "'tu peux'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Tu peux.",
                   "lang": "target"
                 }
               ]
@@ -1182,7 +1230,15 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'rentrer'. Rentrer. Je veux rentrer",
+                  "text": "'rentrer'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Rentrer.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Je veux rentrer",
                   "lang": "target"
                 },
                 {
@@ -1481,7 +1537,15 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'c'est'. C'est. C'est bon",
+                  "text": "'c'est'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "C'est.",
+                  "lang": "target"
+                },
+                {
+                  "text": "C'est bon",
                   "lang": "target"
                 },
                 {
@@ -1506,7 +1570,15 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'ça'. Ça. Je veux ça",
+                  "text": "'ça'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Ça.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Je veux ça",
                   "lang": "target"
                 },
                 {
@@ -1531,7 +1603,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'bon'. Bon.",
+                  "text": "'bon'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Bon.",
                   "lang": "target"
                 }
               ]
@@ -1552,7 +1628,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'mais'. Mais.",
+                  "text": "'mais'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Mais.",
                   "lang": "target"
                 },
                 {
@@ -1859,7 +1939,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'acheter'. Acheter.",
+                  "text": "'acheter'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Acheter.",
                   "lang": "target"
                 }
               ]
@@ -1888,7 +1972,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "Je vais. Je vais manger",
+                  "text": "Je vais.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Je vais manger",
                   "lang": "target"
                 },
                 {
@@ -1913,7 +2001,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'tu vas'. Tu vas.",
+                  "text": "'tu vas'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Tu vas.",
                   "lang": "target"
                 }
               ]
@@ -2211,7 +2303,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'demain'. Demain.",
+                  "text": "'demain'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Demain.",
                   "lang": "target"
                 },
                 {
@@ -2236,7 +2332,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'parce que'. Parce que.",
+                  "text": "'parce que'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Parce que.",
                   "lang": "target"
                 },
                 {
@@ -2269,7 +2369,11 @@
                   "lang": "en"
                 },
                 {
-                  "text": "'aujourd'hui'. Aujourd'hui.",
+                  "text": "'aujourd'hui'.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Aujourd'hui.",
                   "lang": "target"
                 }
               ]
