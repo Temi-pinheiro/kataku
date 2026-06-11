@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   Easing,
@@ -11,7 +11,8 @@ import Animated, {
   type SharedValue,
 } from 'react-native-reanimated';
 import { SymbolView } from 'expo-symbols';
-import { colors, type } from '../theme';
+import { type, type Palette } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 
 const SIZE = 108;
 
@@ -30,9 +31,12 @@ interface Props {
 /**
  * The center of the voice loop. Voice UI rule #1: never let the learner
  * speak into a void — the orb visibly breathes while thinking and moves
- * with their actual voice while listening.
+ * with their actual voice while listening. One icon throughout; state is
+ * carried by color, motion, and the phase banner above the card.
  */
 export function MicOrb({ mode, volume, onPress, thinkMs, thinkKey }: Props) {
+  const { p } = useTheme();
+  const styles = useMemo(() => makeStyles(p), [p]);
   const breath = useSharedValue(1);
   const drain = useSharedValue(1);
 
@@ -70,11 +74,7 @@ export function MicOrb({ mode, volume, onPress, thinkMs, thinkKey }: Props) {
         <Animated.View style={[styles.glow, glowStyle]} />
         <Animated.View style={[styles.orb, mode === 'listen' && styles.orbLive, orbStyle]}>
           <Pressable onPress={onPress} style={styles.press} hitSlop={16}>
-            <SymbolView
-              name={mode === 'listen' ? 'waveform' : 'mic.fill'}
-              size={40}
-              tintColor={mode === 'listen' ? colors.onAccent : colors.accent}
-            />
+            <SymbolView name="mic.fill" size={40} tintColor={mode === 'listen' ? p.onAccent : p.accent} />
           </Pressable>
         </Animated.View>
       </View>
@@ -85,41 +85,42 @@ export function MicOrb({ mode, volume, onPress, thinkMs, thinkKey }: Props) {
       ) : (
         <View style={styles.meter} />
       )}
-      <Text style={styles.hint}>{mode === 'think' ? 'say it when ready — or tap' : 'listening · tap when done'}</Text>
+      <Text style={styles.hint}>{mode === 'think' ? 'tap the mic to answer early' : 'tap the mic when you finish'}</Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: { alignItems: 'center' },
-  orbArea: { width: SIZE * 1.6, height: SIZE * 1.6, alignItems: 'center', justifyContent: 'center' },
-  glow: {
-    position: 'absolute',
-    width: SIZE,
-    height: SIZE,
-    borderRadius: SIZE / 2,
-    backgroundColor: colors.accent,
-  },
-  orb: {
-    width: SIZE,
-    height: SIZE,
-    borderRadius: SIZE / 2,
-    backgroundColor: colors.raised,
-    borderWidth: 1.5,
-    borderColor: colors.stroke,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  orbLive: { backgroundColor: colors.accent, borderColor: colors.accent },
-  press: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' },
-  meter: {
-    width: SIZE * 1.3,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: colors.raised,
-    marginTop: 2,
-    overflow: 'hidden',
-  },
-  meterFill: { height: '100%', borderRadius: 2, backgroundColor: colors.accent },
-  hint: { color: colors.faint, fontSize: type.caption, marginTop: 10, letterSpacing: 0.4 },
-});
+const makeStyles = (p: Palette) =>
+  StyleSheet.create({
+    wrap: { alignItems: 'center' },
+    orbArea: { width: SIZE * 1.6, height: SIZE * 1.6, alignItems: 'center', justifyContent: 'center' },
+    glow: {
+      position: 'absolute',
+      width: SIZE,
+      height: SIZE,
+      borderRadius: SIZE / 2,
+      backgroundColor: p.live,
+    },
+    orb: {
+      width: SIZE,
+      height: SIZE,
+      borderRadius: SIZE / 2,
+      backgroundColor: p.raised,
+      borderWidth: 1.5,
+      borderColor: p.stroke,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    orbLive: { backgroundColor: p.accent, borderColor: p.accent },
+    press: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' },
+    meter: {
+      width: SIZE * 1.3,
+      height: 4,
+      borderRadius: 2,
+      backgroundColor: p.raised,
+      marginTop: 2,
+      overflow: 'hidden',
+    },
+    meterFill: { height: '100%', borderRadius: 2, backgroundColor: p.accent },
+    hint: { color: p.dim, fontSize: type.small, marginTop: 10, letterSpacing: 0.2 },
+  });

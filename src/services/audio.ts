@@ -32,7 +32,15 @@ let configured = false;
 export async function configureAudioSession(): Promise<void> {
   if (configured) return;
   configured = true;
-  await setAudioModeAsync({ playsInSilentMode: true, allowsRecording: true });
+  // allowsRecording MUST stay false here: true flips iOS into the
+  // phone-call (playAndRecord) category and routes playback to the
+  // earpiece. The mic belongs to expo-speech-recognition, which opens its
+  // own playAndRecord session with defaultToSpeaker while listening.
+  await setAudioModeAsync({
+    playsInSilentMode: true,
+    allowsRecording: false,
+    shouldRouteThroughEarpiece: false,
+  });
 }
 
 export class TeachingAudio {

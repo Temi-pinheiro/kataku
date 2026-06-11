@@ -7,12 +7,14 @@ export interface Settings {
   thinkSeconds: number; // 2–10, default 4 (plan §3.1)
   coachEnabled: boolean; // Tier 1, on by default (plan §11)
   monthlyCapUsd: number;
+  theme: 'system' | 'dark' | 'light';
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   thinkSeconds: 4,
   coachEnabled: true,
   monthlyCapUsd: 10,
+  theme: 'system',
 };
 
 interface AppState {

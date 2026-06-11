@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { BigButton } from '../components/BigButton';
 import { useApp } from '../store';
-import { colors, type } from '../theme';
+import { type, type Palette } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 import { recognizer } from '../services/instances';
 
 /**
@@ -21,6 +22,8 @@ interface Trial {
 
 export function M0SpikeScreen() {
   const { setScreen } = useApp();
+  const { p } = useTheme();
+  const styles = React.useMemo(() => makeStyles(p), [p]);
   const [locale, setLocale] = useState<(typeof LOCALES)[number]>('id-ID');
   const [availability, setAvailability] = useState('checking…');
   const [listening, setListening] = useState(false);
@@ -97,16 +100,17 @@ export function M0SpikeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.bg, padding: 24, paddingTop: 72 },
-  back: { color: colors.dim, fontSize: type.small, marginBottom: 12 },
-  title: { color: colors.text, fontSize: type.title, fontWeight: '700', marginBottom: 16 },
+const makeStyles = (p: Palette) =>
+  StyleSheet.create({
+  screen: { flex: 1, backgroundColor: p.bg, padding: 24, paddingTop: 72 },
+  back: { color: p.dim, fontSize: type.small, marginBottom: 12 },
+  title: { color: p.text, fontSize: type.title, fontWeight: '700', marginBottom: 16 },
   chips: { flexDirection: 'row', gap: 8, marginBottom: 8 },
-  chip: { color: colors.dim, backgroundColor: colors.card, borderRadius: 999, paddingVertical: 8, paddingHorizontal: 16, fontSize: type.small, overflow: 'hidden' },
-  chipActive: { color: '#0B0F14', backgroundColor: colors.accent, fontWeight: '700' },
-  dim: { color: colors.dim, fontSize: type.small, marginBottom: 8 },
-  partial: { color: colors.warn, fontSize: type.title, minHeight: 40, marginVertical: 12 },
+  chip: { color: p.dim, backgroundColor: p.card, borderRadius: 999, paddingVertical: 8, paddingHorizontal: 16, fontSize: type.small, overflow: 'hidden' },
+  chipActive: { color: p.onAccent, backgroundColor: p.accent, fontWeight: '700' },
+  dim: { color: p.dim, fontSize: type.small, marginBottom: 8 },
+  partial: { color: p.live, fontSize: type.title, minHeight: 40, marginVertical: 12 },
   log: { flex: 1, marginTop: 8 },
-  trial: { backgroundColor: colors.card, borderRadius: 12, padding: 14, marginBottom: 8 },
-  transcript: { color: colors.text, fontSize: type.body, marginBottom: 4 },
-});
+  trial: { backgroundColor: p.card, borderRadius: 12, padding: 14, marginBottom: 8 },
+  transcript: { color: p.text, fontSize: type.body, marginBottom: 4 },
+  });

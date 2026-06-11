@@ -3,7 +3,8 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { LANGUAGE_NAMES, PACKS } from '../packs';
 import { useApp } from '../store';
-import { colors, radii, space, type } from '../theme';
+import { radii, space, type, type Palette } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 import { allPrompts } from '../lib/content/types';
 import { masteredItemIds } from '../lib/scheduler/scheduler';
 import { roundSpeakable, speakableCountForPack } from '../lib/review/speakable';
@@ -25,6 +26,8 @@ interface ReviewData {
  */
 export function WeeklyReviewScreen() {
   const { setScreen, language } = useApp();
+  const { p } = useTheme();
+  const styles = React.useMemo(() => makeStyles(p), [p]);
   const PACK = PACKS[language];
   const [data, setData] = useState<ReviewData | null>(null);
 
@@ -97,10 +100,10 @@ export function WeeklyReviewScreen() {
       {data && (
         <>
           <Animated.View entering={FadeInDown.delay(80).duration(300)} style={styles.grid}>
-            <Stat label="minutes practiced" value={`${data.minutes}`} />
-            <Stat label="sessions" value={`${data.sessions}`} />
-            <Stat label="blocks mastered" value={`${data.newMastered}`} />
-            <Stat label="spend this month" value={data.mtdSpend} />
+            <Stat styles={styles} label="minutes practiced" value={`${data.minutes}`} />
+            <Stat styles={styles} label="sessions" value={`${data.sessions}`} />
+            <Stat styles={styles} label="blocks mastered" value={`${data.newMastered}`} />
+            <Stat styles={styles} label="spend this month" value={data.mtdSpend} />
           </Animated.View>
 
           {data.toughest.length > 0 && (
@@ -121,7 +124,7 @@ export function WeeklyReviewScreen() {
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({ styles, label, value }: { styles: ReturnType<typeof makeStyles>; label: string; value: string }) {
   return (
     <View style={styles.stat}>
       <Text style={styles.statValue}>{value}</Text>
@@ -130,36 +133,37 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.bg, paddingHorizontal: space.l, paddingTop: 72 },
-  back: { color: colors.dim, fontSize: type.small, marginBottom: space.m },
-  eyebrow: { color: colors.faint, fontSize: type.caption, letterSpacing: 1.6, textTransform: 'uppercase' },
-  title: { color: colors.text, fontSize: type.giant, fontWeight: '800', marginBottom: space.m },
+const makeStyles = (p: Palette) =>
+  StyleSheet.create({
+  screen: { flex: 1, backgroundColor: p.bg, paddingHorizontal: space.l, paddingTop: 72 },
+  back: { color: p.dim, fontSize: type.small, marginBottom: space.m },
+  eyebrow: { color: p.faint, fontSize: type.caption, letterSpacing: 1.6, textTransform: 'uppercase' },
+  title: { color: p.text, fontSize: type.giant, fontWeight: '800', marginBottom: space.m },
 
   hero: {
-    backgroundColor: colors.card,
+    backgroundColor: p.card,
     borderRadius: radii.l,
     padding: space.xl,
     alignItems: 'center',
     marginBottom: space.m,
   },
-  heroNumber: { color: colors.accent, fontSize: 52, fontWeight: '800', fontVariant: ['tabular-nums'] },
-  heroCaption: { color: colors.text, fontSize: type.body, marginTop: space.s },
-  heroFine: { color: colors.faint, fontSize: type.caption, marginTop: 4 },
+  heroNumber: { color: p.accent, fontSize: 52, fontWeight: '800', fontVariant: ['tabular-nums'] },
+  heroCaption: { color: p.text, fontSize: type.body, marginTop: space.s },
+  heroFine: { color: p.faint, fontSize: type.caption, marginTop: 4 },
 
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: space.s },
   stat: {
     width: '48.5%',
-    backgroundColor: colors.card,
+    backgroundColor: p.card,
     borderRadius: radii.m,
     padding: space.m,
     gap: 2,
   },
-  statValue: { color: colors.text, fontSize: type.title, fontWeight: '800', fontVariant: ['tabular-nums'] },
-  statLabel: { color: colors.dim, fontSize: type.caption },
+  statValue: { color: p.text, fontSize: type.title, fontWeight: '800', fontVariant: ['tabular-nums'] },
+  statLabel: { color: p.dim, fontSize: type.caption },
 
   section: {
-    color: colors.faint,
+    color: p.faint,
     fontSize: type.caption,
     letterSpacing: 1.6,
     textTransform: 'uppercase',
@@ -167,7 +171,7 @@ const styles = StyleSheet.create({
     marginBottom: space.s,
   },
   tough: {
-    backgroundColor: colors.card,
+    backgroundColor: p.card,
     borderRadius: radii.m,
     padding: space.m,
     marginBottom: space.s,
@@ -176,7 +180,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space.m,
   },
-  toughCue: { color: colors.miss, fontSize: type.body, flex: 1 },
-  toughRate: { color: colors.faint, fontSize: type.caption },
-  fine: { color: colors.faint, fontSize: type.caption, textAlign: 'center', marginTop: space.l },
-});
+  toughCue: { color: p.miss, fontSize: type.body, flex: 1 },
+  toughRate: { color: p.faint, fontSize: type.caption },
+  fine: { color: p.faint, fontSize: type.caption, textAlign: 'center', marginTop: space.l },
+  });

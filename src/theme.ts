@@ -1,30 +1,77 @@
 /**
- * One place for look-and-feel. Design principles (docs/design-principles.md):
- * dark, calm, voice-first — the screen is a remote control. Motion and color
- * communicate state, never decorate. Misses are never red (plan §2.4).
+ * Look-and-feel tokens (docs/design-principles.md). Two palettes, one hue
+ * logic: an analogous green→teal family carries everything "alive" (speech,
+ * progress, live transcript); a muted apricot exists only for near-miss
+ * semantics (a saturated yellow is blue's complement and vibrates against
+ * the dark base — the v2 mistake); slate for misses. Misses are never red.
  */
 
-export const colors = {
-  // surfaces
-  bg: '#0B0F14',
-  card: '#151C26', // primary surface
-  raised: '#1E2836', // controls / sheet surface
-  stroke: '#2A3648',
+export interface Palette {
+  bg: string;
+  card: string;
+  raised: string;
+  stroke: string;
 
-  // content
-  text: '#F4F7FA',
-  dim: '#8E9BAE',
-  faint: '#5C6878',
+  text: string;
+  dim: string;
+  faint: string;
 
-  // brand + semantics
-  accent: '#4ADE80', // go / speech / pass
-  accentDeep: '#16331F',
-  warn: '#FBBF24', // near-miss, live transcript
-  warnDeep: '#3A2E10',
-  miss: '#94A3B8', // information, never failure
-  missDeep: '#222B38',
+  /** Primary action / pass / progress. */
+  accent: string;
+  onAccent: string;
+  accentDeep: string;
+  /** The learner's live voice: partial transcripts, resume, mic glow. */
+  live: string;
 
-  onAccent: '#08110B',
+  /** Near-miss only. */
+  warn: string;
+  warnDeep: string;
+  /** Miss = information, never failure. */
+  miss: string;
+  missDeep: string;
+}
+
+export const palettes: Record<'dark' | 'light', Palette> = {
+  dark: {
+    bg: '#0C1117',
+    card: '#161D27',
+    raised: '#212B3A',
+    stroke: '#2D3950',
+
+    text: '#F2F6FA',
+    dim: '#9AA7B9',
+    faint: '#5F6E80',
+
+    accent: '#45D483',
+    onAccent: '#07130C',
+    accentDeep: '#15301F',
+    live: '#6FD6C3',
+
+    warn: '#E3A968',
+    warnDeep: '#382B14',
+    miss: '#94A3B8',
+    missDeep: '#232E3C',
+  },
+  light: {
+    bg: '#F4F7F9',
+    card: '#FFFFFF',
+    raised: '#E9EFF4',
+    stroke: '#D5DEE7',
+
+    text: '#15202B',
+    dim: '#56697D',
+    faint: '#8898A9',
+
+    accent: '#12A35B',
+    onAccent: '#FFFFFF',
+    accentDeep: '#D9F3E4',
+    live: '#0C8B77',
+
+    warn: '#B0741B',
+    warnDeep: '#F8ECD2',
+    miss: '#5D7187',
+    missDeep: '#E3EAF1',
+  },
 };
 
 export const type = {
@@ -54,10 +101,18 @@ export const radii = {
   pill: 999,
 };
 
-/** Result → presentation. */
-export const resultStyle = {
-  pass: { tint: colors.accent, deep: colors.accentDeep, label: 'Yes.' },
-  near: { tint: colors.warn, deep: colors.warnDeep, label: 'Almost — listen:' },
-  miss: { tint: colors.miss, deep: colors.missDeep, label: 'Listen:' },
-  skip: { tint: colors.miss, deep: colors.missDeep, label: 'Here it is:' },
-} as const;
+export type ResultKind = 'pass' | 'near' | 'miss' | 'skip';
+
+/** Result → presentation, per palette. */
+export function resultFor(p: Palette, kind: ResultKind): { tint: string; deep: string; label: string } {
+  switch (kind) {
+    case 'pass':
+      return { tint: p.accent, deep: p.accentDeep, label: 'Yes.' };
+    case 'near':
+      return { tint: p.warn, deep: p.warnDeep, label: 'Almost — listen:' };
+    case 'miss':
+      return { tint: p.miss, deep: p.missDeep, label: 'Listen:' };
+    case 'skip':
+      return { tint: p.miss, deep: p.missDeep, label: 'Here it is:' };
+  }
+}

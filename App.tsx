@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { INSTALLED_LANGUAGES, PACKS } from './src/packs';
 import { useApp } from './src/store';
-import { colors } from './src/theme';
+import { useTheme } from './src/hooks/useTheme';
 import { loadPack, openDb } from './src/db';
 import { teachingAudio } from './src/services/instances';
 import { configureAudioSession } from './src/services/audio';
@@ -15,6 +15,7 @@ import { M0SpikeScreen } from './src/screens/M0SpikeScreen';
 
 export default function App() {
   const { screen, setSettings } = useApp();
+  const { p, scheme } = useTheme();
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -42,15 +43,15 @@ export default function App() {
 
   if (!ready) {
     return (
-      <View style={styles.boot}>
-        <ActivityIndicator color={colors.accent} />
+      <View style={[styles.boot, { backgroundColor: p.bg }]}>
+        <ActivityIndicator color={p.accent} />
       </View>
     );
   }
 
   return (
-    <View style={styles.app}>
-      <StatusBar style="light" />
+    <View style={[styles.app, { backgroundColor: p.bg }]}>
+      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
       {screen === 'home' && <HomeScreen />}
       {screen === 'session' && <SessionScreen />}
       {screen === 'review' && <WeeklyReviewScreen />}
@@ -61,6 +62,6 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  app: { flex: 1, backgroundColor: colors.bg },
-  boot: { flex: 1, backgroundColor: colors.bg, justifyContent: 'center', alignItems: 'center' },
+  app: { flex: 1 },
+  boot: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 });

@@ -1,15 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, Share, StyleSheet, Switch, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { SymbolView } from 'expo-symbols';
 import { BigButton } from '../components/BigButton';
-import { DEFAULT_SETTINGS, useApp } from '../store';
-import { colors, radii, space, type } from '../theme';
+import { DEFAULT_SETTINGS, useApp, type Settings } from '../store';
+import { radii, space, type, type Palette } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 import { exportProgress, getSetting, setSetting, spendEvents } from '../db';
 import { formatUsd, monthToDateUsd } from '../lib/cost/meter';
 
+const THEME_OPTIONS: { value: Settings['theme']; label: string }[] = [
+  { value: 'system', label: 'System' },
+  { value: 'dark', label: 'Dark' },
+  { value: 'light', label: 'Light' },
+];
+
 export function SettingsScreen() {
   const { setScreen, settings, setSettings } = useApp();
+  const { p } = useTheme();
+  const styles = useMemo(() => makeStyles(p), [p]);
   const [mtd, setMtd] = useState<string>('…');
 
   useEffect(() => {
@@ -40,28 +49,46 @@ export function SettingsScreen() {
   return (
     <ScrollView style={styles.screen} contentContainerStyle={{ paddingBottom: 64 }}>
       <Pressable onPress={() => setScreen('home')} style={styles.back} hitSlop={12}>
-        <SymbolView name="chevron.left" size={16} tintColor={colors.dim} />
+        <SymbolView name="chevron.left" size={16} tintColor={p.dim} />
         <Text style={styles.backText}>home</Text>
       </Pressable>
       <Text style={styles.title}>Settings</Text>
 
+      <Text style={styles.section}>Appearance</Text>
+      <View style={styles.segments}>
+        {THEME_OPTIONS.map((opt) => (
+          <Pressable
+            key={opt.value}
+            onPress={() => {
+              Haptics.selectionAsync();
+              update({ theme: opt.value });
+            }}
+            style={[styles.segment, settings.theme === opt.value && styles.segmentActive]}
+          >
+            <Text style={[styles.segmentText, settings.theme === opt.value && styles.segmentTextActive]}>
+              {opt.label}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+
       <Text style={styles.section}>Lesson</Text>
-      <Row label="Think time" value={`${settings.thinkSeconds}s`}>
-        <Stepper onMinus={() => bumpThink(-1)} onPlus={() => bumpThink(1)} />
+      <Row styles={styles} label="Think time" value={`${settings.thinkSeconds}s`}>
+        <Stepper styles={styles} p={p} onMinus={() => bumpThink(-1)} onPlus={() => bumpThink(1)} />
       </Row>
 
       <Text style={styles.section}>Coach & spend</Text>
-      <Row label="AI coach" value="≈$1–2/mo">
+      <Row styles={styles} label="AI coach" value="≈$1–2/mo">
         <Switch
           value={settings.coachEnabled}
           onValueChange={(v) => update({ coachEnabled: v })}
-          trackColor={{ true: colors.accent }}
+          trackColor={{ true: p.accent }}
         />
       </Row>
-      <Row label="Soft cap" value={`$${settings.monthlyCapUsd}/mo`}>
-        <Stepper onMinus={() => bumpCap(-1)} onPlus={() => bumpCap(1)} />
+      <Row styles={styles} label="Soft cap" value={`$${settings.monthlyCapUsd}/mo`}>
+        <Stepper styles={styles} p={p} onMinus={() => bumpCap(-1)} onPlus={() => bumpCap(1)} />
       </Row>
-      <Row label="Spent this month" value="">
+      <Row styles={styles} label="Spent this month" value="">
         <Text style={styles.value}>{mtd}</Text>
       </Row>
 
@@ -78,7 +105,7 @@ export function SettingsScreen() {
         }}
       >
         <Text style={styles.label}>Mic test (M0)</Text>
-        <SymbolView name="chevron.right" size={14} tintColor={colors.faint} />
+        <SymbolView name="chevron.right" size={14} tintColor={p.faint} />
       </Pressable>
     </ScrollView>
   );
@@ -93,7 +120,9 @@ export async function loadPersistedSettings(): Promise<typeof DEFAULT_SETTINGS> 
   }
 }
 
-function Row({ label, value, children }: { label: string; value: string; children: React.ReactNode }) {
+type Styles = ReturnType<typeof makeStyles>;
+
+function Row({ styles, label, value, children }: { styles: Styles; label: string; value: string; children: React.ReactNode }) {
   return (
     <View style={styles.row}>
       <View style={{ flex: 1 }}>
@@ -105,7 +134,7 @@ function Row({ label, value, children }: { label: string; value: string; childre
   );
 }
 
-function Stepper({ onMinus, onPlus }: { onMinus: () => void; onPlus: () => void }) {
+function Stepper({ styles, p, onMinus, onPlus }: { styles: Styles; p: Palette; onMinus: () => void; onPlus: () => void }) {
   const tap = (fn: () => void) => () => {
     Haptics.selectionAsync();
     fn();
@@ -113,49 +142,61 @@ function Stepper({ onMinus, onPlus }: { onMinus: () => void; onPlus: () => void 
   return (
     <View style={styles.stepper}>
       <Pressable onPress={tap(onMinus)} style={styles.step} hitSlop={8}>
-        <SymbolView name="minus" size={16} tintColor={colors.text} />
+        <SymbolView name="minus" size={16} tintColor={p.text} />
       </Pressable>
       <Pressable onPress={tap(onPlus)} style={styles.step} hitSlop={8}>
-        <SymbolView name="plus" size={16} tintColor={colors.text} />
+        <SymbolView name="plus" size={16} tintColor={p.text} />
       </Pressable>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.bg, paddingHorizontal: space.l, paddingTop: 72 },
-  back: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: space.m },
-  backText: { color: colors.dim, fontSize: type.small },
-  title: { color: colors.text, fontSize: type.giant, fontWeight: '800', marginBottom: space.s },
-  section: {
-    color: colors.faint,
-    fontSize: type.caption,
-    letterSpacing: 1.6,
-    textTransform: 'uppercase',
-    marginTop: space.l,
-    marginBottom: space.s,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: colors.card,
-    borderRadius: radii.m,
-    padding: space.m,
-    marginBottom: space.s,
-    minHeight: 60,
-  },
-  label: { color: colors.text, fontSize: type.body },
-  rowValue: { color: colors.faint, fontSize: type.caption, marginTop: 2 },
-  value: { color: colors.accent, fontSize: type.body, fontWeight: '700' },
-  stepper: { flexDirection: 'row', gap: space.s },
-  step: {
-    width: 44,
-    height: 44,
-    borderRadius: radii.s,
-    backgroundColor: colors.raised,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  note: { color: colors.faint, fontSize: type.caption, textAlign: 'center', marginTop: space.s },
-});
+const makeStyles = (p: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: p.bg, paddingHorizontal: space.l, paddingTop: 72 },
+    back: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: space.m },
+    backText: { color: p.dim, fontSize: type.small },
+    title: { color: p.text, fontSize: type.giant, fontWeight: '800', marginBottom: space.s },
+    section: {
+      color: p.faint,
+      fontSize: type.caption,
+      letterSpacing: 1.6,
+      textTransform: 'uppercase',
+      marginTop: space.l,
+      marginBottom: space.s,
+    },
+    segments: {
+      flexDirection: 'row',
+      backgroundColor: p.card,
+      borderRadius: radii.m,
+      padding: 4,
+      gap: 4,
+    },
+    segment: { flex: 1, paddingVertical: 10, borderRadius: radii.s, alignItems: 'center' },
+    segmentActive: { backgroundColor: p.raised },
+    segmentText: { color: p.dim, fontSize: type.small, fontWeight: '600' },
+    segmentTextActive: { color: p.text, fontWeight: '700' },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      backgroundColor: p.card,
+      borderRadius: radii.m,
+      padding: space.m,
+      marginBottom: space.s,
+      minHeight: 60,
+    },
+    label: { color: p.text, fontSize: type.body },
+    rowValue: { color: p.faint, fontSize: type.caption, marginTop: 2 },
+    value: { color: p.accent, fontSize: type.body, fontWeight: '700' },
+    stepper: { flexDirection: 'row', gap: space.s },
+    step: {
+      width: 44,
+      height: 44,
+      borderRadius: radii.s,
+      backgroundColor: p.raised,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    note: { color: p.faint, fontSize: type.caption, textAlign: 'center', marginTop: space.s },
+  });

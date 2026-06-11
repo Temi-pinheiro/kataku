@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeInDown, useSharedValue, withSpring } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
@@ -10,7 +10,8 @@ import { SessionProgress } from '../components/SessionProgress';
 import { TutorDots } from '../components/TutorDots';
 import { PACKS, type InstalledLanguage } from '../packs';
 import { useApp } from '../store';
-import { colors, space, type } from '../theme';
+import { radii, resultFor, space, type, type Palette } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 import type { ContentItem, ContentPrompt, CoursePack } from '../lib/content/types';
 import { allItems, allPrompts } from '../lib/content/types';
 import { buildSession, type SessionPlan } from '../lib/session/builder';
@@ -100,6 +101,8 @@ function fromStepKeys(keys: SavedStepKey[], pack: CoursePack): UiStep[] | null {
 
 export function SessionScreen() {
   const { setScreen, settings, language } = useApp();
+  const { p } = useTheme();
+  const styles = useMemo(() => makeStyles(p), [p]);
   const PACK = PACKS[language];
   const [stage, setStage] = useState<Stage>({ kind: 'loading' });
   const masteryRef = useRef(new Map<string, MasteryState>());
@@ -253,7 +256,7 @@ export function SessionScreen() {
   if (stage.kind === 'loading') {
     return (
       <View style={[styles.screen, styles.center]}>
-        <ActivityIndicator color={colors.accent} />
+        <ActivityIndicator color={p.accent} />
       </View>
     );
   }
@@ -343,7 +346,7 @@ export function SessionScreen() {
     <View style={styles.screen}>
       <View style={styles.topBar}>
         <Pressable onPress={confirmLeave} hitSlop={12} style={styles.close}>
-          <SymbolView name="xmark" size={17} tintColor={colors.dim} />
+          <SymbolView name="xmark" size={17} tintColor={p.dim} />
         </Pressable>
         <SessionProgress value={run.stepIndex / run.steps.length} />
         <Text style={styles.counter}>
@@ -371,9 +374,32 @@ export function SessionScreen() {
   );
 }
 
+// ---- the big state banner (owner: state must be readable at a glance) ----
+
+function PhaseBanner({ label, tint }: { label: string; tint: string }) {
+  const { p } = useTheme();
+  return (
+    <Animated.Text
+      key={label}
+      entering={FadeIn.duration(180)}
+      style={{
+        fontSize: 30,
+        fontWeight: '900',
+        letterSpacing: 0.4,
+        color: tint || p.text,
+        marginTop: space.s,
+      }}
+    >
+      {label}
+    </Animated.Text>
+  );
+}
+
 // ---- step cards ----
 
 function AnnounceCard({ pack, line, onDone }: { pack: CoursePack; line: string; onDone: () => void }) {
+  const { p } = useTheme();
+  const styles = useMemo(() => makeStyles(p), [p]);
   const text = pack.system_lines[line]?.text ?? '';
   useEffect(() => {
     let cancelled = false;
@@ -389,14 +415,19 @@ function AnnounceCard({ pack, line, onDone }: { pack: CoursePack; line: string; 
   }, [line]);
 
   return (
-    <Animated.View entering={FadeIn.duration(300)} style={[styles.stepArea, styles.center]}>
-      <TutorDots />
-      <Text style={styles.announce}>{text}</Text>
-    </Animated.View>
+    <View style={styles.stepArea}>
+      <PhaseBanner label="Listen" tint={p.dim} />
+      <Animated.View entering={FadeIn.duration(300)} style={[styles.stageCenter, styles.center]}>
+        <TutorDots />
+        <Text style={styles.announce}>{text}</Text>
+      </Animated.View>
+    </View>
   );
 }
 
 function TeachCard({ item, onDone }: { item: ContentItem; onDone: () => void }) {
+  const { p } = useTheme();
+  const styles = useMemo(() => makeStyles(p), [p]);
   const [replayKey, setReplayKey] = useState(0);
   useEffect(() => {
     let cancelled = false;
@@ -412,15 +443,17 @@ function TeachCard({ item, onDone }: { item: ContentItem; onDone: () => void }) 
   }, [item.id, replayKey]);
 
   return (
-    <Animated.View entering={FadeInDown.duration(300)} style={[styles.stepArea, styles.center]}>
-      <Text style={styles.eyebrowAccent}>new block</Text>
-      <Text style={styles.teachConcept}>{item.concept_en}</Text>
-      <Text style={styles.teachTarget}>{item.target_text}</Text>
-      {item.romanization ? <Text style={styles.dim}>{item.romanization}</Text> : null}
-      <View style={{ height: space.l }} />
-      <TutorDots />
-      <BigButton label="Hear it again" kind="quiet" small onPress={() => setReplayKey((k) => k + 1)} />
-    </Animated.View>
+    <View style={styles.stepArea}>
+      <PhaseBanner label="New block" tint={p.accent} />
+      <Animated.View entering={FadeInDown.duration(300)} style={[styles.stageCenter, styles.center]}>
+        <Text style={styles.teachConcept}>{item.concept_en}</Text>
+        <Text style={styles.teachTarget}>{item.target_text}</Text>
+        {item.romanization ? <Text style={styles.dim}>{item.romanization}</Text> : null}
+        <View style={{ height: space.l }} />
+        <TutorDots />
+        <BigButton label="Hear it again" kind="quiet" small onPress={() => setReplayKey((k) => k + 1)} />
+      </Animated.View>
+    </View>
   );
 }
 
@@ -441,6 +474,8 @@ function PromptCard({
   thinkMs: number;
   onFinished: (prompt: ContentPrompt, state: LoopState) => void;
 }) {
+  const { p } = useTheme();
+  const styles = useMemo(() => makeStyles(p), [p]);
   const volume = useSharedValue(0);
   const [thinkKey, setThinkKey] = useState(0);
 
@@ -477,8 +512,28 @@ function PromptCard({
     state.retriesUsed < MAX_RETRIES;
   const inFeedback = state.phase === 'feedback' || state.phase === 'done';
 
+  const banner: { label: string; tint: string } = (() => {
+    switch (state.phase) {
+      case 'play_cue':
+        return { label: 'Listen', tint: p.dim };
+      case 'think':
+        return { label: 'Think it', tint: p.live };
+      case 'listen':
+        return { label: 'Say it', tint: p.accent };
+      case 'feedback':
+      case 'done': {
+        const kind = state.feedbackKind ?? 'miss';
+        const r = resultFor(p, kind);
+        return { label: kind === 'pass' ? 'Yes' : kind === 'near' ? 'Almost' : kind === 'skip' ? 'Here it is' : 'Listen again', tint: r.tint };
+      }
+      default:
+        return { label: ' ', tint: p.dim };
+    }
+  })();
+
   return (
     <View style={styles.stepArea}>
+      <PhaseBanner label={banner.label} tint={banner.tint} />
       {isVictoryLap && (
         <Animated.Text entering={FadeIn} style={styles.lap}>
           victory lap
@@ -563,6 +618,8 @@ function OutroCard({
   onKeepGoing: () => void;
   onHome: () => void;
 }) {
+  const { p } = useTheme();
+  const styles = useMemo(() => makeStyles(p), [p]);
   useEffect(() => {
     void teachingAudio.play({
       key: pack.system_lines.session_close?.audio,
@@ -575,7 +632,7 @@ function OutroCard({
 
   return (
     <Animated.View entering={FadeInDown.duration(350)} style={styles.introCard}>
-      <SymbolView name="checkmark.seal.fill" size={44} tintColor={colors.accent} />
+      <SymbolView name="checkmark.seal.fill" size={44} tintColor={p.accent} />
       <Text style={[styles.h1, { marginTop: space.m }]}>That's the day.</Text>
       <Text style={styles.introMeta}>
         Lesson {lessonRef} · {promptsDone} prompts{recycled > 0 ? ` · ${recycled} recycled` : ''}
@@ -587,56 +644,56 @@ function OutroCard({
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.bg },
-  center: { alignItems: 'center', justifyContent: 'center' },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.m,
-    paddingTop: 64,
-    paddingHorizontal: space.l,
-    paddingBottom: space.m,
-  },
-  close: { padding: 4 },
-  counter: { color: colors.faint, fontSize: type.caption, fontVariant: ['tabular-nums'] },
+const makeStyles = (p: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: p.bg },
+    center: { alignItems: 'center', justifyContent: 'center' },
+    topBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: space.m,
+      paddingTop: 64,
+      paddingHorizontal: space.l,
+      paddingBottom: space.m,
+    },
+    close: { padding: 4 },
+    counter: { color: p.faint, fontSize: type.caption, fontVariant: ['tabular-nums'] },
 
-  stepArea: { flex: 1, paddingHorizontal: space.l, paddingBottom: space.xl },
-  stageCenter: { flex: 1, justifyContent: 'center' },
+    stepArea: { flex: 1, paddingHorizontal: space.l, paddingBottom: space.xl },
+    stageCenter: { flex: 1, justifyContent: 'center' },
 
-  h1: { color: colors.text, fontSize: type.giant, fontWeight: '800' },
-  dim: { color: colors.dim, fontSize: type.body },
-  eyebrow: { color: colors.faint, fontSize: type.caption, letterSpacing: 1.6, textTransform: 'uppercase' },
-  eyebrowAccent: {
-    color: colors.accent,
-    fontSize: type.caption,
-    letterSpacing: 1.6,
-    textTransform: 'uppercase',
-    fontWeight: '700',
-    marginBottom: space.s,
-  },
+    h1: { color: p.text, fontSize: type.giant, fontWeight: '800' },
+    dim: { color: p.dim, fontSize: type.body },
+    eyebrow: { color: p.faint, fontSize: type.caption, letterSpacing: 1.6, textTransform: 'uppercase' },
 
-  introCard: {
-    backgroundColor: colors.card,
-    borderRadius: 28,
-    padding: space.xl,
-    gap: space.s,
-    alignItems: 'flex-start',
-  },
-  introMeta: { color: colors.dim, fontSize: type.body, marginBottom: space.m },
-  newWords: { color: colors.accent, fontSize: type.heading, fontWeight: '700', marginBottom: space.m },
+    introCard: {
+      backgroundColor: p.card,
+      borderRadius: radii.xl,
+      padding: space.xl,
+      gap: space.s,
+      alignItems: 'flex-start',
+    },
+    introMeta: { color: p.dim, fontSize: type.body, marginBottom: space.m },
+    newWords: { color: p.accent, fontSize: type.heading, fontWeight: '700', marginBottom: space.m },
 
-  announce: { color: colors.dim, fontSize: type.heading, textAlign: 'center', marginTop: space.l },
+    announce: { color: p.dim, fontSize: type.heading, textAlign: 'center', marginTop: space.l },
 
-  teachConcept: { color: colors.dim, fontSize: type.heading },
-  teachTarget: { color: colors.text, fontSize: type.hero, fontWeight: '800', marginVertical: space.s },
+    teachConcept: { color: p.dim, fontSize: type.heading },
+    teachTarget: { color: p.text, fontSize: type.hero, fontWeight: '800', marginVertical: space.s },
 
-  cue: { color: colors.text, fontSize: type.heading, lineHeight: 29, marginTop: space.m },
-  heardLive: { color: colors.warn, fontSize: type.body, minHeight: 24, marginTop: space.m, textAlign: 'center' },
+    cue: { color: p.text, fontSize: type.heading, lineHeight: 29, marginTop: space.m },
+    heardLive: { color: p.live, fontSize: type.body, fontWeight: '600', minHeight: 24, marginTop: space.m, textAlign: 'center' },
 
-  lap: { color: colors.accent, fontSize: type.caption, fontWeight: '800', letterSpacing: 1.6, textTransform: 'uppercase', marginTop: space.s },
-  recycleTag: { color: colors.faint, fontSize: type.caption, letterSpacing: 1.2, textTransform: 'uppercase', marginTop: space.s },
+    lap: {
+      color: p.accent,
+      fontSize: type.caption,
+      fontWeight: '800',
+      letterSpacing: 1.6,
+      textTransform: 'uppercase',
+      marginTop: space.s,
+    },
+    recycleTag: { color: p.faint, fontSize: type.caption, letterSpacing: 1.2, textTransform: 'uppercase', marginTop: space.s },
 
-  controls: { flexDirection: 'row', gap: space.s },
-  control: { flex: 1 },
-});
+    controls: { flexDirection: 'row', gap: space.s },
+    control: { flex: 1 },
+  });

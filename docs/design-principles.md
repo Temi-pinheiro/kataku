@@ -11,14 +11,19 @@ Apple HIG (typography, motion, touch targets).
 1. **Never let the learner speak into a void.** Every audio state is
    visible: tutor speaking = pulsing dots; mic warming = breathing orb +
    tone + haptic; listening = orb moving with the learner's actual voice
-   level (volumechange events) + live partial transcript. If the screen is
-   still, the app is idle — anything else is a bug.
+   level (volumechange events) + live partial transcript. The current
+   state is also named in a large bold banner above the card (Listen /
+   Think it / Say it / result) — readable at arm's length. If the screen
+   is still, the app is idle — anything else is a bug.
 2. **The learner ends the utterance, not the OS.** Recognition runs in
    continuous mode; an attempt finalizes only on tap-the-orb, ~2.6s of
    true post-speech silence, or the 12s cap. Beginners pause mid-sentence
    to construct — that pause is the method (plan §2.3), never a timeout.
    Corollary: **the mic is never open while the tutor speaks** (echo leaks
-   into transcripts).
+   into transcripts). Audio-session corollary: the playback session never
+   sets `allowsRecording` — that flips iOS into the phone-call category and
+   routes the tutor to the earpiece; only the recognizer opens a
+   playAndRecord session, with `defaultToSpeaker`.
 3. **Motion is state, not decoration.** Transitions communicate "heard
    you / thinking / your turn / result." Springs over linear, 200–350ms,
    one entering animation per state change. No idle animation except the
@@ -36,9 +41,15 @@ Apple HIG (typography, motion, touch targets).
 
 ## Texture
 
-- Dark only. Surfaces `bg → card → raised` (+ `stroke` borders); content
-  `text / dim / faint`. Accent green = go/speech/pass; amber = near + live
-  transcript; slate = miss/info.
+- Two palettes (dark + light, System/Dark/Light in Settings), one hue
+  logic: surfaces `bg → card → raised` (+ `stroke`); content
+  `text / dim / faint`. The "alive" family is analogous green→teal:
+  accent = go/pass/progress, `live` teal = the learner's own voice
+  (transcripts, mic glow, resume). Muted apricot is **near-miss only** —
+  a saturated yellow is blue's complement and vibrates against the dark
+  base; never use it for ambient UI. Slate = miss/info. All colors come
+  from `palettes` in src/theme.ts via `useTheme()` — components own a
+  `makeStyles(p)` factory, no module-level color literals.
 - Type scale 44/34/26/21/17/14/12, weight 800 for numbers and titles,
   tabular numerals for stats. Uppercase letter-spaced eyebrows for section
   labels.

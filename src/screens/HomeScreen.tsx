@@ -5,7 +5,8 @@ import * as Haptics from 'expo-haptics';
 import { SymbolView } from 'expo-symbols';
 import { INSTALLED_LANGUAGES, LANGUAGE_NAMES, PACKS } from '../packs';
 import { useApp } from '../store';
-import { colors, radii, space, type } from '../theme';
+import { radii, space, type, type Palette } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 import { allLessons } from '../lib/content/types';
 import { buildSession } from '../lib/session/builder';
 import { masteredItemIds } from '../lib/scheduler/scheduler';
@@ -23,6 +24,8 @@ interface HomeData {
 
 export function HomeScreen() {
   const { setScreen, language, setLanguage } = useApp();
+  const { p } = useTheme();
+  const styles = React.useMemo(() => makeStyles(p), [p]);
   const [data, setData] = useState<HomeData | null>(null);
 
   const refresh = useCallback(async () => {
@@ -97,14 +100,14 @@ export function HomeScreen() {
       {d?.resumeStep && (
         <Animated.View entering={FadeInDown.delay(100).duration(300)}>
           <Pressable style={styles.resume} onPress={() => setScreen('session')}>
-            <SymbolView name="play.circle.fill" size={26} tintColor={colors.warn} />
+            <SymbolView name="play.circle.fill" size={26} tintColor={p.live} />
             <View style={{ flex: 1 }}>
               <Text style={styles.resumeTitle}>Resume lesson {d.resumeStep.lessonRef}</Text>
               <Text style={styles.resumeMeta}>
                 step {d.resumeStep.step} of {d.resumeStep.total}
               </Text>
             </View>
-            <SymbolView name="chevron.right" size={14} tintColor={colors.faint} />
+            <SymbolView name="chevron.right" size={14} tintColor={p.faint} />
           </Pressable>
         </Animated.View>
       )}
@@ -128,7 +131,7 @@ export function HomeScreen() {
             </Text>
             {d?.doneToday && <Text style={styles.ctaDone}>today is done — anything more is extra</Text>}
           </View>
-          <SymbolView name="mic.circle.fill" size={52} tintColor={colors.onAccent} />
+          <SymbolView name="mic.circle.fill" size={52} tintColor={p.onAccent} />
         </Pressable>
       </Animated.View>
 
@@ -139,7 +142,7 @@ export function HomeScreen() {
           <Text style={styles.secondaryLink}>weekly review →</Text>
         </Pressable>
         <Pressable style={styles.secondary} onPress={() => setScreen('settings')}>
-          <SymbolView name="gearshape.fill" size={26} tintColor={colors.dim} />
+          <SymbolView name="gearshape.fill" size={26} tintColor={p.dim} />
           <Text style={[styles.secondaryLabel, { marginTop: space.s }]}>think time · coach · spend</Text>
           <Text style={styles.secondaryLink}>settings →</Text>
         </Pressable>
@@ -148,65 +151,66 @@ export function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.bg, paddingHorizontal: space.l, paddingTop: 76, gap: space.m },
-  brand: { color: colors.faint, fontSize: type.caption, letterSpacing: 3, textTransform: 'uppercase' },
+const makeStyles = (p: Palette) =>
+  StyleSheet.create({
+  screen: { flex: 1, backgroundColor: p.bg, paddingHorizontal: space.l, paddingTop: 76, gap: space.m },
+  brand: { color: p.faint, fontSize: type.caption, letterSpacing: 3, textTransform: 'uppercase' },
 
   chips: { flexDirection: 'row', gap: space.s, marginTop: space.m },
   chip: {
-    backgroundColor: colors.card,
+    backgroundColor: p.card,
     borderRadius: radii.pill,
     paddingVertical: 8,
     paddingHorizontal: 16,
   },
-  chipActive: { backgroundColor: colors.accent },
-  chipText: { color: colors.dim, fontSize: type.small, fontWeight: '700' },
-  chipTextActive: { color: colors.onAccent },
+  chipActive: { backgroundColor: p.accent },
+  chipText: { color: p.dim, fontSize: type.small, fontWeight: '700' },
+  chipTextActive: { color: p.onAccent },
 
-  langTitle: { color: colors.text, fontSize: type.hero, fontWeight: '800', marginTop: space.m, letterSpacing: -0.5 },
+  langTitle: { color: p.text, fontSize: type.hero, fontWeight: '800', marginTop: space.m, letterSpacing: -0.5 },
 
   weekArc: { flexDirection: 'row', alignItems: 'center', gap: 6, flexWrap: 'wrap' },
-  daySeg: { width: 26, height: 6, borderRadius: 3, backgroundColor: colors.raised },
-  daySegDone: { backgroundColor: colors.accent },
-  daySegToday: { backgroundColor: colors.stroke, borderWidth: 1, borderColor: colors.accent },
-  weekLabel: { color: colors.faint, fontSize: type.caption, marginLeft: space.s },
+  daySeg: { width: 26, height: 6, borderRadius: 3, backgroundColor: p.raised },
+  daySegDone: { backgroundColor: p.accent },
+  daySegToday: { backgroundColor: p.stroke, borderWidth: 1, borderColor: p.accent },
+  weekLabel: { color: p.faint, fontSize: type.caption, marginLeft: space.s },
 
   resume: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.m,
-    backgroundColor: colors.card,
+    backgroundColor: p.card,
     borderRadius: radii.m,
     borderWidth: 1,
-    borderColor: colors.warnDeep,
+    borderColor: p.stroke,
     padding: space.m,
   },
-  resumeTitle: { color: colors.text, fontSize: type.body, fontWeight: '700' },
-  resumeMeta: { color: colors.dim, fontSize: type.small },
+  resumeTitle: { color: p.text, fontSize: type.body, fontWeight: '700' },
+  resumeMeta: { color: p.dim, fontSize: type.small },
 
   cta: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.m,
-    backgroundColor: colors.accent,
+    backgroundColor: p.accent,
     borderRadius: radii.l,
     padding: space.l,
     minHeight: 110,
   },
-  ctaTitle: { color: colors.onAccent, fontSize: type.title, fontWeight: '800' },
-  ctaMeta: { color: colors.onAccent, opacity: 0.75, fontSize: type.small, marginTop: 4 },
-  ctaDone: { color: colors.onAccent, opacity: 0.6, fontSize: type.caption, marginTop: 6 },
+  ctaTitle: { color: p.onAccent, fontSize: type.title, fontWeight: '800' },
+  ctaMeta: { color: p.onAccent, opacity: 0.75, fontSize: type.small, marginTop: 4 },
+  ctaDone: { color: p.onAccent, opacity: 0.6, fontSize: type.caption, marginTop: 6 },
 
   secondaryRow: { flexDirection: 'row', gap: space.m },
   secondary: {
     flex: 1,
-    backgroundColor: colors.card,
+    backgroundColor: p.card,
     borderRadius: radii.l,
     padding: space.m,
     minHeight: 116,
     justifyContent: 'space-between',
   },
-  secondaryValue: { color: colors.accent, fontSize: type.title, fontWeight: '800' },
-  secondaryLabel: { color: colors.dim, fontSize: type.caption, lineHeight: 16 },
-  secondaryLink: { color: colors.faint, fontSize: type.caption, marginTop: space.s },
-});
+  secondaryValue: { color: p.accent, fontSize: type.title, fontWeight: '800' },
+  secondaryLabel: { color: p.dim, fontSize: type.caption, lineHeight: 16 },
+  secondaryLink: { color: p.faint, fontSize: type.caption, marginTop: space.s },
+  });

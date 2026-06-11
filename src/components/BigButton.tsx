@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, type ViewStyle } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import { colors, radii, type } from '../theme';
+import { radii, type, type Palette } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -16,6 +17,8 @@ interface Props {
 
 /** The app's button: 56pt target, spring press, selection haptic. */
 export function BigButton({ label, onPress, kind = 'primary', small, style }: Props) {
+  const { p } = useTheme();
+  const styles = useMemo(() => makeStyles(p), [p]);
   const scale = useSharedValue(1);
   const animated = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
 
@@ -37,7 +40,7 @@ export function BigButton({ label, onPress, kind = 'primary', small, style }: Pr
         style={[
           styles.label,
           small && styles.labelSmall,
-          kind !== 'primary' && { color: kind === 'quiet' ? colors.dim : colors.text },
+          kind !== 'primary' && { color: kind === 'quiet' ? p.dim : p.text },
         ]}
       >
         {label}
@@ -46,20 +49,21 @@ export function BigButton({ label, onPress, kind = 'primary', small, style }: Pr
   );
 }
 
-const styles = StyleSheet.create({
-  base: {
-    minHeight: 56,
-    paddingVertical: 16,
-    paddingHorizontal: 28,
-    borderRadius: radii.l,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 6,
-  },
-  primary: { backgroundColor: colors.accent },
-  ghost: { backgroundColor: colors.raised },
-  quiet: { backgroundColor: 'transparent' },
-  small: { minHeight: 44, paddingVertical: 10, paddingHorizontal: 18, borderRadius: radii.m },
-  label: { fontSize: type.body, fontWeight: '700', color: colors.onAccent, letterSpacing: 0.2 },
-  labelSmall: { fontSize: type.small },
-});
+const makeStyles = (p: Palette) =>
+  StyleSheet.create({
+    base: {
+      minHeight: 56,
+      paddingVertical: 16,
+      paddingHorizontal: 28,
+      borderRadius: radii.l,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginVertical: 6,
+    },
+    primary: { backgroundColor: p.accent },
+    ghost: { backgroundColor: p.raised },
+    quiet: { backgroundColor: 'transparent' },
+    small: { minHeight: 44, paddingVertical: 10, paddingHorizontal: 18, borderRadius: radii.m },
+    label: { fontSize: type.body, fontWeight: '700', color: p.onAccent, letterSpacing: 0.2 },
+    labelSmall: { fontSize: type.small },
+  });

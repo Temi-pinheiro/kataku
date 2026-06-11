@@ -87,6 +87,13 @@ export class NativeRecognizer implements SpeechRecognizer {
       continuous: options.continuous ?? false,
       requiresOnDeviceRecognition: onDevice,
       addsPunctuation: false,
+      // Explicit so a library default change can't send tutor audio to the
+      // earpiece mid-listen (the playback session handles the rest of the time).
+      iosCategory: {
+        category: 'playAndRecord',
+        categoryOptions: ['defaultToSpeaker', 'allowBluetooth'],
+        mode: 'measurement',
+      },
       ...(callbacks.onVolume ? { volumeChangeEventOptions: { enabled: true, intervalMillis: 100 } } : {}),
       ...(options.recordAudio
         ? {

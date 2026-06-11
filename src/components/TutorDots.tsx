@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
@@ -9,9 +9,9 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { colors } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 
-function Dot({ delay }: { delay: number }) {
+function Dot({ delay, color }: { delay: number; color: string }) {
   const v = useSharedValue(0.3);
   useEffect(() => {
     v.value = withDelay(
@@ -29,21 +29,23 @@ function Dot({ delay }: { delay: number }) {
     opacity: v.value,
     transform: [{ scale: 0.8 + v.value * 0.4 }],
   }));
-  return <Animated.View style={[styles.dot, style]} />;
+  return <Animated.View style={[styles.dot, { backgroundColor: color }, style]} />;
 }
 
 /** "The tutor is speaking" — the audio has a face. */
 export function TutorDots() {
+  const { p } = useTheme();
+  const color = useMemo(() => p.accent, [p]);
   return (
     <View style={styles.row}>
-      <Dot delay={0} />
-      <Dot delay={160} />
-      <Dot delay={320} />
+      <Dot delay={0} color={color} />
+      <Dot delay={160} color={color} />
+      <Dot delay={320} color={color} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: 10, alignItems: 'center', justifyContent: 'center', height: 28 },
-  dot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.accent },
+  dot: { width: 10, height: 10, borderRadius: 5 },
 });
