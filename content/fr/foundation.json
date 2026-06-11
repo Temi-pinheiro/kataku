@@ -1,0 +1,1182 @@
+{
+  "language": "fr",
+  "phase": "foundation",
+  "version": 1,
+  "units": [
+    {
+      "index": 1,
+      "title": "Foundation — Week 1",
+      "lessons": [
+        {
+          "index": 1,
+          "items": [
+            {
+              "id": "fr-f-001",
+              "type": "block",
+              "concept_en": "I want",
+              "target_text": "je veux",
+              "romanization": null,
+              "teach_script": "'I want' is 'je veux'. Je veux.",
+              "audio": { "teach": "fr-f-001-t" }
+            },
+            {
+              "id": "fr-f-002",
+              "type": "block",
+              "concept_en": "to eat",
+              "target_text": "manger",
+              "romanization": null,
+              "teach_script": "'To eat' is 'manger'. Manger.",
+              "audio": { "teach": "fr-f-002-t" }
+            },
+            {
+              "id": "fr-f-003",
+              "type": "block",
+              "concept_en": "to drink",
+              "target_text": "boire",
+              "romanization": null,
+              "teach_script": "'To drink' is 'boire'. Boire.",
+              "audio": { "teach": "fr-f-003-t" }
+            },
+            {
+              "id": "fr-f-004",
+              "type": "block",
+              "concept_en": "now",
+              "target_text": "maintenant",
+              "romanization": null,
+              "teach_script": "'Now' is 'maintenant'. Maintenant. Time words like this usually go at the end.",
+              "audio": { "teach": "fr-f-004-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "fr-f-p-001",
+              "cue_en": "How would you say: I want?",
+              "expected": ["je veux"],
+              "components": ["fr-f-001"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-001-c", "answer": "fr-f-p-001-a", "answer_slow": "fr-f-p-001-s" }
+            },
+            {
+              "id": "fr-f-p-002",
+              "cue_en": "How would you say: I want to eat?",
+              "expected": ["je veux manger"],
+              "components": ["fr-f-001", "fr-f-002"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-002-c", "answer": "fr-f-p-002-a", "answer_slow": "fr-f-p-002-s" }
+            },
+            {
+              "id": "fr-f-p-003",
+              "cue_en": "And: I want to drink?",
+              "expected": ["je veux boire"],
+              "components": ["fr-f-001", "fr-f-003"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-003-c", "answer": "fr-f-p-003-a", "answer_slow": "fr-f-p-003-s" }
+            },
+            {
+              "id": "fr-f-p-004",
+              "cue_en": "Just the word: to eat.",
+              "expected": ["manger"],
+              "components": ["fr-f-002"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-004-c", "answer": "fr-f-p-004-a", "answer_slow": "fr-f-p-004-s" }
+            },
+            {
+              "id": "fr-f-p-005",
+              "cue_en": "Just the word: to drink.",
+              "expected": ["boire"],
+              "components": ["fr-f-003"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-005-c", "answer": "fr-f-p-005-a", "answer_slow": "fr-f-p-005-s" }
+            },
+            {
+              "id": "fr-f-p-006",
+              "cue_en": "Just: now.",
+              "expected": ["maintenant"],
+              "components": ["fr-f-004"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-006-c", "answer": "fr-f-p-006-a", "answer_slow": "fr-f-p-006-s" }
+            },
+            {
+              "id": "fr-f-p-007",
+              "cue_en": "I want to eat now.",
+              "expected": ["je veux manger maintenant"],
+              "components": ["fr-f-001", "fr-f-002", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Je veux — manger — maintenant at the end.",
+              "audio": { "cue": "fr-f-p-007-c", "answer": "fr-f-p-007-a", "answer_slow": "fr-f-p-007-s" }
+            },
+            {
+              "id": "fr-f-p-008",
+              "cue_en": "I want to drink now.",
+              "expected": ["je veux boire maintenant"],
+              "components": ["fr-f-001", "fr-f-003", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Je veux — boire — maintenant.",
+              "audio": { "cue": "fr-f-p-008-c", "answer": "fr-f-p-008-a", "answer_slow": "fr-f-p-008-s" }
+            },
+            {
+              "id": "fr-f-p-009",
+              "cue_en": "Again — I want to eat.",
+              "expected": ["je veux manger"],
+              "components": ["fr-f-001", "fr-f-002"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-009-c", "answer": "fr-f-p-009-a", "answer_slow": "fr-f-p-009-s" }
+            },
+            {
+              "id": "fr-f-p-010",
+              "cue_en": "Build it: I want to drink now.",
+              "expected": ["je veux boire maintenant"],
+              "components": ["fr-f-001", "fr-f-003", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Piece by piece: je veux — boire — maintenant.",
+              "audio": { "cue": "fr-f-p-010-c", "answer": "fr-f-p-010-a", "answer_slow": "fr-f-p-010-s" }
+            },
+            {
+              "id": "fr-f-p-011",
+              "cue_en": "And: I want to eat now.",
+              "expected": ["je veux manger maintenant"],
+              "components": ["fr-f-001", "fr-f-002", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Je veux — manger — maintenant.",
+              "audio": { "cue": "fr-f-p-011-c", "answer": "fr-f-p-011-a", "answer_slow": "fr-f-p-011-s" }
+            },
+            {
+              "id": "fr-f-p-012",
+              "cue_en": "Last one for today: I want to drink.",
+              "expected": ["je veux boire"],
+              "components": ["fr-f-001", "fr-f-003"],
+              "difficulty": 2,
+              "decompose_script": "Je veux — boire.",
+              "audio": { "cue": "fr-f-p-012-c", "answer": "fr-f-p-012-a", "answer_slow": "fr-f-p-012-s" }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "items": [
+            {
+              "id": "fr-f-005",
+              "type": "block",
+              "concept_en": "you want",
+              "target_text": "tu veux",
+              "romanization": null,
+              "teach_script": "'You want' is 'tu veux'. Tu veux.",
+              "audio": { "teach": "fr-f-005-t" }
+            },
+            {
+              "id": "fr-f-006",
+              "type": "pattern",
+              "concept_en": "negation sandwich (ne … pas)",
+              "target_text": "pas",
+              "romanization": null,
+              "teach_script": "French negation is a sandwich: ne before the verb, pas after it. Je ne veux pas — I don't want.",
+              "audio": { "teach": "fr-f-006-t" }
+            },
+            {
+              "id": "fr-f-007",
+              "type": "pattern",
+              "concept_en": "questions by intonation",
+              "target_text": "tu veux manger",
+              "romanization": null,
+              "teach_script": "Spoken French questions are free: say the sentence and let your voice rise. Tu veux manger ? — do you want to eat? Nothing else changes.",
+              "audio": { "teach": "fr-f-007-t" }
+            },
+            {
+              "id": "fr-f-008",
+              "type": "usage_note",
+              "concept_en": "dropping 'ne' in speech",
+              "target_text": "je veux pas",
+              "romanization": null,
+              "teach_script": "In everyday speech the 'ne' often disappears: je veux pas. You'll hear it constantly. Both are right — the full form is the polished one.",
+              "audio": { "teach": "fr-f-008-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "fr-f-p-013",
+              "cue_en": "A statement: you want to eat.",
+              "expected": ["tu veux manger"],
+              "components": ["fr-f-005", "fr-f-002"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-013-c", "answer": "fr-f-p-013-a", "answer_slow": "fr-f-p-013-s" }
+            },
+            {
+              "id": "fr-f-p-014",
+              "cue_en": "Now make it a question — do you want to eat?",
+              "expected": ["tu veux manger"],
+              "components": ["fr-f-005", "fr-f-002", "fr-f-007"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-014-c", "answer": "fr-f-p-014-a", "answer_slow": "fr-f-p-014-s" }
+            },
+            {
+              "id": "fr-f-p-015",
+              "cue_en": "How would you say: I don't want?",
+              "expected": ["je ne veux pas", "je veux pas"],
+              "components": ["fr-f-001", "fr-f-006"],
+              "difficulty": 2,
+              "decompose_script": "The verb gets sandwiched: je — ne veux pas.",
+              "audio": { "cue": "fr-f-p-015-c", "answer": "fr-f-p-015-a", "answer_slow": "fr-f-p-015-s" }
+            },
+            {
+              "id": "fr-f-p-016",
+              "cue_en": "I don't want to eat.",
+              "expected": ["je ne veux pas manger", "je veux pas manger"],
+              "components": ["fr-f-001", "fr-f-006", "fr-f-002"],
+              "difficulty": 2,
+              "decompose_script": "The sandwich first, then the verb: je ne veux pas — manger.",
+              "audio": { "cue": "fr-f-p-016-c", "answer": "fr-f-p-016-a", "answer_slow": "fr-f-p-016-s" }
+            },
+            {
+              "id": "fr-f-p-017",
+              "cue_en": "I don't want to drink now.",
+              "expected": ["je ne veux pas boire maintenant", "je veux pas boire maintenant"],
+              "components": ["fr-f-001", "fr-f-006", "fr-f-003", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Je ne veux pas — boire — maintenant.",
+              "audio": { "cue": "fr-f-p-017-c", "answer": "fr-f-p-017-a", "answer_slow": "fr-f-p-017-s" }
+            },
+            {
+              "id": "fr-f-p-018",
+              "cue_en": "Ask me: do you want to drink?",
+              "expected": ["tu veux boire"],
+              "components": ["fr-f-005", "fr-f-003", "fr-f-007"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-018-c", "answer": "fr-f-p-018-a", "answer_slow": "fr-f-p-018-s" }
+            },
+            {
+              "id": "fr-f-p-019",
+              "cue_en": "Tell me: you don't want to eat.",
+              "expected": ["tu ne veux pas manger", "tu veux pas manger"],
+              "components": ["fr-f-005", "fr-f-006", "fr-f-002"],
+              "difficulty": 2,
+              "decompose_script": "Tu ne veux pas — manger.",
+              "audio": { "cue": "fr-f-p-019-c", "answer": "fr-f-p-019-a", "answer_slow": "fr-f-p-019-s" }
+            },
+            {
+              "id": "fr-f-p-020",
+              "cue_en": "Two words to a friend, rising voice: you want?",
+              "expected": ["tu veux"],
+              "components": ["fr-f-005", "fr-f-007"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-020-c", "answer": "fr-f-p-020-a", "answer_slow": "fr-f-p-020-s" }
+            },
+            {
+              "id": "fr-f-p-021",
+              "cue_en": "Ask me: don't you want to drink?",
+              "expected": ["tu ne veux pas boire", "tu veux pas boire"],
+              "components": ["fr-f-005", "fr-f-006", "fr-f-003", "fr-f-007"],
+              "difficulty": 2,
+              "decompose_script": "The statement with rising voice: tu ne veux pas boire ?",
+              "audio": { "cue": "fr-f-p-021-c", "answer": "fr-f-p-021-a", "answer_slow": "fr-f-p-021-s" }
+            },
+            {
+              "id": "fr-f-p-022",
+              "cue_en": "Just: you want.",
+              "expected": ["tu veux"],
+              "components": ["fr-f-005"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-022-c", "answer": "fr-f-p-022-a", "answer_slow": "fr-f-p-022-s" }
+            },
+            {
+              "id": "fr-f-p-023",
+              "cue_en": "Street French drops the 'ne' — say 'I don't want' the everyday way.",
+              "expected": ["je veux pas"],
+              "components": ["fr-f-001", "fr-f-006", "fr-f-008"],
+              "difficulty": 2,
+              "decompose_script": "Just je — veux — pas. The ne stays home.",
+              "audio": { "cue": "fr-f-p-023-c", "answer": "fr-f-p-023-a", "answer_slow": "fr-f-p-023-s" }
+            },
+            {
+              "id": "fr-f-p-024",
+              "cue_en": "You don't want to drink now.",
+              "expected": ["tu ne veux pas boire maintenant", "tu veux pas boire maintenant"],
+              "components": ["fr-f-005", "fr-f-006", "fr-f-003", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Tu ne veux pas — boire — maintenant.",
+              "audio": { "cue": "fr-f-p-024-c", "answer": "fr-f-p-024-a", "answer_slow": "fr-f-p-024-s" }
+            },
+            {
+              "id": "fr-f-p-025",
+              "cue_en": "Ask me: do you want to eat now?",
+              "expected": ["tu veux manger maintenant"],
+              "components": ["fr-f-005", "fr-f-002", "fr-f-004", "fr-f-007"],
+              "difficulty": 2,
+              "decompose_script": "Tu veux manger maintenant — and let it rise.",
+              "audio": { "cue": "fr-f-p-025-c", "answer": "fr-f-p-025-a", "answer_slow": "fr-f-p-025-s" }
+            },
+            {
+              "id": "fr-f-p-026",
+              "cue_en": "And: I don't want to eat now.",
+              "expected": ["je ne veux pas manger maintenant", "je veux pas manger maintenant"],
+              "components": ["fr-f-001", "fr-f-006", "fr-f-002", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Je ne veux pas — manger — maintenant.",
+              "audio": { "cue": "fr-f-p-026-c", "answer": "fr-f-p-026-a", "answer_slow": "fr-f-p-026-s" }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "items": [
+            {
+              "id": "fr-f-009",
+              "type": "block",
+              "concept_en": "to go",
+              "target_text": "aller",
+              "romanization": null,
+              "teach_script": "'To go' is 'aller'. Aller.",
+              "audio": { "teach": "fr-f-009-t" }
+            },
+            {
+              "id": "fr-f-010",
+              "type": "pattern",
+              "concept_en": "to the (à + le = au)",
+              "target_text": "au",
+              "romanization": null,
+              "teach_script": "'To the' squeezes into one little word: 'au'. Au. So 'to the market' is — au marché.",
+              "audio": { "teach": "fr-f-010-t" }
+            },
+            {
+              "id": "fr-f-011",
+              "type": "block",
+              "concept_en": "the market",
+              "target_text": "marché",
+              "romanization": null,
+              "teach_script": "'The market' is 'le marché'. Marché.",
+              "audio": { "teach": "fr-f-011-t" }
+            },
+            {
+              "id": "fr-f-012",
+              "type": "block",
+              "concept_en": "later",
+              "target_text": "plus tard",
+              "romanization": null,
+              "teach_script": "'Later' is 'plus tard'. Plus tard. Another time word — it goes at the end, like maintenant.",
+              "audio": { "teach": "fr-f-012-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "fr-f-p-027",
+              "cue_en": "How would you say: I want to go?",
+              "expected": ["je veux aller"],
+              "components": ["fr-f-001", "fr-f-009"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-027-c", "answer": "fr-f-p-027-a", "answer_slow": "fr-f-p-027-s" }
+            },
+            {
+              "id": "fr-f-p-028",
+              "cue_en": "To the market — I want to go to the market.",
+              "expected": ["je veux aller au marché"],
+              "components": ["fr-f-001", "fr-f-009", "fr-f-010", "fr-f-011"],
+              "difficulty": 2,
+              "decompose_script": "À plus le squeezes into au: aller au marché.",
+              "audio": { "cue": "fr-f-p-028-c", "answer": "fr-f-p-028-a", "answer_slow": "fr-f-p-028-s" }
+            },
+            {
+              "id": "fr-f-p-029",
+              "cue_en": "Just: the market.",
+              "expected": ["le marché", "marché"],
+              "components": ["fr-f-011"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-029-c", "answer": "fr-f-p-029-a", "answer_slow": "fr-f-p-029-s" }
+            },
+            {
+              "id": "fr-f-p-030",
+              "cue_en": "Just: later.",
+              "expected": ["plus tard"],
+              "components": ["fr-f-012"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-030-c", "answer": "fr-f-p-030-a", "answer_slow": "fr-f-p-030-s" }
+            },
+            {
+              "id": "fr-f-p-031",
+              "cue_en": "I want to go now.",
+              "expected": ["je veux aller maintenant"],
+              "components": ["fr-f-001", "fr-f-009", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Je veux aller — maintenant at the end.",
+              "audio": { "cue": "fr-f-p-031-c", "answer": "fr-f-p-031-a", "answer_slow": "fr-f-p-031-s" }
+            },
+            {
+              "id": "fr-f-p-032",
+              "cue_en": "Ask me: do you want to go to the market?",
+              "expected": ["tu veux aller au marché"],
+              "components": ["fr-f-005", "fr-f-009", "fr-f-010", "fr-f-011", "fr-f-007"],
+              "difficulty": 2,
+              "decompose_script": "Tu veux — aller au marché — rising at the end.",
+              "audio": { "cue": "fr-f-p-032-c", "answer": "fr-f-p-032-a", "answer_slow": "fr-f-p-032-s" }
+            },
+            {
+              "id": "fr-f-p-033",
+              "cue_en": "I don't want to go now.",
+              "expected": ["je ne veux pas aller maintenant", "je veux pas aller maintenant"],
+              "components": ["fr-f-001", "fr-f-006", "fr-f-009", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Je ne veux pas — aller — maintenant.",
+              "audio": { "cue": "fr-f-p-033-c", "answer": "fr-f-p-033-a", "answer_slow": "fr-f-p-033-s" }
+            },
+            {
+              "id": "fr-f-p-034",
+              "cue_en": "I want to drink later.",
+              "expected": ["je veux boire plus tard"],
+              "components": ["fr-f-001", "fr-f-003", "fr-f-012"],
+              "difficulty": 2,
+              "decompose_script": "Je veux boire — plus tard at the end.",
+              "audio": { "cue": "fr-f-p-034-c", "answer": "fr-f-p-034-a", "answer_slow": "fr-f-p-034-s" }
+            },
+            {
+              "id": "fr-f-p-035",
+              "cue_en": "Ask me: do you want to eat later?",
+              "expected": ["tu veux manger plus tard"],
+              "components": ["fr-f-005", "fr-f-002", "fr-f-012", "fr-f-007"],
+              "difficulty": 2,
+              "decompose_script": "Tu veux manger plus tard — and let it rise.",
+              "audio": { "cue": "fr-f-p-035-c", "answer": "fr-f-p-035-a", "answer_slow": "fr-f-p-035-s" }
+            },
+            {
+              "id": "fr-f-p-036",
+              "cue_en": "I don't want to go to the market.",
+              "expected": ["je ne veux pas aller au marché", "je veux pas aller au marché"],
+              "components": ["fr-f-001", "fr-f-006", "fr-f-009", "fr-f-010", "fr-f-011"],
+              "difficulty": 2,
+              "decompose_script": "Je ne veux pas, then the journey: aller au marché.",
+              "audio": { "cue": "fr-f-p-036-c", "answer": "fr-f-p-036-a", "answer_slow": "fr-f-p-036-s" }
+            },
+            {
+              "id": "fr-f-p-037",
+              "cue_en": "Again: I want to go.",
+              "expected": ["je veux aller"],
+              "components": ["fr-f-001", "fr-f-009"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-037-c", "answer": "fr-f-p-037-a", "answer_slow": "fr-f-p-037-s" }
+            },
+            {
+              "id": "fr-f-p-038",
+              "cue_en": "Now the whole thing: I want to go to the market now.",
+              "expected": ["je veux aller au marché maintenant"],
+              "components": ["fr-f-001", "fr-f-009", "fr-f-010", "fr-f-011", "fr-f-004"],
+              "difficulty": 3,
+              "decompose_script": "Three pieces: je veux — aller au marché — maintenant.",
+              "audio": { "cue": "fr-f-p-038-c", "answer": "fr-f-p-038-a", "answer_slow": "fr-f-p-038-s" }
+            },
+            {
+              "id": "fr-f-p-039",
+              "cue_en": "Ask me: do you want to go to the market later?",
+              "expected": ["tu veux aller au marché plus tard"],
+              "components": ["fr-f-005", "fr-f-009", "fr-f-010", "fr-f-011", "fr-f-012", "fr-f-007"],
+              "difficulty": 3,
+              "decompose_script": "Tu veux — aller au marché — plus tard — rising at the end.",
+              "audio": { "cue": "fr-f-p-039-c", "answer": "fr-f-p-039-a", "answer_slow": "fr-f-p-039-s" }
+            },
+            {
+              "id": "fr-f-p-040",
+              "cue_en": "And: I don't want to go to the market now.",
+              "expected": ["je ne veux pas aller au marché maintenant", "je veux pas aller au marché maintenant"],
+              "components": ["fr-f-001", "fr-f-006", "fr-f-009", "fr-f-010", "fr-f-011", "fr-f-004"],
+              "difficulty": 3,
+              "decompose_script": "Je ne veux pas — aller au marché — maintenant.",
+              "audio": { "cue": "fr-f-p-040-c", "answer": "fr-f-p-040-a", "answer_slow": "fr-f-p-040-s" }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "items": [
+            {
+              "id": "fr-f-013",
+              "type": "block",
+              "concept_en": "I can",
+              "target_text": "je peux",
+              "romanization": null,
+              "teach_script": "'I can' is 'je peux'. Je peux. It works exactly like je veux: je peux manger — I can eat.",
+              "audio": { "teach": "fr-f-013-t" }
+            },
+            {
+              "id": "fr-f-014",
+              "type": "block",
+              "concept_en": "I have to",
+              "target_text": "je dois",
+              "romanization": null,
+              "teach_script": "'I have to' — I must — is 'je dois'. Je dois.",
+              "audio": { "teach": "fr-f-014-t" }
+            },
+            {
+              "id": "fr-f-015",
+              "type": "block",
+              "concept_en": "you can",
+              "target_text": "tu peux",
+              "romanization": null,
+              "teach_script": "'You can' is 'tu peux'. Tu peux.",
+              "audio": { "teach": "fr-f-015-t" }
+            },
+            {
+              "id": "fr-f-016",
+              "type": "block",
+              "concept_en": "to go home",
+              "target_text": "rentrer",
+              "romanization": null,
+              "teach_script": "'To go home' has its own verb: 'rentrer'. Rentrer. Je veux rentrer — I want to go home.",
+              "audio": { "teach": "fr-f-016-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "fr-f-p-041",
+              "cue_en": "How would you say: I can?",
+              "expected": ["je peux"],
+              "components": ["fr-f-013"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-041-c", "answer": "fr-f-p-041-a", "answer_slow": "fr-f-p-041-s" }
+            },
+            {
+              "id": "fr-f-p-042",
+              "cue_en": "I can go now.",
+              "expected": ["je peux aller maintenant"],
+              "components": ["fr-f-013", "fr-f-009", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Je peux works like je veux: je peux — aller — maintenant.",
+              "audio": { "cue": "fr-f-p-042-c", "answer": "fr-f-p-042-a", "answer_slow": "fr-f-p-042-s" }
+            },
+            {
+              "id": "fr-f-p-043",
+              "cue_en": "I have to eat.",
+              "expected": ["je dois manger"],
+              "components": ["fr-f-014", "fr-f-002"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-043-c", "answer": "fr-f-p-043-a", "answer_slow": "fr-f-p-043-s" }
+            },
+            {
+              "id": "fr-f-p-044",
+              "cue_en": "Just: to go home.",
+              "expected": ["rentrer"],
+              "components": ["fr-f-016"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-044-c", "answer": "fr-f-p-044-a", "answer_slow": "fr-f-p-044-s" }
+            },
+            {
+              "id": "fr-f-p-045",
+              "cue_en": "I want to go home.",
+              "expected": ["je veux rentrer"],
+              "components": ["fr-f-001", "fr-f-016"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-045-c", "answer": "fr-f-p-045-a", "answer_slow": "fr-f-p-045-s" }
+            },
+            {
+              "id": "fr-f-p-046",
+              "cue_en": "I have to go home now.",
+              "expected": ["je dois rentrer maintenant"],
+              "components": ["fr-f-014", "fr-f-016", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Je dois — rentrer — maintenant.",
+              "audio": { "cue": "fr-f-p-046-c", "answer": "fr-f-p-046-a", "answer_slow": "fr-f-p-046-s" }
+            },
+            {
+              "id": "fr-f-p-047",
+              "cue_en": "Just: you can.",
+              "expected": ["tu peux"],
+              "components": ["fr-f-015"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-047-c", "answer": "fr-f-p-047-a", "answer_slow": "fr-f-p-047-s" }
+            },
+            {
+              "id": "fr-f-p-048",
+              "cue_en": "I can eat later.",
+              "expected": ["je peux manger plus tard"],
+              "components": ["fr-f-013", "fr-f-002", "fr-f-012"],
+              "difficulty": 2,
+              "decompose_script": "Je peux manger — plus tard at the end.",
+              "audio": { "cue": "fr-f-p-048-c", "answer": "fr-f-p-048-a", "answer_slow": "fr-f-p-048-s" }
+            },
+            {
+              "id": "fr-f-p-049",
+              "cue_en": "Ask me: can you go to the market later?",
+              "expected": ["tu peux aller au marché plus tard"],
+              "components": ["fr-f-015", "fr-f-009", "fr-f-010", "fr-f-011", "fr-f-012", "fr-f-007"],
+              "difficulty": 3,
+              "decompose_script": "Tu peux — aller au marché — plus tard — rising at the end.",
+              "audio": { "cue": "fr-f-p-049-c", "answer": "fr-f-p-049-a", "answer_slow": "fr-f-p-049-s" }
+            },
+            {
+              "id": "fr-f-p-050",
+              "cue_en": "I can't go now.",
+              "expected": ["je ne peux pas aller maintenant", "je peux pas aller maintenant"],
+              "components": ["fr-f-006", "fr-f-013", "fr-f-009", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Same sandwich: je ne peux pas — aller maintenant.",
+              "audio": { "cue": "fr-f-p-050-c", "answer": "fr-f-p-050-a", "answer_slow": "fr-f-p-050-s" }
+            },
+            {
+              "id": "fr-f-p-051",
+              "cue_en": "Ask me: can you eat now?",
+              "expected": ["tu peux manger maintenant"],
+              "components": ["fr-f-015", "fr-f-002", "fr-f-004", "fr-f-007"],
+              "difficulty": 2,
+              "decompose_script": "Tu peux manger maintenant — let it rise.",
+              "audio": { "cue": "fr-f-p-051-c", "answer": "fr-f-p-051-a", "answer_slow": "fr-f-p-051-s" }
+            },
+            {
+              "id": "fr-f-p-052",
+              "cue_en": "The big one: I can't go to the market now.",
+              "expected": ["je ne peux pas aller au marché maintenant", "je peux pas aller au marché maintenant"],
+              "components": ["fr-f-006", "fr-f-013", "fr-f-009", "fr-f-010", "fr-f-011", "fr-f-004"],
+              "difficulty": 3,
+              "decompose_script": "Je ne peux pas, then the journey: aller au marché — maintenant.",
+              "audio": { "cue": "fr-f-p-052-c", "answer": "fr-f-p-052-a", "answer_slow": "fr-f-p-052-s" }
+            },
+            {
+              "id": "fr-f-p-053",
+              "cue_en": "I have to go to the market later.",
+              "expected": ["je dois aller au marché plus tard"],
+              "components": ["fr-f-014", "fr-f-009", "fr-f-010", "fr-f-011", "fr-f-012"],
+              "difficulty": 3,
+              "decompose_script": "Je dois — aller au marché — plus tard.",
+              "audio": { "cue": "fr-f-p-053-c", "answer": "fr-f-p-053-a", "answer_slow": "fr-f-p-053-s" }
+            },
+            {
+              "id": "fr-f-p-054",
+              "cue_en": "And: I don't want to go home now.",
+              "expected": ["je ne veux pas rentrer maintenant", "je veux pas rentrer maintenant"],
+              "components": ["fr-f-006", "fr-f-001", "fr-f-016", "fr-f-004"],
+              "difficulty": 3,
+              "decompose_script": "Je ne veux pas — rentrer — maintenant.",
+              "audio": { "cue": "fr-f-p-054-c", "answer": "fr-f-p-054-a", "answer_slow": "fr-f-p-054-s" }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "items": [
+            {
+              "id": "fr-f-017",
+              "type": "block",
+              "concept_en": "it is / this is",
+              "target_text": "c'est",
+              "romanization": null,
+              "teach_script": "'It is' — 'this is' — is one sound: 'c'est'. C'est. C'est bon — it's good.",
+              "audio": { "teach": "fr-f-017-t" }
+            },
+            {
+              "id": "fr-f-018",
+              "type": "block",
+              "concept_en": "that (and casual this)",
+              "target_text": "ça",
+              "romanization": null,
+              "teach_script": "'That' — and casually 'this' too — is 'ça'. Ça. Je veux ça — I want that.",
+              "audio": { "teach": "fr-f-018-t" }
+            },
+            {
+              "id": "fr-f-019",
+              "type": "block",
+              "concept_en": "good",
+              "target_text": "bon",
+              "romanization": null,
+              "teach_script": "'Good' is 'bon'. Bon.",
+              "audio": { "teach": "fr-f-019-t" }
+            },
+            {
+              "id": "fr-f-020",
+              "type": "block",
+              "concept_en": "but",
+              "target_text": "mais",
+              "romanization": null,
+              "teach_script": "'But' is 'mais'. Mais. It glues two little sentences together.",
+              "audio": { "teach": "fr-f-020-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "fr-f-p-055",
+              "cue_en": "How would you say: it's good?",
+              "expected": ["c'est bon"],
+              "components": ["fr-f-017", "fr-f-019"],
+              "difficulty": 1,
+              "decompose_script": "One sound, then the word: c'est — bon.",
+              "audio": { "cue": "fr-f-p-055-c", "answer": "fr-f-p-055-a", "answer_slow": "fr-f-p-055-s" }
+            },
+            {
+              "id": "fr-f-p-056",
+              "cue_en": "I want that.",
+              "expected": ["je veux ça"],
+              "components": ["fr-f-001", "fr-f-018"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-056-c", "answer": "fr-f-p-056-a", "answer_slow": "fr-f-p-056-s" }
+            },
+            {
+              "id": "fr-f-p-057",
+              "cue_en": "It's not good.",
+              "expected": ["ce n'est pas bon", "c'est pas bon"],
+              "components": ["fr-f-017", "fr-f-006", "fr-f-019"],
+              "difficulty": 2,
+              "decompose_script": "Polished: ce n'est pas bon. On the street you'll hear: c'est pas bon.",
+              "audio": { "cue": "fr-f-p-057-c", "answer": "fr-f-p-057-a", "answer_slow": "fr-f-p-057-s" }
+            },
+            {
+              "id": "fr-f-p-058",
+              "cue_en": "Just: that.",
+              "expected": ["ça"],
+              "components": ["fr-f-018"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-058-c", "answer": "fr-f-p-058-a", "answer_slow": "fr-f-p-058-s" }
+            },
+            {
+              "id": "fr-f-p-059",
+              "cue_en": "Ask me: do you want that?",
+              "expected": ["tu veux ça"],
+              "components": ["fr-f-005", "fr-f-018", "fr-f-007"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-059-c", "answer": "fr-f-p-059-a", "answer_slow": "fr-f-p-059-s" }
+            },
+            {
+              "id": "fr-f-p-060",
+              "cue_en": "I don't want that.",
+              "expected": ["je ne veux pas ça", "je veux pas ça"],
+              "components": ["fr-f-006", "fr-f-001", "fr-f-018"],
+              "difficulty": 2,
+              "decompose_script": "Je ne veux pas — ça.",
+              "audio": { "cue": "fr-f-p-060-c", "answer": "fr-f-p-060-a", "answer_slow": "fr-f-p-060-s" }
+            },
+            {
+              "id": "fr-f-p-061",
+              "cue_en": "Ask me: is it good?",
+              "expected": ["c'est bon"],
+              "components": ["fr-f-017", "fr-f-019", "fr-f-007"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-061-c", "answer": "fr-f-p-061-a", "answer_slow": "fr-f-p-061-s" }
+            },
+            {
+              "id": "fr-f-p-062",
+              "cue_en": "Just: but.",
+              "expected": ["mais"],
+              "components": ["fr-f-020"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-062-c", "answer": "fr-f-p-062-a", "answer_slow": "fr-f-p-062-s" }
+            },
+            {
+              "id": "fr-f-p-063",
+              "cue_en": "It's good, but I want to go home.",
+              "expected": ["c'est bon mais je veux rentrer"],
+              "components": ["fr-f-017", "fr-f-019", "fr-f-020", "fr-f-001", "fr-f-016"],
+              "difficulty": 2,
+              "decompose_script": "Two sentences glued with mais: c'est bon — mais — je veux rentrer.",
+              "audio": { "cue": "fr-f-p-063-c", "answer": "fr-f-p-063-a", "answer_slow": "fr-f-p-063-s" }
+            },
+            {
+              "id": "fr-f-p-064",
+              "cue_en": "I want that now.",
+              "expected": ["je veux ça maintenant"],
+              "components": ["fr-f-001", "fr-f-018", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Je veux ça — maintenant at the end.",
+              "audio": { "cue": "fr-f-p-064-c", "answer": "fr-f-p-064-a", "answer_slow": "fr-f-p-064-s" }
+            },
+            {
+              "id": "fr-f-p-065",
+              "cue_en": "It's good, but I don't want that.",
+              "expected": ["c'est bon mais je ne veux pas ça", "c'est bon mais je veux pas ça"],
+              "components": ["fr-f-017", "fr-f-019", "fr-f-020", "fr-f-006", "fr-f-001", "fr-f-018"],
+              "difficulty": 3,
+              "decompose_script": "C'est bon — mais — je ne veux pas ça.",
+              "audio": { "cue": "fr-f-p-065-c", "answer": "fr-f-p-065-a", "answer_slow": "fr-f-p-065-s" }
+            },
+            {
+              "id": "fr-f-p-066",
+              "cue_en": "It's good, but I have to go home now.",
+              "expected": ["c'est bon mais je dois rentrer maintenant"],
+              "components": ["fr-f-017", "fr-f-019", "fr-f-020", "fr-f-014", "fr-f-016", "fr-f-004"],
+              "difficulty": 3,
+              "decompose_script": "C'est bon — mais — je dois rentrer maintenant.",
+              "audio": { "cue": "fr-f-p-066-c", "answer": "fr-f-p-066-a", "answer_slow": "fr-f-p-066-s" }
+            },
+            {
+              "id": "fr-f-p-067",
+              "cue_en": "I want to go, but I can't go now.",
+              "expected": ["je veux aller mais je ne peux pas aller maintenant", "je veux aller mais je peux pas aller maintenant"],
+              "components": ["fr-f-001", "fr-f-009", "fr-f-020", "fr-f-006", "fr-f-013", "fr-f-004"],
+              "difficulty": 3,
+              "decompose_script": "Je veux aller — mais — je ne peux pas aller maintenant.",
+              "audio": { "cue": "fr-f-p-067-c", "answer": "fr-f-p-067-a", "answer_slow": "fr-f-p-067-s" }
+            },
+            {
+              "id": "fr-f-p-068",
+              "cue_en": "And: it's good, but I don't want that now.",
+              "expected": ["c'est bon mais je ne veux pas ça maintenant", "c'est bon mais je veux pas ça maintenant"],
+              "components": ["fr-f-017", "fr-f-019", "fr-f-020", "fr-f-006", "fr-f-001", "fr-f-018", "fr-f-004"],
+              "difficulty": 3,
+              "decompose_script": "C'est bon — mais — je ne veux pas ça maintenant.",
+              "audio": { "cue": "fr-f-p-068-c", "answer": "fr-f-p-068-a", "answer_slow": "fr-f-p-068-s" }
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "items": [
+            {
+              "id": "fr-f-021",
+              "type": "block",
+              "concept_en": "to buy",
+              "target_text": "acheter",
+              "romanization": null,
+              "teach_script": "'To buy' is 'acheter'. Acheter.",
+              "audio": { "teach": "fr-f-021-t" }
+            },
+            {
+              "id": "fr-f-022",
+              "type": "block",
+              "concept_en": "I'm going to (future)",
+              "target_text": "je vais",
+              "romanization": null,
+              "teach_script": "Here is your whole future: 'je vais' — I'm going to. Je vais. Je vais manger — I'm going to eat. Any verb you know can follow it.",
+              "audio": { "teach": "fr-f-022-t" }
+            },
+            {
+              "id": "fr-f-023",
+              "type": "block",
+              "concept_en": "you're going to",
+              "target_text": "tu vas",
+              "romanization": null,
+              "teach_script": "'You're going to' is 'tu vas'. Tu vas.",
+              "audio": { "teach": "fr-f-023-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "fr-f-p-069",
+              "cue_en": "To buy.",
+              "expected": ["acheter"],
+              "components": ["fr-f-021"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-069-c", "answer": "fr-f-p-069-a", "answer_slow": "fr-f-p-069-s" }
+            },
+            {
+              "id": "fr-f-p-070",
+              "cue_en": "I want to buy that.",
+              "expected": ["je veux acheter ça"],
+              "components": ["fr-f-001", "fr-f-021", "fr-f-018"],
+              "difficulty": 2,
+              "decompose_script": "Je veux acheter — ça.",
+              "audio": { "cue": "fr-f-p-070-c", "answer": "fr-f-p-070-a", "answer_slow": "fr-f-p-070-s" }
+            },
+            {
+              "id": "fr-f-p-071",
+              "cue_en": "The future scaffold — say: I'm going to.",
+              "expected": ["je vais"],
+              "components": ["fr-f-022"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-071-c", "answer": "fr-f-p-071-a", "answer_slow": "fr-f-p-071-s" }
+            },
+            {
+              "id": "fr-f-p-072",
+              "cue_en": "I'm going to buy that.",
+              "expected": ["je vais acheter ça"],
+              "components": ["fr-f-022", "fr-f-021", "fr-f-018"],
+              "difficulty": 2,
+              "decompose_script": "Je vais — plus any verb: je vais acheter — ça.",
+              "audio": { "cue": "fr-f-p-072-c", "answer": "fr-f-p-072-a", "answer_slow": "fr-f-p-072-s" }
+            },
+            {
+              "id": "fr-f-p-073",
+              "cue_en": "I'm going to eat now.",
+              "expected": ["je vais manger maintenant"],
+              "components": ["fr-f-022", "fr-f-002", "fr-f-004"],
+              "difficulty": 2,
+              "decompose_script": "Je vais manger — maintenant.",
+              "audio": { "cue": "fr-f-p-073-c", "answer": "fr-f-p-073-a", "answer_slow": "fr-f-p-073-s" }
+            },
+            {
+              "id": "fr-f-p-074",
+              "cue_en": "I'm going to go to the market.",
+              "expected": ["je vais aller au marché"],
+              "components": ["fr-f-022", "fr-f-009", "fr-f-010", "fr-f-011"],
+              "difficulty": 2,
+              "decompose_script": "Je vais aller — au marché. Yes, 'going to go' is normal French.",
+              "audio": { "cue": "fr-f-p-074-c", "answer": "fr-f-p-074-a", "answer_slow": "fr-f-p-074-s" }
+            },
+            {
+              "id": "fr-f-p-075",
+              "cue_en": "You're going to — say it.",
+              "expected": ["tu vas"],
+              "components": ["fr-f-023"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-075-c", "answer": "fr-f-p-075-a", "answer_slow": "fr-f-p-075-s" }
+            },
+            {
+              "id": "fr-f-p-076",
+              "cue_en": "Ask me: are you going to buy that?",
+              "expected": ["tu vas acheter ça"],
+              "components": ["fr-f-023", "fr-f-021", "fr-f-018", "fr-f-007"],
+              "difficulty": 2,
+              "decompose_script": "Tu vas acheter ça — let it rise.",
+              "audio": { "cue": "fr-f-p-076-c", "answer": "fr-f-p-076-a", "answer_slow": "fr-f-p-076-s" }
+            },
+            {
+              "id": "fr-f-p-077",
+              "cue_en": "I'm not going to buy that.",
+              "expected": ["je ne vais pas acheter ça", "je vais pas acheter ça"],
+              "components": ["fr-f-006", "fr-f-022", "fr-f-021", "fr-f-018"],
+              "difficulty": 2,
+              "decompose_script": "Sandwich the vais: je ne vais pas — acheter ça.",
+              "audio": { "cue": "fr-f-p-077-c", "answer": "fr-f-p-077-a", "answer_slow": "fr-f-p-077-s" }
+            },
+            {
+              "id": "fr-f-p-078",
+              "cue_en": "I have to buy that.",
+              "expected": ["je dois acheter ça"],
+              "components": ["fr-f-014", "fr-f-021", "fr-f-018"],
+              "difficulty": 2,
+              "decompose_script": "Je dois acheter — ça.",
+              "audio": { "cue": "fr-f-p-078-c", "answer": "fr-f-p-078-a", "answer_slow": "fr-f-p-078-s" }
+            },
+            {
+              "id": "fr-f-p-079",
+              "cue_en": "I'm going to go home.",
+              "expected": ["je vais rentrer"],
+              "components": ["fr-f-022", "fr-f-016"],
+              "difficulty": 2,
+              "decompose_script": "Je vais — rentrer.",
+              "audio": { "cue": "fr-f-p-079-c", "answer": "fr-f-p-079-a", "answer_slow": "fr-f-p-079-s" }
+            },
+            {
+              "id": "fr-f-p-080",
+              "cue_en": "I'm going to go to the market now.",
+              "expected": ["je vais aller au marché maintenant"],
+              "components": ["fr-f-022", "fr-f-009", "fr-f-010", "fr-f-011", "fr-f-004"],
+              "difficulty": 3,
+              "decompose_script": "Je vais aller — au marché — maintenant.",
+              "audio": { "cue": "fr-f-p-080-c", "answer": "fr-f-p-080-a", "answer_slow": "fr-f-p-080-s" }
+            },
+            {
+              "id": "fr-f-p-081",
+              "cue_en": "It's good, but I'm not going to buy that.",
+              "expected": ["c'est bon mais je ne vais pas acheter ça", "c'est bon mais je vais pas acheter ça"],
+              "components": ["fr-f-017", "fr-f-019", "fr-f-020", "fr-f-006", "fr-f-022", "fr-f-021", "fr-f-018"],
+              "difficulty": 3,
+              "decompose_script": "C'est bon — mais — je ne vais pas acheter ça.",
+              "audio": { "cue": "fr-f-p-081-c", "answer": "fr-f-p-081-a", "answer_slow": "fr-f-p-081-s" }
+            },
+            {
+              "id": "fr-f-p-082",
+              "cue_en": "I'm going to go home, but I have to eat now.",
+              "expected": ["je vais rentrer mais je dois manger maintenant"],
+              "components": ["fr-f-022", "fr-f-016", "fr-f-020", "fr-f-014", "fr-f-002", "fr-f-004"],
+              "difficulty": 3,
+              "decompose_script": "Je vais rentrer — mais — je dois manger maintenant.",
+              "audio": { "cue": "fr-f-p-082-c", "answer": "fr-f-p-082-a", "answer_slow": "fr-f-p-082-s" }
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "items": [
+            {
+              "id": "fr-f-024",
+              "type": "block",
+              "concept_en": "tomorrow",
+              "target_text": "demain",
+              "romanization": null,
+              "teach_script": "'Tomorrow' is 'demain'. Demain. A time word — so it goes at the end.",
+              "audio": { "teach": "fr-f-024-t" }
+            },
+            {
+              "id": "fr-f-025",
+              "type": "block",
+              "concept_en": "because",
+              "target_text": "parce que",
+              "romanization": null,
+              "teach_script": "'Because' is 'parce que'. Parce que. Like mais, it glues two sentences — and now you can give reasons.",
+              "audio": { "teach": "fr-f-025-t" }
+            },
+            {
+              "id": "fr-f-026",
+              "type": "block",
+              "concept_en": "today",
+              "target_text": "aujourd'hui",
+              "romanization": null,
+              "teach_script": "'Today' is 'aujourd'hui'. Aujourd'hui.",
+              "audio": { "teach": "fr-f-026-t" }
+            }
+          ],
+          "prompts": [
+            {
+              "id": "fr-f-p-083",
+              "cue_en": "Just: tomorrow.",
+              "expected": ["demain"],
+              "components": ["fr-f-024"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-083-c", "answer": "fr-f-p-083-a", "answer_slow": "fr-f-p-083-s" }
+            },
+            {
+              "id": "fr-f-p-084",
+              "cue_en": "And: today.",
+              "expected": ["aujourd'hui"],
+              "components": ["fr-f-026"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-084-c", "answer": "fr-f-p-084-a", "answer_slow": "fr-f-p-084-s" }
+            },
+            {
+              "id": "fr-f-p-085",
+              "cue_en": "I'm going to go tomorrow.",
+              "expected": ["je vais aller demain"],
+              "components": ["fr-f-022", "fr-f-009", "fr-f-024"],
+              "difficulty": 2,
+              "decompose_script": "Je vais aller — demain at the end.",
+              "audio": { "cue": "fr-f-p-085-c", "answer": "fr-f-p-085-a", "answer_slow": "fr-f-p-085-s" }
+            },
+            {
+              "id": "fr-f-p-086",
+              "cue_en": "Ask me: are you going to go to the market tomorrow?",
+              "expected": ["tu vas aller au marché demain"],
+              "components": ["fr-f-023", "fr-f-009", "fr-f-010", "fr-f-011", "fr-f-024", "fr-f-007"],
+              "difficulty": 3,
+              "decompose_script": "Tu vas — aller au marché — demain — and let it rise.",
+              "audio": { "cue": "fr-f-p-086-c", "answer": "fr-f-p-086-a", "answer_slow": "fr-f-p-086-s" }
+            },
+            {
+              "id": "fr-f-p-087",
+              "cue_en": "I'm going to buy that tomorrow.",
+              "expected": ["je vais acheter ça demain"],
+              "components": ["fr-f-022", "fr-f-021", "fr-f-018", "fr-f-024"],
+              "difficulty": 2,
+              "decompose_script": "Je vais acheter ça — demain at the end.",
+              "audio": { "cue": "fr-f-p-087-c", "answer": "fr-f-p-087-a", "answer_slow": "fr-f-p-087-s" }
+            },
+            {
+              "id": "fr-f-p-088",
+              "cue_en": "Just: because.",
+              "expected": ["parce que"],
+              "components": ["fr-f-025"],
+              "difficulty": 1,
+              "audio": { "cue": "fr-f-p-088-c", "answer": "fr-f-p-088-a", "answer_slow": "fr-f-p-088-s" }
+            },
+            {
+              "id": "fr-f-p-089",
+              "cue_en": "I want to go home because I have to eat.",
+              "expected": ["je veux rentrer parce que je dois manger"],
+              "components": ["fr-f-001", "fr-f-016", "fr-f-025", "fr-f-014", "fr-f-002"],
+              "difficulty": 3,
+              "decompose_script": "First clause — parce que — second clause: je veux rentrer — parce que — je dois manger.",
+              "audio": { "cue": "fr-f-p-089-c", "answer": "fr-f-p-089-a", "answer_slow": "fr-f-p-089-s" }
+            },
+            {
+              "id": "fr-f-p-090",
+              "cue_en": "I can't go now because I have to eat.",
+              "expected": [
+                "je ne peux pas aller maintenant parce que je dois manger",
+                "je peux pas aller maintenant parce que je dois manger"
+              ],
+              "components": ["fr-f-006", "fr-f-013", "fr-f-009", "fr-f-004", "fr-f-025", "fr-f-014", "fr-f-002"],
+              "difficulty": 3,
+              "decompose_script": "Je ne peux pas aller maintenant — parce que — je dois manger.",
+              "audio": { "cue": "fr-f-p-090-c", "answer": "fr-f-p-090-a", "answer_slow": "fr-f-p-090-s" }
+            },
+            {
+              "id": "fr-f-p-091",
+              "cue_en": "I'm going to eat today.",
+              "expected": ["je vais manger aujourd'hui"],
+              "components": ["fr-f-022", "fr-f-002", "fr-f-026"],
+              "difficulty": 2,
+              "decompose_script": "Je vais manger — aujourd'hui at the end.",
+              "audio": { "cue": "fr-f-p-091-c", "answer": "fr-f-p-091-a", "answer_slow": "fr-f-p-091-s" }
+            },
+            {
+              "id": "fr-f-p-092",
+              "cue_en": "I'm not going to go tomorrow.",
+              "expected": ["je ne vais pas aller demain", "je vais pas aller demain"],
+              "components": ["fr-f-006", "fr-f-022", "fr-f-009", "fr-f-024"],
+              "difficulty": 2,
+              "decompose_script": "Je ne vais pas — aller — demain.",
+              "audio": { "cue": "fr-f-p-092-c", "answer": "fr-f-p-092-a", "answer_slow": "fr-f-p-092-s" }
+            },
+            {
+              "id": "fr-f-p-093",
+              "cue_en": "I'm going to eat later because I want to go now.",
+              "expected": ["je vais manger plus tard parce que je veux aller maintenant"],
+              "components": ["fr-f-022", "fr-f-002", "fr-f-012", "fr-f-025", "fr-f-001", "fr-f-009", "fr-f-004"],
+              "difficulty": 3,
+              "decompose_script": "Je vais manger plus tard — parce que — je veux aller maintenant.",
+              "audio": { "cue": "fr-f-p-093-c", "answer": "fr-f-p-093-a", "answer_slow": "fr-f-p-093-s" }
+            },
+            {
+              "id": "fr-f-p-094",
+              "cue_en": "The big one: I can't go to the market today because I have to eat.",
+              "expected": [
+                "je ne peux pas aller au marché aujourd'hui parce que je dois manger",
+                "je peux pas aller au marché aujourd'hui parce que je dois manger"
+              ],
+              "components": ["fr-f-006", "fr-f-013", "fr-f-009", "fr-f-010", "fr-f-011", "fr-f-026", "fr-f-025", "fr-f-014", "fr-f-002"],
+              "difficulty": 3,
+              "decompose_script": "Three pieces: je ne peux pas aller au marché aujourd'hui — parce que — je dois manger.",
+              "audio": { "cue": "fr-f-p-094-c", "answer": "fr-f-p-094-a", "answer_slow": "fr-f-p-094-s" }
+            },
+            {
+              "id": "fr-f-p-095",
+              "cue_en": "I'm going to go to the market tomorrow because I have to buy that.",
+              "expected": ["je vais aller au marché demain parce que je dois acheter ça"],
+              "components": ["fr-f-022", "fr-f-009", "fr-f-010", "fr-f-011", "fr-f-024", "fr-f-025", "fr-f-014", "fr-f-021", "fr-f-018"],
+              "difficulty": 3,
+              "decompose_script": "Je vais aller au marché demain — parce que — je dois acheter ça.",
+              "audio": { "cue": "fr-f-p-095-c", "answer": "fr-f-p-095-a", "answer_slow": "fr-f-p-095-s" }
+            },
+            {
+              "id": "fr-f-p-096",
+              "cue_en": "Last one this week: it's good, but I'm going to buy that tomorrow.",
+              "expected": ["c'est bon mais je vais acheter ça demain"],
+              "components": ["fr-f-017", "fr-f-019", "fr-f-020", "fr-f-022", "fr-f-021", "fr-f-018", "fr-f-024"],
+              "difficulty": 3,
+              "decompose_script": "C'est bon — mais — je vais acheter ça demain.",
+              "audio": { "cue": "fr-f-p-096-c", "answer": "fr-f-p-096-a", "answer_slow": "fr-f-p-096-s" }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "modal-verb-time",
+      "shape": "[modal] [verb] ([time])",
+      "slots": [
+        { "name": "modal", "fillers": ["fr-f-001", "fr-f-005", "fr-f-013", "fr-f-014", "fr-f-015", "fr-f-022", "fr-f-023"] },
+        { "name": "verb", "fillers": ["fr-f-002", "fr-f-003", "fr-f-009", "fr-f-016", "fr-f-021"] },
+        { "name": "time", "fillers": ["fr-f-004", "fr-f-012", "fr-f-024", "fr-f-026"], "optional": true }
+      ]
+    },
+    {
+      "id": "cest-opinion",
+      "shape": "c'est bon (and its negation)",
+      "slots": [
+        { "name": "copula", "fillers": ["fr-f-017"] },
+        { "name": "negation", "fillers": ["fr-f-006"], "optional": true },
+        { "name": "adjective", "fillers": ["fr-f-019"] }
+      ]
+    },
+    {
+      "id": "want-object",
+      "shape": "[je veux/tu veux] (pas) ça",
+      "slots": [
+        { "name": "want", "fillers": ["fr-f-001", "fr-f-005"] },
+        { "name": "negation", "fillers": ["fr-f-006"], "optional": true },
+        { "name": "object", "fillers": ["fr-f-018"] }
+      ]
+    },
+    {
+      "id": "go-to-market",
+      "shape": "[modal] aller au marché ([time])",
+      "slots": [
+        { "name": "modal", "fillers": ["fr-f-001", "fr-f-005", "fr-f-013", "fr-f-014", "fr-f-015", "fr-f-022", "fr-f-023"] },
+        { "name": "motion", "fillers": ["fr-f-009"] },
+        { "name": "connector", "fillers": ["fr-f-010"] },
+        { "name": "place", "fillers": ["fr-f-011"] },
+        { "name": "time", "fillers": ["fr-f-004", "fr-f-012", "fr-f-024", "fr-f-026"], "optional": true }
+      ]
+    }
+  ],
+  "system_lines": {
+    "confirm": { "text": "Yes —", "audio": "sys-confirm" },
+    "almost": { "text": "Almost — listen:", "audio": "sys-almost" },
+    "miss_intro": { "text": "Here it is again —", "audio": "sys-miss-intro" },
+    "session_open": { "text": "Ready. Here we go.", "audio": "sys-session-open" },
+    "victory_intro": { "text": "Last stretch — you build these yourself.", "audio": "sys-victory-intro" },
+    "session_close": { "text": "That's the session. You're done for today — or keep going.", "audio": "sys-session-close" }
+  }
+}

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { InstalledLanguage } from './packs';
 
 export type Screen = 'home' | 'session' | 'review' | 'settings' | 'm0spike';
 
@@ -16,9 +17,10 @@ export const DEFAULT_SETTINGS: Settings = {
 
 interface AppState {
   screen: Screen;
-  language: 'id';
+  language: InstalledLanguage;
   settings: Settings;
   setScreen: (s: Screen) => void;
+  setLanguage: (l: InstalledLanguage) => void;
   setSettings: (s: Partial<Settings>) => void;
 }
 
@@ -27,5 +29,6 @@ export const useApp = create<AppState>((set) => ({
   language: 'id',
   settings: DEFAULT_SETTINGS,
   setScreen: (screen) => set({ screen }),
+  setLanguage: (language) => set({ language }),
   setSettings: (patch) => set((s) => ({ settings: { ...s.settings, ...patch } })),
 }));

@@ -2,6 +2,12 @@ import { createAudioPlayer, setAudioModeAsync, type AudioPlayer } from 'expo-aud
 import * as Speech from 'expo-speech';
 import { Directory, Paths } from 'expo-file-system';
 import { sttLocaleFor } from '../db';
+import { AUDIO_MAP as AUDIO_ID } from '../generated/audio-map.id';
+import { AUDIO_MAP as AUDIO_ES } from '../generated/audio-map.es';
+import { AUDIO_MAP as AUDIO_FR } from '../generated/audio-map.fr';
+
+/** Clips bundled into the binary at build time (regenerated per render). */
+const BUNDLED: Record<string, number> = { ...AUDIO_ID, ...AUDIO_ES, ...AUDIO_FR };
 
 /**
  * All teaching audio goes through here. Rendered pack clips play from
@@ -49,13 +55,22 @@ export class TeachingAudio {
   }
 
   hasClip(key: string): boolean {
-    return this.available.has(key);
+    return this.available.has(key) || key in BUNDLED;
   }
 
-  /** Play one line; resolves when it finishes (or immediately on stop()). */
+  /**
+   * Play one line; resolves when it finishes (or immediately on stop()).
+   * Source order: bundled clip → downloaded pack file → device TTS. The TTS
+   * fallback is a stopgap for unrendered packs only — M0 verdict: unusable
+   * as the tutor voice, fine for incidental dynamic lines.
+   */
   async play(req: SpeakRequest): Promise<void> {
     this.cancelled = false;
     await configureAudioSession();
+    const bundled = req.key ? BUNDLED[req.key] : undefined;
+    if (bundled !== undefined) {
+      return this.playFile(bundled);
+    }
     const uri = req.key ? this.available.get(req.key) : undefined;
     if (uri) {
       return this.playFile(uri);
@@ -63,7 +78,7 @@ export class TeachingAudio {
     return this.speak(req);
   }
 
-  private playFile(uri: string): Promise<void> {
+  private playFile(uri: string | number): Promise<void> {
     return new Promise((resolve) => {
       if (!this.player) {
         this.player = createAudioPlayer(uri);

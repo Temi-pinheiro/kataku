@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import pack from '../../content/id/foundation.json';
+import { LANGUAGE_NAMES, PACKS } from '../packs';
 import { useApp } from '../store';
 import { colors, type } from '../theme';
-import type { CoursePack } from '../lib/content/types';
 import { allPrompts } from '../lib/content/types';
 import { masteredItemIds } from '../lib/scheduler/scheduler';
 import { roundSpeakable, speakableCountForPack } from '../lib/review/speakable';
 import { formatUsd, monthToDateUsd } from '../lib/cost/meter';
 import { getAllMastery, openDb, spendEvents } from '../db';
-
-const PACK = pack as unknown as CoursePack;
 
 interface ReviewData {
   speakable: number;
@@ -26,7 +23,8 @@ interface ReviewData {
  * checkpoint and what's-next line land in M4.
  */
 export function WeeklyReviewScreen() {
-  const { setScreen } = useApp();
+  const { setScreen, language } = useApp();
+  const PACK = PACKS[language];
   const [data, setData] = useState<ReviewData | null>(null);
 
   useEffect(() => {
@@ -38,11 +36,12 @@ export function WeeklyReviewScreen() {
       monthStart.setUTCHours(0, 0, 0, 0);
 
       const mastery = await getAllMastery();
-      const mastered = new Set(masteredItemIds(mastery));
+      const mastered = new Set(masteredItemIds(mastery).filter((id) => id.startsWith(`${language}-`)));
       const speakable = roundSpeakable(speakableCountForPack(PACK, mastered));
 
       const sessionRows = await db.getAllAsync<{ started_at: string; ended_at: string | null }>(
-        'SELECT started_at, ended_at FROM session WHERE started_at >= ? AND ended_at IS NOT NULL',
+        'SELECT started_at, ended_at FROM session WHERE language = ? AND started_at >= ? AND ended_at IS NOT NULL',
+        language,
         weekStart,
       );
       const minutes = Math.round(
@@ -50,8 +49,9 @@ export function WeeklyReviewScreen() {
       );
 
       const attemptRows = await db.getAllAsync<{ prompt_id: string; result: string }>(
-        'SELECT prompt_id, result FROM attempt WHERE at >= ? AND retries = 0',
+        'SELECT prompt_id, result FROM attempt WHERE at >= ? AND retries = 0 AND prompt_id LIKE ?',
         weekStart,
+        `${language}-%`,
       );
       const byPrompt = new Map<string, { miss: number; total: number }>();
       for (const a of attemptRows) {
@@ -77,14 +77,14 @@ export function WeeklyReviewScreen() {
         mtdSpend: formatUsd(monthToDateUsd(events, new Date())),
       });
     })();
-  }, []);
+  }, [language, PACK]);
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={{ paddingBottom: 48 }}>
       <Text style={styles.back} onPress={() => setScreen('home')}>
         ‹ home
       </Text>
-      <Text style={styles.title}>This week</Text>
+      <Text style={styles.title}>This week — {LANGUAGE_NAMES[language]}</Text>
 
       <View style={styles.hero}>
         <Text style={styles.heroNumber}>{data ? `~${data.speakable.toLocaleString()}` : '…'}</Text>

@@ -13,8 +13,14 @@ describe('normalize', () => {
     expect(normalize('Ça va très bien.', 'fr')).toBe('ça va très bien');
   });
 
-  it('turns apostrophes into token breaks consistently', () => {
-    expect(normalize("J'ai faim", 'fr')).toBe('j ai faim');
+  it('keeps word-internal apostrophes and folds curly ones', () => {
+    expect(normalize("J'ai faim", 'fr')).toBe("j'ai faim");
+    expect(normalize('C’est bon.', 'fr')).toBe("c'est bon");
+    expect(tokenize(normalize("Je n'ai pas faim", 'fr'), 'fr')).toEqual(["je", "n'ai", 'pas', 'faim']);
+  });
+
+  it('drops apostrophes that are not between letters', () => {
+    expect(normalize("'quoted' word", 'fr')).toBe('quoted word');
   });
 
   it('removes all whitespace and fullwidth punctuation for Mandarin', () => {

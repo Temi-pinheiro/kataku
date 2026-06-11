@@ -12,14 +12,17 @@ const SPACE_DELIMITED: Record<LanguageCode, boolean> = {
 /**
  * Canonical normalization shared by the app's evaluator and the content
  * validator (plan §3.3): lowercase, strip punctuation/symbols, collapse
- * whitespace, keep diacritics. Apostrophes and hyphens become token breaks
- * ("j'ai" → "j ai") — consistent on both sides, so matching is unaffected.
- * For zh, all whitespace is removed and comparison happens on hanzi.
+ * whitespace, keep diacritics. Word-internal apostrophes survive ("c'est"
+ * stays one token — iOS French STT produces them reliably); curly ’ folds
+ * to straight '. Hyphens become token breaks. For zh, all whitespace is
+ * removed and comparison happens on hanzi.
  */
 export function normalize(text: string, lang: LanguageCode): string {
   const stripped = text
     .toLowerCase()
-    .replace(/[^\p{L}\p{M}\p{N}\s]/gu, ' ');
+    .replace(/[’]/gu, "'")
+    .replace(/[^\p{L}\p{M}\p{N}\s']/gu, ' ')
+    .replace(/'(?!\p{L})|(?<!\p{L})'/gu, ' '); // keep ' only between letters
   if (!SPACE_DELIMITED[lang]) {
     return stripped.replace(/\s+/gu, '');
   }

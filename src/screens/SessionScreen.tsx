@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import pack from '../../content/id/foundation.json';
 import { BigButton } from '../components/BigButton';
+import { PACKS, type InstalledLanguage } from '../packs';
 import { useApp } from '../store';
 import { colors, type } from '../theme';
 import type { ContentItem, ContentPrompt, CoursePack } from '../lib/content/types';
@@ -12,8 +12,6 @@ import { useVoiceLoop } from '../hooks/useVoiceLoop';
 import { completedChunkCount, finishSession, getAllMastery, recordAttempt, startSession, upsertMastery } from '../db';
 import { recognizer, teachingAudio } from '../services/instances';
 
-const PACK = pack as unknown as CoursePack;
-
 type Stage =
   | { kind: 'loading' }
   | { kind: 'running'; plan: SessionPlan; stepIndex: number; sessionId: number }
@@ -22,6 +20,7 @@ type Stage =
 
 export function SessionScreen() {
   const { setScreen, settings, language } = useApp();
+  const PACK = PACKS[language];
   const [stage, setStage] = useState<Stage>({ kind: 'loading' });
   const masteryRef = useRef(new Map<string, MasteryState>());
   const promptsDoneRef = useRef(0);
@@ -38,7 +37,7 @@ export function SessionScreen() {
     promptsDoneRef.current = 0;
     const sessionId = await startSession(language, new Date());
     setStage({ kind: 'running', plan, stepIndex: 0, sessionId });
-  }, [language]);
+  }, [language, PACK]);
 
   useEffect(() => {
     begin();
@@ -136,6 +135,8 @@ export function SessionScreen() {
         <PromptCard
           key={step.prompt.id + ':' + stage.stepIndex}
           prompt={step.prompt}
+          pack={PACK}
+          lang={language}
           isVictoryLap={step.isVictoryLap}
           thinkMs={settings.thinkSeconds * 1000}
           onFinished={onPromptFinished}
@@ -170,19 +171,23 @@ function TeachCard({ item, onDone }: { item: ContentItem; onDone: () => void }) 
 
 function PromptCard({
   prompt,
+  pack,
+  lang,
   isVictoryLap,
   thinkMs,
   onFinished,
 }: {
   prompt: ContentPrompt;
+  pack: CoursePack;
+  lang: InstalledLanguage;
   isVictoryLap: boolean;
   thinkMs: number;
   onFinished: (prompt: ContentPrompt, state: LoopState) => void;
 }) {
   const { state, heard, send } = useVoiceLoop({
     prompt,
-    lang: 'id',
-    systemLines: PACK.system_lines,
+    lang,
+    systemLines: pack.system_lines,
     audio: teachingAudio,
     recognizer,
     thinkMs,

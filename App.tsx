@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import packJson from './content/id/foundation.json';
+import { INSTALLED_LANGUAGES, PACKS } from './src/packs';
 import { useApp } from './src/store';
 import { colors } from './src/theme';
-import type { CoursePack } from './src/lib/content/types';
 import { loadPack, openDb } from './src/db';
 import { teachingAudio } from './src/services/instances';
 import { configureAudioSession } from './src/services/audio';
@@ -14,8 +13,6 @@ import { WeeklyReviewScreen } from './src/screens/WeeklyReviewScreen';
 import { SettingsScreen, loadPersistedSettings } from './src/screens/SettingsScreen';
 import { M0SpikeScreen } from './src/screens/M0SpikeScreen';
 
-const PACK = packJson as unknown as CoursePack;
-
 export default function App() {
   const { screen, setSettings } = useApp();
   const [ready, setReady] = useState(false);
@@ -23,14 +20,17 @@ export default function App() {
   useEffect(() => {
     (async () => {
       const db = await openDb();
-      const row = await db.getFirstAsync<{ pack_version: number }>(
-        "SELECT pack_version FROM language WHERE code = 'id'",
-      );
-      if ((row?.pack_version ?? -1) !== PACK.version) {
-        await loadPack(PACK);
+      for (const lang of INSTALLED_LANGUAGES) {
+        const row = await db.getFirstAsync<{ pack_version: number }>(
+          'SELECT pack_version FROM language WHERE code = ?',
+          lang,
+        );
+        if ((row?.pack_version ?? -1) !== PACKS[lang].version) {
+          await loadPack(PACKS[lang]);
+        }
+        await teachingAudio.loadPackIndex(lang);
       }
       setSettings(await loadPersistedSettings());
-      await teachingAudio.loadPackIndex('id');
       await configureAudioSession();
       setReady(true);
     })().catch((e) => {

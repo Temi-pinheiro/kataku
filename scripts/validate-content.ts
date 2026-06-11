@@ -102,9 +102,11 @@ function validatePack(path: string, requireAudio: boolean): void {
     for (const item of lesson.items) {
       if (item.type !== 'block') continue;
       const target = normalize(item.target_text, lang);
+      // Word-boundary phrase match so multi-word blocks ("tengo que",
+      // "je veux") count; zh matches on hanzi substring.
       const appears = lessons.some((l) =>
         l.prompts.some((p) =>
-          lang === 'zh' ? p.expected[0].includes(target) : p.expected[0].split(' ').includes(target),
+          lang === 'zh' ? p.expected[0].includes(target) : ` ${p.expected[0]} `.includes(` ${target} `),
         ),
       );
       if (!appears) err(`item ${item.id}: target_text "${item.target_text}" never appears in any canonical answer`);

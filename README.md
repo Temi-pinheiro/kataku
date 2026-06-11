@@ -8,12 +8,12 @@ truth), `stretch-spec.md`, and `content/SPEC.md`.
 
 | Milestone | Status |
 |---|---|
-| M0 de-risk | Code + Mic-test screen done; **needs the owner's iPhone** (`docs/m0-findings.md`) |
-| M1 voice loop | Done — full cue→think→listen→evaluate→feedback loop, runs on device-TTS fallback with zero keys |
-| M2 content pipeline | Validator + hash-keyed renderer + bake-off mode done; **needs keys + owner's ears**, then a pack-install flow |
-| M3 sessions/progress | Engine + DB + Home done; notification scheduling pending |
-| M4 review + coach | Review screen with speakable counter + honest stats done; spoken checkpoint + Tier-1 coach pending |
-| M5 five languages | Indonesian Week 1 authored (lessons 8–14 outlined); other languages pending |
+| M0 de-risk | **Done** — owner-tested on iPhone (`docs/m0-findings.md`); id-ID workable, device-TTS fallback judged unusable → rendered audio is the critical path |
+| M1 voice loop | Done — full cue→think→listen→evaluate→feedback loop |
+| M2 content pipeline | Validator + hash-keyed renderer + blind bake-off + bundled audio maps done; **needs keys + owner's ears** (`docs/OWNER-TODO.md`) |
+| M3 sessions/progress | Engine + DB + Home with language switcher done; notification scheduling pending |
+| M4 review + coach | Review screen (per language) with speakable counter + honest stats done; spoken checkpoint + Tier-1 coach pending |
+| M5 five languages | **id + es + fr Week 1 authored** (~96 prompts each, validator-clean); zh + it pending |
 
 **Next action: `docs/OWNER-TODO.md`.**
 

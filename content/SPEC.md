@@ -87,6 +87,33 @@ dia & names · suka + nouns/verbs (likes) · ada (there is/have) · di + places
 recap + long-recombination finale. Sequence final when Week 1 has been
 street-tested.
 
+## Spanish & French Foundation — Week 1 (quality baselines)
+
+Authored 2026-06-11 at the owner's request: he is conversational in Spanish
+and speaks some French, so these packs exist primarily to benchmark app
+quality (recognition fairness, audio naturalness, matching strictness)
+against languages he can already judge — and they reuse the same original
+Week-1 arc as Indonesian, which makes cross-language comparison direct.
+
+Romance adaptations (plan §2.5):
+- **Modal scaffolds carry the person**: quiero/quieres, je veux/tu veux are
+  taught as fused blocks — no conjugation tables, the ending *is* the
+  pronoun. Spanish is pro-drop (canonical answers omit yo/tú; variants
+  accept them); French keeps its pronouns.
+- **The future is a scaffold, not a tense**: voy a / vas a, je vais / tu vas
+  + infinitive. Real past tense (passé composé, pretérito) is Builder
+  material; Indonesian got sudah/belum instead, which has no Romance
+  equivalent this cheap.
+- **Contractions taught as patterns**: al (a+el), au (à+le).
+- **French negation** is the ne…pas sandwich, canonical with `ne`; the
+  spoken-French ne-drop ("je veux pas") is taught as a usage note and
+  accepted as a variant everywhere — mirror of Indonesian's aku policy.
+- **Normalization keeps word-internal apostrophes** (c'est, aujourd'hui are
+  single tokens) — this is engine-level (`normalize.ts`), shared by all
+  languages.
+- "go home" gets its own verb in both: a casa (es) / rentrer (fr) —
+  parallel to pulang.
+
 ## Templates (speakable-sentences counter)
 
 Templates list item ids per slot; the counter multiplies mastered fillers
