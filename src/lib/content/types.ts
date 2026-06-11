@@ -4,6 +4,12 @@ import type { LanguageCode } from '../matching';
 
 export type ItemType = 'block' | 'pattern' | 'usage_note';
 
+export interface TeachSegment {
+  text: string;
+  /** 'target' segments render/speak in the pack language; 'en' in English. */
+  lang: 'en' | 'target';
+}
+
 export interface ContentItem {
   id: string;
   type: ItemType;
@@ -12,6 +18,12 @@ export interface ContentItem {
   /** Pinyin for zh; null elsewhere. */
   romanization: string | null;
   teach_script: string;
+  /**
+   * teach_script split by language. A single mixed-language render
+   * anglicizes the embedded target words ("komair"), so each segment is
+   * rendered/spoken with its own voice. Audio keys: `<id>-t-<index>`.
+   */
+  teach_segments: TeachSegment[];
   audio: { teach: string };
   /** S3 schema addition; defaults to neutral. */
   register?: 'neutral' | 'casual' | 'formal';

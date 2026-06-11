@@ -10,10 +10,10 @@ import { AUDIO_MAP as AUDIO_FR } from '../generated/audio-map.fr';
 const BUNDLED: Record<string, number> = { ...AUDIO_ID, ...AUDIO_ES, ...AUDIO_FR };
 
 /**
- * All teaching audio goes through here. Rendered pack clips play from
- * documentDirectory/packs/<lang>/audio/<key>.mp3; anything unrendered falls
- * back to the OS voice via expo-speech (plan §4.1 runtime fallback) — lower
- * quality, but it means lessons work before any pack has been rendered.
+ * All teaching audio goes through here. Rendered pack clips play from the
+ * bundle (or documentDirectory/packs for downloaded packs); anything
+ * unrendered falls back to the OS voice via expo-speech — per segment, in
+ * the segment's own locale.
  */
 
 export interface SpeakRequest {
@@ -27,15 +27,13 @@ export interface SpeakRequest {
   slow?: boolean;
 }
 
-let configured = false;
-
-export async function configureAudioSession(): Promise<void> {
-  if (configured) return;
-  configured = true;
-  // allowsRecording MUST stay false here: true flips iOS into the
-  // phone-call (playAndRecord) category and routes playback to the
-  // earpiece. The mic belongs to expo-speech-recognition, which opens its
-  // own playAndRecord session with defaultToSpeaker while listening.
+/**
+ * Re-asserted before EVERY clip, not once: expo-speech-recognition flips
+ * the session to playAndRecord while listening, and iOS can leave the
+ * route on the earpiece afterwards. allowsRecording stays false here —
+ * true is what turns playback into a phone call (receiver routing).
+ */
+async function assertSpeakerRoute(): Promise<void> {
   await setAudioModeAsync({
     playsInSilentMode: true,
     allowsRecording: false,
@@ -43,9 +41,11 @@ export async function configureAudioSession(): Promise<void> {
   });
 }
 
+export const configureAudioSession = assertSpeakerRoute;
+
 export class TeachingAudio {
-  private player: AudioPlayer | null = null;
   private available = new Map<string, string>(); // audio key → file uri
+  private settleActive: (() => void) | null = null;
   private cancelled = false;
 
   /** Index a language's rendered clips once per app start. */
@@ -58,7 +58,7 @@ export class TeachingAudio {
         if (m) this.available.set(m[1], entry.uri);
       }
     } catch {
-      // No rendered pack yet — device TTS carries the lesson.
+      // No downloaded pack — bundle and device TTS carry the lesson.
     }
   }
 
@@ -66,15 +66,10 @@ export class TeachingAudio {
     return this.available.has(key) || key in BUNDLED;
   }
 
-  /**
-   * Play one line; resolves when it finishes (or immediately on stop()).
-   * Source order: bundled clip → downloaded pack file → device TTS. The TTS
-   * fallback is a stopgap for unrendered packs only — M0 verdict: unusable
-   * as the tutor voice, fine for incidental dynamic lines.
-   */
+  /** Play one line; resolves when it finishes (or immediately on stop()). */
   async play(req: SpeakRequest): Promise<void> {
     this.cancelled = false;
-    await configureAudioSession();
+    await assertSpeakerRoute();
     const bundled = req.key ? BUNDLED[req.key] : undefined;
     if (bundled !== undefined) {
       return this.playFile(bundled);
@@ -86,20 +81,33 @@ export class TeachingAudio {
     return this.speak(req);
   }
 
+  /**
+   * A fresh player per clip: a reused player's status listener can deliver
+   * the PREVIOUS clip's didJustFinish before the new source starts, which
+   * resolved instantly and silently — the "resumed lessons say nothing" bug.
+   */
   private playFile(uri: string | number): Promise<void> {
     return new Promise((resolve) => {
-      if (!this.player) {
-        this.player = createAudioPlayer(uri);
-      } else {
-        this.player.replace(uri);
-      }
-      const sub = this.player.addListener('playbackStatusUpdate', (status) => {
-        if (status.didJustFinish || this.cancelled) {
-          sub.remove();
-          resolve();
+      const player = createAudioPlayer(uri);
+      let settled = false;
+      const settle = () => {
+        if (settled) return;
+        settled = true;
+        this.settleActive = null;
+        sub.remove();
+        try {
+          player.pause();
+          player.remove();
+        } catch {
+          // already torn down
         }
+        resolve();
+      };
+      const sub = player.addListener('playbackStatusUpdate', (status) => {
+        if (status.didJustFinish || this.cancelled) settle();
       });
-      this.player.play();
+      this.settleActive = settle;
+      player.play();
     });
   }
 
@@ -117,24 +125,29 @@ export class TeachingAudio {
 
   stop(): void {
     this.cancelled = true;
-    this.player?.pause();
     Speech.stop();
+    this.settleActive?.();
   }
 
   dispose(): void {
     this.stop();
-    this.player?.remove();
-    this.player = null;
   }
 }
 
-/** The mic-open tone (plan §3.1) — bundled, instant. */
-const beepPlayer = () => createAudioPlayer(require('../../assets/beep.wav'));
-let beep: AudioPlayer | null = null;
+// ---- mic tones (plan §3.1: a soft tone signals "mic open") ----
 
-export async function playMicTone(): Promise<void> {
-  await configureAudioSession();
-  if (!beep) beep = beepPlayer();
-  beep.seekTo(0);
-  beep.play();
+const TONES = {
+  open: require('../../assets/beep.wav'),
+  close: require('../../assets/beep-close.wav'),
+} as const;
+
+const tonePlayers: Partial<Record<keyof typeof TONES, AudioPlayer>> = {};
+
+/** open = mic is hot, say it · close = got it, capture ended. */
+export async function playMicTone(kind: 'open' | 'close' = 'open'): Promise<void> {
+  await assertSpeakerRoute();
+  if (!tonePlayers[kind]) tonePlayers[kind] = createAudioPlayer(TONES[kind]);
+  const player = tonePlayers[kind]!;
+  player.seekTo(0);
+  player.play();
 }

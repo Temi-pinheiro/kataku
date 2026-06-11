@@ -19,7 +19,17 @@
               "teach_script": "The word for 'I' in Indonesian is 'saya'. Saya.",
               "audio": {
                 "teach": "id-f-001-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "The word for 'I' in Indonesian is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'saya'. Saya.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "id-f-002",
@@ -30,7 +40,25 @@
               "teach_script": "'To want' is 'mau'. Mau. So 'I want' is — saya mau.",
               "audio": {
                 "teach": "id-f-002-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'To want' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'mau'. Mau.",
+                  "lang": "target"
+                },
+                {
+                  "text": "So 'I want' is —",
+                  "lang": "en"
+                },
+                {
+                  "text": "saya mau.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "id-f-003",
@@ -41,7 +69,17 @@
               "teach_script": "'To eat' is 'makan'. Makan.",
               "audio": {
                 "teach": "id-f-003-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'To eat' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'makan'. Makan.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "id-f-004",
@@ -52,7 +90,17 @@
               "teach_script": "'To drink' is 'minum'. Minum.",
               "audio": {
                 "teach": "id-f-004-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'To drink' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'minum'. Minum.",
+                  "lang": "target"
+                }
+              ]
             }
           ],
           "prompts": [
@@ -293,7 +341,17 @@
               "teach_script": "'You' is 'kamu'. Kamu.",
               "audio": {
                 "teach": "id-f-005-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'You' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'kamu'. Kamu.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "id-f-006",
@@ -304,7 +362,29 @@
               "teach_script": "'Not' is 'tidak'. Tidak. It sits right before the word it cancels: saya tidak mau — I don't want.",
               "audio": {
                 "teach": "id-f-006-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'Not' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'tidak'. Tidak.",
+                  "lang": "target"
+                },
+                {
+                  "text": "It sits right before the word it cancels:",
+                  "lang": "en"
+                },
+                {
+                  "text": "saya tidak mau",
+                  "lang": "target"
+                },
+                {
+                  "text": "— I don't want.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "id-f-007",
@@ -315,7 +395,21 @@
               "teach_script": "Indonesian questions are free. Say the sentence and let your voice rise at the end: kamu mau makan? — do you want to eat? Nothing else changes.",
               "audio": {
                 "teach": "id-f-007-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "Indonesian questions are free. Say the sentence and let your voice rise at the end:",
+                  "lang": "en"
+                },
+                {
+                  "text": "kamu mau makan?",
+                  "lang": "target"
+                },
+                {
+                  "text": "— do you want to eat? Nothing else changes.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "id-f-008",
@@ -326,7 +420,21 @@
               "teach_script": "In everyday speech, when it's obvious who you mean, Indonesians drop the pronoun. 'Mau makan?' — want to eat? Both ways are right; you'll hear the short one constantly.",
               "audio": {
                 "teach": "id-f-008-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "In everyday speech, when it's obvious who you mean, Indonesians drop the pronoun.",
+                  "lang": "en"
+                },
+                {
+                  "text": "'Mau makan?'",
+                  "lang": "target"
+                },
+                {
+                  "text": "— want to eat? Both ways are right; you'll hear the short one constantly.",
+                  "lang": "en"
+                }
+              ]
             }
           ],
           "prompts": [
@@ -620,7 +728,17 @@
               "teach_script": "'To go' is 'pergi'. Pergi.",
               "audio": {
                 "teach": "id-f-009-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'To go' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'pergi'. Pergi.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "id-f-010",
@@ -631,7 +749,17 @@
               "teach_script": "'To' — toward a place — is 'ke'. Ke.",
               "audio": {
                 "teach": "id-f-010-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'To' — toward a place — is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'ke'. Ke.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "id-f-011",
@@ -642,7 +770,25 @@
               "teach_script": "'The market' is 'pasar'. Pasar. So 'to the market' — ke pasar.",
               "audio": {
                 "teach": "id-f-011-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'The market' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'pasar'. Pasar.",
+                  "lang": "target"
+                },
+                {
+                  "text": "So 'to the market' —",
+                  "lang": "en"
+                },
+                {
+                  "text": "ke pasar.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "id-f-012",
@@ -653,7 +799,21 @@
               "teach_script": "'Now' is 'sekarang'. Sekarang. Time words like this usually sit at the end of the sentence.",
               "audio": {
                 "teach": "id-f-012-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'Now' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'sekarang'. Sekarang.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Time words like this usually sit at the end of the sentence.",
+                  "lang": "en"
+                }
+              ]
             }
           ],
           "prompts": [
@@ -971,7 +1131,29 @@
               "teach_script": "'Can' is 'bisa'. Bisa. It works exactly like mau: saya bisa — I can.",
               "audio": {
                 "teach": "id-f-013-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'Can' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'bisa'. Bisa.",
+                  "lang": "target"
+                },
+                {
+                  "text": "It works exactly like",
+                  "lang": "en"
+                },
+                {
+                  "text": "mau: saya bisa",
+                  "lang": "target"
+                },
+                {
+                  "text": "— I can.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "id-f-014",
@@ -982,7 +1164,17 @@
               "teach_script": "'Have to' — must — is 'harus'. Harus.",
               "audio": {
                 "teach": "id-f-014-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'Have to' — must — is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'harus'. Harus.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "id-f-015",
@@ -993,7 +1185,25 @@
               "teach_script": "'Later' is 'nanti'. Nanti. Another time word — it goes at the end, like sekarang.",
               "audio": {
                 "teach": "id-f-015-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'Later' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'nanti'. Nanti.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Another time word — it goes at the end, like",
+                  "lang": "en"
+                },
+                {
+                  "text": "sekarang.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "id-f-016",
@@ -1004,7 +1214,25 @@
               "teach_script": "'To go home' has its own word: 'pulang'. Pulang. Not 'go to house' — just pulang.",
               "audio": {
                 "teach": "id-f-016-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'To go home' has its own word:",
+                  "lang": "en"
+                },
+                {
+                  "text": "'pulang'. Pulang.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Not 'go to house' — just",
+                  "lang": "en"
+                },
+                {
+                  "text": "pulang.",
+                  "lang": "target"
+                }
+              ]
             }
           ],
           "prompts": [
@@ -1313,7 +1541,17 @@
               "teach_script": "'This' is 'ini'. Ini.",
               "audio": {
                 "teach": "id-f-017-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'This' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'ini'. Ini.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "id-f-018",
@@ -1324,7 +1562,17 @@
               "teach_script": "'That' is 'itu'. Itu.",
               "audio": {
                 "teach": "id-f-018-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'That' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'itu'. Itu.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "id-f-019",
@@ -1335,7 +1583,29 @@
               "teach_script": "'Good' — for things — is 'bagus'. Bagus. And there's no word for 'is': ini bagus — this is good. Just point and say it.",
               "audio": {
                 "teach": "id-f-019-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'Good' — for things — is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'bagus'. Bagus.",
+                  "lang": "target"
+                },
+                {
+                  "text": "And there's no word for 'is':",
+                  "lang": "en"
+                },
+                {
+                  "text": "ini bagus",
+                  "lang": "target"
+                },
+                {
+                  "text": "— this is good. Just point and say it.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "id-f-020",
@@ -1346,7 +1616,21 @@
               "teach_script": "'But' is 'tapi'. Tapi. It glues two little sentences together.",
               "audio": {
                 "teach": "id-f-020-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'But' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'tapi'. Tapi.",
+                  "lang": "target"
+                },
+                {
+                  "text": "It glues two little sentences together.",
+                  "lang": "en"
+                }
+              ]
             }
           ],
           "prompts": [
@@ -1648,7 +1932,29 @@
               "teach_script": "Here is the whole Indonesian past tense: 'sudah' — already. Sudah. Saya sudah makan — I already ate, I have eaten. The verb never changes.",
               "audio": {
                 "teach": "id-f-021-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "Here is the whole Indonesian past tense:",
+                  "lang": "en"
+                },
+                {
+                  "text": "'sudah'",
+                  "lang": "target"
+                },
+                {
+                  "text": "— already.",
+                  "lang": "en"
+                },
+                {
+                  "text": "Sudah. Saya sudah makan",
+                  "lang": "target"
+                },
+                {
+                  "text": "— I already ate, I have eaten. The verb never changes.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "id-f-022",
@@ -1659,7 +1965,29 @@
               "teach_script": "'Not yet' is 'belum'. Belum. Saya belum makan — I haven't eaten yet. It sits exactly where sudah would.",
               "audio": {
                 "teach": "id-f-022-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'Not yet' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'belum'. Belum. Saya belum makan",
+                  "lang": "target"
+                },
+                {
+                  "text": "— I haven't eaten yet. It sits exactly where",
+                  "lang": "en"
+                },
+                {
+                  "text": "sudah",
+                  "lang": "target"
+                },
+                {
+                  "text": "would.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "id-f-023",
@@ -1670,7 +1998,17 @@
               "teach_script": "'To buy' is 'beli'. Beli.",
               "audio": {
                 "teach": "id-f-023-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'To buy' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'beli'. Beli.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "id-f-024",
@@ -1681,7 +2019,45 @@
               "teach_script": "When someone asks a sudah question — kamu sudah makan? — you answer with the time word itself: 'Sudah' — already — or 'Belum' — not yet. Not 'yes' or 'no'.",
               "audio": {
                 "teach": "id-f-024-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "When someone asks a",
+                  "lang": "en"
+                },
+                {
+                  "text": "sudah",
+                  "lang": "target"
+                },
+                {
+                  "text": "question —",
+                  "lang": "en"
+                },
+                {
+                  "text": "kamu sudah makan?",
+                  "lang": "target"
+                },
+                {
+                  "text": "— you answer with the time word itself:",
+                  "lang": "en"
+                },
+                {
+                  "text": "'Sudah'",
+                  "lang": "target"
+                },
+                {
+                  "text": "— already — or",
+                  "lang": "en"
+                },
+                {
+                  "text": "'Belum'",
+                  "lang": "target"
+                },
+                {
+                  "text": "— not yet. Not 'yes' or 'no'.",
+                  "lang": "en"
+                }
+              ]
             }
           ],
           "prompts": [
@@ -2004,7 +2380,29 @@
               "teach_script": "And here is the whole future tense: 'akan' — will. Akan. Saya akan pergi — I will go. Again, the verb never changes.",
               "audio": {
                 "teach": "id-f-025-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "And here is the whole future tense:",
+                  "lang": "en"
+                },
+                {
+                  "text": "'akan'",
+                  "lang": "target"
+                },
+                {
+                  "text": "— will.",
+                  "lang": "en"
+                },
+                {
+                  "text": "Akan. Saya akan pergi",
+                  "lang": "target"
+                },
+                {
+                  "text": "— I will go. Again, the verb never changes.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "id-f-026",
@@ -2015,7 +2413,21 @@
               "teach_script": "'Tomorrow' is 'besok'. Besok. A time word — so it goes at the end.",
               "audio": {
                 "teach": "id-f-026-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'Tomorrow' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'besok'. Besok.",
+                  "lang": "target"
+                },
+                {
+                  "text": "A time word — so it goes at the end.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "id-f-027",
@@ -2026,7 +2438,29 @@
               "teach_script": "'Because' is 'karena'. Karena. Like tapi, it glues two sentences — and now you can give reasons.",
               "audio": {
                 "teach": "id-f-027-t"
-              }
+              },
+              "teach_segments": [
+                {
+                  "text": "'Because' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'karena'. Karena.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Like",
+                  "lang": "en"
+                },
+                {
+                  "text": "tapi,",
+                  "lang": "target"
+                },
+                {
+                  "text": "it glues two sentences — and now you can give reasons.",
+                  "lang": "en"
+                }
+              ]
             }
           ],
           "prompts": [

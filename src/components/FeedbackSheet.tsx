@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Animated, { SlideInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SymbolView } from 'expo-symbols';
 import type { FeedbackKind } from '../lib/voice-loop/machine';
 import type { LanguageCode } from '../lib/matching';
@@ -46,7 +46,9 @@ export function FeedbackSheet({ kind, answer, transcript, decompose, lang, retry
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(19).stiffness(180)}
+      // A quiet arrival: short fade + small rise. The full-screen sprung
+      // slide read as "too much" on device (owner, round 3).
+      entering={FadeInDown.duration(200)}
       style={[styles.sheet, { borderColor: palette.tint }]}
     >
       <View style={styles.titleRow}>

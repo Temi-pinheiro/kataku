@@ -64,9 +64,21 @@ credits covered everything — no Starter month needed). Remaining:
 - Edit freely → bump the pack's `"version"` → `npm run validate-content` →
   re-render (hash manifest = only changed lines re-render).
 
-## 4. Later milestones that will ask you again
+## 4. TestFlight (owner asked 2026-06-11: "use it on the go")
 
-- **TestFlight/EAS setup** — whenever you say go (account exists).
+The path: EAS Build (cloud) → App Store Connect → TestFlight install.
+Needs two interactive logins only you can do; in a Claude session type:
+
+```
+! npx eas login            # Expo account (create free at expo.dev if none)
+```
+
+then say "set up TestFlight" — the rest (eas.json, build profile,
+`eas build --platform ios --profile preview`, submit) gets wired up and
+run for you, pausing only where Apple asks for your credentials/2FA.
+Free EAS tier: ~15 iOS cloud builds/month — plenty.
+
+## 5. Later milestones that will ask you again
 - **M3:** daily notification opt-in (time preference, default 8am).
 - **M4:** Anthropic API key for the Tier-1 coach (~$1–2/mo, plan §11).
 - **M5:** Mandarin + Italian packs; zh bake-off listen; fr-FR recognition

@@ -139,12 +139,16 @@ export function useVoiceLoop(deps: VoiceLoopDeps): VoiceLoopView {
         onFinal: (t) => {
           listeningRef.current = false;
           setHeard(t);
+          void playMicTone('close'); // capture ended — you can stop talking
           if (stateRef.current.phase === 'think') send({ type: 'EARLY_SPEECH' });
           send({ type: 'FINAL_TRANSCRIPT', transcript: t });
         },
         onEnd: () => {
           listeningRef.current = false;
-          if (stateRef.current.phase === 'listen') send({ type: 'LISTEN_TIMEOUT' });
+          if (stateRef.current.phase === 'listen') {
+            void playMicTone('close');
+            send({ type: 'LISTEN_TIMEOUT' });
+          }
         },
         onError: () => {
           listeningRef.current = false;

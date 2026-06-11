@@ -357,7 +357,7 @@ export function SessionScreen() {
       {step.kind === 'announce' && (
         <AnnounceCard key={`a-${run.stepIndex}`} pack={PACK} line={step.line} onDone={advance} />
       )}
-      {step.kind === 'teach' && <TeachCard key={step.item.id} item={step.item} onDone={advance} />}
+      {step.kind === 'teach' && <TeachCard key={step.item.id} item={step.item} lang={language} onDone={advance} />}
       {step.kind === 'prompt' && (
         <PromptCard
           key={`${step.prompt.id}:${run.stepIndex}`}
@@ -425,14 +425,26 @@ function AnnounceCard({ pack, line, onDone }: { pack: CoursePack; line: string; 
   );
 }
 
-function TeachCard({ item, onDone }: { item: ContentItem; onDone: () => void }) {
+function TeachCard({ item, lang, onDone }: { item: ContentItem; lang: InstalledLanguage; onDone: () => void }) {
   const { p } = useTheme();
   const styles = useMemo(() => makeStyles(p), [p]);
   const [replayKey, setReplayKey] = useState(0);
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      await teachingAudio.play({ key: item.audio.teach, fallbackText: item.teach_script, lang: 'en' });
+      // Segment by segment, each in its own voice/locale — also fixes the
+      // device-TTS fallback, which now speaks target words natively.
+      const segments = item.teach_segments?.length
+        ? item.teach_segments
+        : [{ text: item.teach_script, lang: 'en' as const }];
+      for (const [i, seg] of segments.entries()) {
+        if (cancelled) return;
+        await teachingAudio.play({
+          key: `${item.id}-t-${i}`,
+          fallbackText: seg.text,
+          lang: seg.lang === 'target' ? lang : 'en',
+        });
+      }
       if (!cancelled) setTimeout(() => !cancelled && onDone(), 1000);
     })();
     return () => {
@@ -497,6 +509,7 @@ function PromptCard({
   const feedbackKind = state.feedbackKind;
   useEffect(() => {
     if (phase === 'think') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (phase === 'listen') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   }, [phase]);
   useEffect(() => {
     if (phase !== 'feedback' || !feedbackKind) return;

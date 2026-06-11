@@ -48,7 +48,22 @@ function validatePack(path: string, requireAudio: boolean): void {
       if (!['block', 'pattern', 'usage_note'].includes(item.type)) err(`${where}: bad type "${item.type}"`);
       if (!item.teach_script.trim()) err(`${where}: empty teach_script`);
       if (item.audio.teach !== `${item.id}-t`) err(`${where}: teach audio key must be "${item.id}-t"`);
-      checkAudio(item.audio.teach, where);
+      // Teach audio renders per language-segment (mixed-language clips
+      // anglicize target words). Keys: <id>-t-<index>.
+      if (!item.teach_segments || item.teach_segments.length === 0) {
+        err(`${where}: missing teach_segments (run scripts/generate-teach-segments.py)`);
+      } else {
+        if (!item.teach_segments.some((s) => s.lang === 'target')) {
+          err(`${where}: teach_segments contain no target-language segment`);
+        }
+        if (item.teach_segments.map((s) => s.text).join(' ') !== item.teach_script) {
+          warn(`${where}: teach_segments do not reassemble into teach_script (stale — regenerate)`);
+        }
+        item.teach_segments.forEach((seg, i) => {
+          if (!seg.text.trim()) err(`${where}: empty teach segment ${i}`);
+          checkAudio(`${item.id}-t-${i}`, where);
+        });
+      }
       if (lang === 'zh' && item.type === 'block' && !item.romanization) {
         err(`${where}: zh blocks need pinyin romanization`);
       }

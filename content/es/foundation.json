@@ -17,7 +17,23 @@
               "target_text": "quiero",
               "romanization": null,
               "teach_script": "'I want' in Spanish is one word: 'quiero'. Quiero. The 'I' is already inside it.",
-              "audio": { "teach": "es-f-001-t" }
+              "audio": {
+                "teach": "es-f-001-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'I want' in Spanish is one word:",
+                  "lang": "en"
+                },
+                {
+                  "text": "'quiero'. Quiero.",
+                  "lang": "target"
+                },
+                {
+                  "text": "The 'I' is already inside it.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "es-f-002",
@@ -26,7 +42,19 @@
               "target_text": "comer",
               "romanization": null,
               "teach_script": "'To eat' is 'comer'. Comer.",
-              "audio": { "teach": "es-f-002-t" }
+              "audio": {
+                "teach": "es-f-002-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'To eat' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'comer'. Comer.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "es-f-003",
@@ -35,7 +63,19 @@
               "target_text": "beber",
               "romanization": null,
               "teach_script": "'To drink' is 'beber'. Beber.",
-              "audio": { "teach": "es-f-003-t" }
+              "audio": {
+                "teach": "es-f-003-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'To drink' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'beber'. Beber.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "es-f-004",
@@ -44,110 +84,243 @@
               "target_text": "ahora",
               "romanization": null,
               "teach_script": "'Now' is 'ahora'. Ahora. Time words like this usually go at the end.",
-              "audio": { "teach": "es-f-004-t" }
+              "audio": {
+                "teach": "es-f-004-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'Now' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'ahora'. Ahora.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Time words like this usually go at the end.",
+                  "lang": "en"
+                }
+              ]
             }
           ],
           "prompts": [
             {
               "id": "es-f-p-001",
               "cue_en": "How would you say: I want?",
-              "expected": ["quiero", "yo quiero"],
-              "components": ["es-f-001"],
+              "expected": [
+                "quiero",
+                "yo quiero"
+              ],
+              "components": [
+                "es-f-001"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-001-c", "answer": "es-f-p-001-a", "answer_slow": "es-f-p-001-s" }
+              "audio": {
+                "cue": "es-f-p-001-c",
+                "answer": "es-f-p-001-a",
+                "answer_slow": "es-f-p-001-s"
+              }
             },
             {
               "id": "es-f-p-002",
               "cue_en": "How would you say: I want to eat?",
-              "expected": ["quiero comer", "yo quiero comer"],
-              "components": ["es-f-001", "es-f-002"],
+              "expected": [
+                "quiero comer",
+                "yo quiero comer"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-002"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-002-c", "answer": "es-f-p-002-a", "answer_slow": "es-f-p-002-s" }
+              "audio": {
+                "cue": "es-f-p-002-c",
+                "answer": "es-f-p-002-a",
+                "answer_slow": "es-f-p-002-s"
+              }
             },
             {
               "id": "es-f-p-003",
               "cue_en": "And: I want to drink?",
-              "expected": ["quiero beber", "yo quiero beber"],
-              "components": ["es-f-001", "es-f-003"],
+              "expected": [
+                "quiero beber",
+                "yo quiero beber"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-003"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-003-c", "answer": "es-f-p-003-a", "answer_slow": "es-f-p-003-s" }
+              "audio": {
+                "cue": "es-f-p-003-c",
+                "answer": "es-f-p-003-a",
+                "answer_slow": "es-f-p-003-s"
+              }
             },
             {
               "id": "es-f-p-004",
               "cue_en": "Just the word: to eat.",
-              "expected": ["comer"],
-              "components": ["es-f-002"],
+              "expected": [
+                "comer"
+              ],
+              "components": [
+                "es-f-002"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-004-c", "answer": "es-f-p-004-a", "answer_slow": "es-f-p-004-s" }
+              "audio": {
+                "cue": "es-f-p-004-c",
+                "answer": "es-f-p-004-a",
+                "answer_slow": "es-f-p-004-s"
+              }
             },
             {
               "id": "es-f-p-005",
               "cue_en": "Just the word: to drink.",
-              "expected": ["beber"],
-              "components": ["es-f-003"],
+              "expected": [
+                "beber"
+              ],
+              "components": [
+                "es-f-003"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-005-c", "answer": "es-f-p-005-a", "answer_slow": "es-f-p-005-s" }
+              "audio": {
+                "cue": "es-f-p-005-c",
+                "answer": "es-f-p-005-a",
+                "answer_slow": "es-f-p-005-s"
+              }
             },
             {
               "id": "es-f-p-006",
               "cue_en": "Just: now.",
-              "expected": ["ahora"],
-              "components": ["es-f-004"],
+              "expected": [
+                "ahora"
+              ],
+              "components": [
+                "es-f-004"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-006-c", "answer": "es-f-p-006-a", "answer_slow": "es-f-p-006-s" }
+              "audio": {
+                "cue": "es-f-p-006-c",
+                "answer": "es-f-p-006-a",
+                "answer_slow": "es-f-p-006-s"
+              }
             },
             {
               "id": "es-f-p-007",
               "cue_en": "I want to eat now.",
-              "expected": ["quiero comer ahora", "yo quiero comer ahora"],
-              "components": ["es-f-001", "es-f-002", "es-f-004"],
+              "expected": [
+                "quiero comer ahora",
+                "yo quiero comer ahora"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-002",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "Quiero — comer — ahora; the time word goes at the end.",
-              "audio": { "cue": "es-f-p-007-c", "answer": "es-f-p-007-a", "answer_slow": "es-f-p-007-s" }
+              "audio": {
+                "cue": "es-f-p-007-c",
+                "answer": "es-f-p-007-a",
+                "answer_slow": "es-f-p-007-s"
+              }
             },
             {
               "id": "es-f-p-008",
               "cue_en": "I want to drink now.",
-              "expected": ["quiero beber ahora", "yo quiero beber ahora"],
-              "components": ["es-f-001", "es-f-003", "es-f-004"],
+              "expected": [
+                "quiero beber ahora",
+                "yo quiero beber ahora"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-003",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "Quiero — beber — ahora.",
-              "audio": { "cue": "es-f-p-008-c", "answer": "es-f-p-008-a", "answer_slow": "es-f-p-008-s" }
+              "audio": {
+                "cue": "es-f-p-008-c",
+                "answer": "es-f-p-008-a",
+                "answer_slow": "es-f-p-008-s"
+              }
             },
             {
               "id": "es-f-p-009",
               "cue_en": "Again — I want to eat.",
-              "expected": ["quiero comer", "yo quiero comer"],
-              "components": ["es-f-001", "es-f-002"],
+              "expected": [
+                "quiero comer",
+                "yo quiero comer"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-002"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-009-c", "answer": "es-f-p-009-a", "answer_slow": "es-f-p-009-s" }
+              "audio": {
+                "cue": "es-f-p-009-c",
+                "answer": "es-f-p-009-a",
+                "answer_slow": "es-f-p-009-s"
+              }
             },
             {
               "id": "es-f-p-010",
               "cue_en": "Build it: I want to drink now.",
-              "expected": ["quiero beber ahora", "yo quiero beber ahora"],
-              "components": ["es-f-001", "es-f-003", "es-f-004"],
+              "expected": [
+                "quiero beber ahora",
+                "yo quiero beber ahora"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-003",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "Piece by piece: quiero — beber — ahora.",
-              "audio": { "cue": "es-f-p-010-c", "answer": "es-f-p-010-a", "answer_slow": "es-f-p-010-s" }
+              "audio": {
+                "cue": "es-f-p-010-c",
+                "answer": "es-f-p-010-a",
+                "answer_slow": "es-f-p-010-s"
+              }
             },
             {
               "id": "es-f-p-011",
               "cue_en": "And: I want to eat now.",
-              "expected": ["quiero comer ahora", "yo quiero comer ahora"],
-              "components": ["es-f-001", "es-f-002", "es-f-004"],
+              "expected": [
+                "quiero comer ahora",
+                "yo quiero comer ahora"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-002",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "Quiero — comer — ahora.",
-              "audio": { "cue": "es-f-p-011-c", "answer": "es-f-p-011-a", "answer_slow": "es-f-p-011-s" }
+              "audio": {
+                "cue": "es-f-p-011-c",
+                "answer": "es-f-p-011-a",
+                "answer_slow": "es-f-p-011-s"
+              }
             },
             {
               "id": "es-f-p-012",
               "cue_en": "Last one for today: I want to drink.",
-              "expected": ["quiero beber", "yo quiero beber"],
-              "components": ["es-f-001", "es-f-003"],
+              "expected": [
+                "quiero beber",
+                "yo quiero beber"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-003"
+              ],
               "difficulty": 2,
               "decompose_script": "Quiero — beber.",
-              "audio": { "cue": "es-f-p-012-c", "answer": "es-f-p-012-a", "answer_slow": "es-f-p-012-s" }
+              "audio": {
+                "cue": "es-f-p-012-c",
+                "answer": "es-f-p-012-a",
+                "answer_slow": "es-f-p-012-s"
+              }
             }
           ]
         },
@@ -161,7 +334,23 @@
               "target_text": "quieres",
               "romanization": null,
               "teach_script": "'You want' is 'quieres'. Quieres. Same word, different ending — the ending is the 'you'.",
-              "audio": { "teach": "es-f-005-t" }
+              "audio": {
+                "teach": "es-f-005-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'You want' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'quieres'. Quieres.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Same word, different ending — the ending is the 'you'.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "es-f-006",
@@ -170,7 +359,31 @@
               "target_text": "no",
               "romanization": null,
               "teach_script": "'Not' is 'no'. No. Put it right before the verb: no quiero — I don't want.",
-              "audio": { "teach": "es-f-006-t" }
+              "audio": {
+                "teach": "es-f-006-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'Not' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'no'. No.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Put it right before the verb:",
+                  "lang": "en"
+                },
+                {
+                  "text": "no quiero",
+                  "lang": "target"
+                },
+                {
+                  "text": "— I don't want.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "es-f-007",
@@ -179,7 +392,23 @@
               "target_text": "quieres comer",
               "romanization": null,
               "teach_script": "Spanish questions are free: say the sentence and let your voice rise at the end. ¿Quieres comer? — do you want to eat? Nothing else changes.",
-              "audio": { "teach": "es-f-007-t" }
+              "audio": {
+                "teach": "es-f-007-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "Spanish questions are free: say the sentence and let your voice rise at the end.",
+                  "lang": "en"
+                },
+                {
+                  "text": "¿Quieres comer?",
+                  "lang": "target"
+                },
+                {
+                  "text": "— do you want to eat? Nothing else changes.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "es-f-008",
@@ -188,128 +417,318 @@
               "target_text": "quiero",
               "romanization": null,
               "teach_script": "Spanish doesn't need the words for 'I' or 'you' — quiero already means I want, quieres already means you want. Add yo or tú only for emphasis.",
-              "audio": { "teach": "es-f-008-t" }
+              "audio": {
+                "teach": "es-f-008-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "Spanish doesn't need the words for 'I' or 'you' —",
+                  "lang": "en"
+                },
+                {
+                  "text": "quiero",
+                  "lang": "target"
+                },
+                {
+                  "text": "already means I want,",
+                  "lang": "en"
+                },
+                {
+                  "text": "quieres",
+                  "lang": "target"
+                },
+                {
+                  "text": "already means you want. Add",
+                  "lang": "en"
+                },
+                {
+                  "text": "yo",
+                  "lang": "target"
+                },
+                {
+                  "text": "or",
+                  "lang": "en"
+                },
+                {
+                  "text": "tú",
+                  "lang": "target"
+                },
+                {
+                  "text": "only for emphasis.",
+                  "lang": "en"
+                }
+              ]
             }
           ],
           "prompts": [
             {
               "id": "es-f-p-013",
               "cue_en": "A statement: you want to eat.",
-              "expected": ["quieres comer", "tú quieres comer"],
-              "components": ["es-f-005", "es-f-002"],
+              "expected": [
+                "quieres comer",
+                "tú quieres comer"
+              ],
+              "components": [
+                "es-f-005",
+                "es-f-002"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-013-c", "answer": "es-f-p-013-a", "answer_slow": "es-f-p-013-s" }
+              "audio": {
+                "cue": "es-f-p-013-c",
+                "answer": "es-f-p-013-a",
+                "answer_slow": "es-f-p-013-s"
+              }
             },
             {
               "id": "es-f-p-014",
               "cue_en": "Now make it a question — do you want to eat?",
-              "expected": ["quieres comer", "tú quieres comer"],
-              "components": ["es-f-005", "es-f-002", "es-f-007"],
+              "expected": [
+                "quieres comer",
+                "tú quieres comer"
+              ],
+              "components": [
+                "es-f-005",
+                "es-f-002",
+                "es-f-007"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-014-c", "answer": "es-f-p-014-a", "answer_slow": "es-f-p-014-s" }
+              "audio": {
+                "cue": "es-f-p-014-c",
+                "answer": "es-f-p-014-a",
+                "answer_slow": "es-f-p-014-s"
+              }
             },
             {
               "id": "es-f-p-015",
               "cue_en": "How would you say: I don't want?",
-              "expected": ["no quiero", "yo no quiero"],
-              "components": ["es-f-006", "es-f-001"],
+              "expected": [
+                "no quiero",
+                "yo no quiero"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-001"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-015-c", "answer": "es-f-p-015-a", "answer_slow": "es-f-p-015-s" }
+              "audio": {
+                "cue": "es-f-p-015-c",
+                "answer": "es-f-p-015-a",
+                "answer_slow": "es-f-p-015-s"
+              }
             },
             {
               "id": "es-f-p-016",
               "cue_en": "I don't want to eat.",
-              "expected": ["no quiero comer", "yo no quiero comer"],
-              "components": ["es-f-006", "es-f-001", "es-f-002"],
+              "expected": [
+                "no quiero comer",
+                "yo no quiero comer"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-001",
+                "es-f-002"
+              ],
               "difficulty": 2,
               "decompose_script": "No sits right before quiero: no quiero — comer.",
-              "audio": { "cue": "es-f-p-016-c", "answer": "es-f-p-016-a", "answer_slow": "es-f-p-016-s" }
+              "audio": {
+                "cue": "es-f-p-016-c",
+                "answer": "es-f-p-016-a",
+                "answer_slow": "es-f-p-016-s"
+              }
             },
             {
               "id": "es-f-p-017",
               "cue_en": "I don't want to drink now.",
-              "expected": ["no quiero beber ahora", "yo no quiero beber ahora"],
-              "components": ["es-f-006", "es-f-001", "es-f-003", "es-f-004"],
+              "expected": [
+                "no quiero beber ahora",
+                "yo no quiero beber ahora"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-001",
+                "es-f-003",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "No quiero — beber — ahora.",
-              "audio": { "cue": "es-f-p-017-c", "answer": "es-f-p-017-a", "answer_slow": "es-f-p-017-s" }
+              "audio": {
+                "cue": "es-f-p-017-c",
+                "answer": "es-f-p-017-a",
+                "answer_slow": "es-f-p-017-s"
+              }
             },
             {
               "id": "es-f-p-018",
               "cue_en": "Ask me: do you want to drink?",
-              "expected": ["quieres beber", "tú quieres beber"],
-              "components": ["es-f-005", "es-f-003", "es-f-007"],
+              "expected": [
+                "quieres beber",
+                "tú quieres beber"
+              ],
+              "components": [
+                "es-f-005",
+                "es-f-003",
+                "es-f-007"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-018-c", "answer": "es-f-p-018-a", "answer_slow": "es-f-p-018-s" }
+              "audio": {
+                "cue": "es-f-p-018-c",
+                "answer": "es-f-p-018-a",
+                "answer_slow": "es-f-p-018-s"
+              }
             },
             {
               "id": "es-f-p-019",
               "cue_en": "Tell me: you don't want to eat.",
-              "expected": ["no quieres comer", "tú no quieres comer"],
-              "components": ["es-f-006", "es-f-005", "es-f-002"],
+              "expected": [
+                "no quieres comer",
+                "tú no quieres comer"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-005",
+                "es-f-002"
+              ],
               "difficulty": 2,
               "decompose_script": "No quieres — comer.",
-              "audio": { "cue": "es-f-p-019-c", "answer": "es-f-p-019-a", "answer_slow": "es-f-p-019-s" }
+              "audio": {
+                "cue": "es-f-p-019-c",
+                "answer": "es-f-p-019-a",
+                "answer_slow": "es-f-p-019-s"
+              }
             },
             {
               "id": "es-f-p-020",
               "cue_en": "One Spanish word carries all of 'I want' — say just that word.",
-              "expected": ["quiero"],
-              "components": ["es-f-001", "es-f-008"],
+              "expected": [
+                "quiero"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-008"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-020-c", "answer": "es-f-p-020-a", "answer_slow": "es-f-p-020-s" }
+              "audio": {
+                "cue": "es-f-p-020-c",
+                "answer": "es-f-p-020-a",
+                "answer_slow": "es-f-p-020-s"
+              }
             },
             {
               "id": "es-f-p-021",
               "cue_en": "Ask me: don't you want to eat?",
-              "expected": ["no quieres comer", "tú no quieres comer"],
-              "components": ["es-f-006", "es-f-005", "es-f-002", "es-f-007"],
+              "expected": [
+                "no quieres comer",
+                "tú no quieres comer"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-005",
+                "es-f-002",
+                "es-f-007"
+              ],
               "difficulty": 2,
               "decompose_script": "The statement with rising voice: ¿no quieres comer?",
-              "audio": { "cue": "es-f-p-021-c", "answer": "es-f-p-021-a", "answer_slow": "es-f-p-021-s" }
+              "audio": {
+                "cue": "es-f-p-021-c",
+                "answer": "es-f-p-021-a",
+                "answer_slow": "es-f-p-021-s"
+              }
             },
             {
               "id": "es-f-p-022",
               "cue_en": "Just: you want.",
-              "expected": ["quieres", "tú quieres"],
-              "components": ["es-f-005"],
+              "expected": [
+                "quieres",
+                "tú quieres"
+              ],
+              "components": [
+                "es-f-005"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-022-c", "answer": "es-f-p-022-a", "answer_slow": "es-f-p-022-s" }
+              "audio": {
+                "cue": "es-f-p-022-c",
+                "answer": "es-f-p-022-a",
+                "answer_slow": "es-f-p-022-s"
+              }
             },
             {
               "id": "es-f-p-023",
               "cue_en": "Quick: not.",
-              "expected": ["no"],
-              "components": ["es-f-006"],
+              "expected": [
+                "no"
+              ],
+              "components": [
+                "es-f-006"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-023-c", "answer": "es-f-p-023-a", "answer_slow": "es-f-p-023-s" }
+              "audio": {
+                "cue": "es-f-p-023-c",
+                "answer": "es-f-p-023-a",
+                "answer_slow": "es-f-p-023-s"
+              }
             },
             {
               "id": "es-f-p-024",
               "cue_en": "You don't want to drink now.",
-              "expected": ["no quieres beber ahora", "tú no quieres beber ahora"],
-              "components": ["es-f-006", "es-f-005", "es-f-003", "es-f-004"],
+              "expected": [
+                "no quieres beber ahora",
+                "tú no quieres beber ahora"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-005",
+                "es-f-003",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "No quieres — beber — ahora.",
-              "audio": { "cue": "es-f-p-024-c", "answer": "es-f-p-024-a", "answer_slow": "es-f-p-024-s" }
+              "audio": {
+                "cue": "es-f-p-024-c",
+                "answer": "es-f-p-024-a",
+                "answer_slow": "es-f-p-024-s"
+              }
             },
             {
               "id": "es-f-p-025",
               "cue_en": "Ask me: do you want to eat now?",
-              "expected": ["quieres comer ahora", "tú quieres comer ahora"],
-              "components": ["es-f-005", "es-f-002", "es-f-004", "es-f-007"],
+              "expected": [
+                "quieres comer ahora",
+                "tú quieres comer ahora"
+              ],
+              "components": [
+                "es-f-005",
+                "es-f-002",
+                "es-f-004",
+                "es-f-007"
+              ],
               "difficulty": 2,
               "decompose_script": "Quieres comer ahora — and let it rise.",
-              "audio": { "cue": "es-f-p-025-c", "answer": "es-f-p-025-a", "answer_slow": "es-f-p-025-s" }
+              "audio": {
+                "cue": "es-f-p-025-c",
+                "answer": "es-f-p-025-a",
+                "answer_slow": "es-f-p-025-s"
+              }
             },
             {
               "id": "es-f-p-026",
               "cue_en": "And: I don't want to eat now.",
-              "expected": ["no quiero comer ahora", "yo no quiero comer ahora"],
-              "components": ["es-f-006", "es-f-001", "es-f-002", "es-f-004"],
+              "expected": [
+                "no quiero comer ahora",
+                "yo no quiero comer ahora"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-001",
+                "es-f-002",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "No quiero — comer — ahora.",
-              "audio": { "cue": "es-f-p-026-c", "answer": "es-f-p-026-a", "answer_slow": "es-f-p-026-s" }
+              "audio": {
+                "cue": "es-f-p-026-c",
+                "answer": "es-f-p-026-a",
+                "answer_slow": "es-f-p-026-s"
+              }
             }
           ]
         },
@@ -323,7 +742,23 @@
               "target_text": "ir",
               "romanization": null,
               "teach_script": "'To go' is 'ir'. Ir. A tiny word with huge use.",
-              "audio": { "teach": "es-f-009-t" }
+              "audio": {
+                "teach": "es-f-009-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'To go' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'ir'. Ir.",
+                  "lang": "target"
+                },
+                {
+                  "text": "A tiny word with huge use.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "es-f-010",
@@ -332,7 +767,27 @@
               "target_text": "al",
               "romanization": null,
               "teach_script": "'To the' squeezes into one little word: 'al'. Al. So 'to the market' is — al mercado.",
-              "audio": { "teach": "es-f-010-t" }
+              "audio": {
+                "teach": "es-f-010-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'To the' squeezes into one little word:",
+                  "lang": "en"
+                },
+                {
+                  "text": "'al'. Al.",
+                  "lang": "target"
+                },
+                {
+                  "text": "So 'to the market' is —",
+                  "lang": "en"
+                },
+                {
+                  "text": "al mercado.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "es-f-011",
@@ -341,7 +796,19 @@
               "target_text": "mercado",
               "romanization": null,
               "teach_script": "'The market' is 'el mercado'. Mercado.",
-              "audio": { "teach": "es-f-011-t" }
+              "audio": {
+                "teach": "es-f-011-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'The market' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'el mercado'. Mercado.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "es-f-012",
@@ -350,131 +817,313 @@
               "target_text": "luego",
               "romanization": null,
               "teach_script": "'Later' is 'luego'. Luego. Another time word — it goes at the end, like ahora.",
-              "audio": { "teach": "es-f-012-t" }
+              "audio": {
+                "teach": "es-f-012-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'Later' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'luego'. Luego.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Another time word — it goes at the end, like",
+                  "lang": "en"
+                },
+                {
+                  "text": "ahora.",
+                  "lang": "target"
+                }
+              ]
             }
           ],
           "prompts": [
             {
               "id": "es-f-p-027",
               "cue_en": "How would you say: I want to go?",
-              "expected": ["quiero ir", "yo quiero ir"],
-              "components": ["es-f-001", "es-f-009"],
+              "expected": [
+                "quiero ir",
+                "yo quiero ir"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-009"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-027-c", "answer": "es-f-p-027-a", "answer_slow": "es-f-p-027-s" }
+              "audio": {
+                "cue": "es-f-p-027-c",
+                "answer": "es-f-p-027-a",
+                "answer_slow": "es-f-p-027-s"
+              }
             },
             {
               "id": "es-f-p-028",
               "cue_en": "To the market — I want to go to the market.",
-              "expected": ["quiero ir al mercado", "yo quiero ir al mercado"],
-              "components": ["es-f-001", "es-f-009", "es-f-010", "es-f-011"],
+              "expected": [
+                "quiero ir al mercado",
+                "yo quiero ir al mercado"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-009",
+                "es-f-010",
+                "es-f-011"
+              ],
               "difficulty": 2,
               "decompose_script": "A plus el squeezes into al: ir al mercado.",
-              "audio": { "cue": "es-f-p-028-c", "answer": "es-f-p-028-a", "answer_slow": "es-f-p-028-s" }
+              "audio": {
+                "cue": "es-f-p-028-c",
+                "answer": "es-f-p-028-a",
+                "answer_slow": "es-f-p-028-s"
+              }
             },
             {
               "id": "es-f-p-029",
               "cue_en": "Just: the market.",
-              "expected": ["el mercado", "mercado"],
-              "components": ["es-f-011"],
+              "expected": [
+                "el mercado",
+                "mercado"
+              ],
+              "components": [
+                "es-f-011"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-029-c", "answer": "es-f-p-029-a", "answer_slow": "es-f-p-029-s" }
+              "audio": {
+                "cue": "es-f-p-029-c",
+                "answer": "es-f-p-029-a",
+                "answer_slow": "es-f-p-029-s"
+              }
             },
             {
               "id": "es-f-p-030",
               "cue_en": "Just: later.",
-              "expected": ["luego"],
-              "components": ["es-f-012"],
+              "expected": [
+                "luego"
+              ],
+              "components": [
+                "es-f-012"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-030-c", "answer": "es-f-p-030-a", "answer_slow": "es-f-p-030-s" }
+              "audio": {
+                "cue": "es-f-p-030-c",
+                "answer": "es-f-p-030-a",
+                "answer_slow": "es-f-p-030-s"
+              }
             },
             {
               "id": "es-f-p-031",
               "cue_en": "I want to go now.",
-              "expected": ["quiero ir ahora", "yo quiero ir ahora"],
-              "components": ["es-f-001", "es-f-009", "es-f-004"],
+              "expected": [
+                "quiero ir ahora",
+                "yo quiero ir ahora"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-009",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "Quiero ir — then ahora at the end.",
-              "audio": { "cue": "es-f-p-031-c", "answer": "es-f-p-031-a", "answer_slow": "es-f-p-031-s" }
+              "audio": {
+                "cue": "es-f-p-031-c",
+                "answer": "es-f-p-031-a",
+                "answer_slow": "es-f-p-031-s"
+              }
             },
             {
               "id": "es-f-p-032",
               "cue_en": "Ask me: do you want to go to the market?",
-              "expected": ["quieres ir al mercado", "tú quieres ir al mercado"],
-              "components": ["es-f-005", "es-f-009", "es-f-010", "es-f-011", "es-f-007"],
+              "expected": [
+                "quieres ir al mercado",
+                "tú quieres ir al mercado"
+              ],
+              "components": [
+                "es-f-005",
+                "es-f-009",
+                "es-f-010",
+                "es-f-011",
+                "es-f-007"
+              ],
               "difficulty": 2,
               "decompose_script": "Quieres — ir al mercado — rising at the end.",
-              "audio": { "cue": "es-f-p-032-c", "answer": "es-f-p-032-a", "answer_slow": "es-f-p-032-s" }
+              "audio": {
+                "cue": "es-f-p-032-c",
+                "answer": "es-f-p-032-a",
+                "answer_slow": "es-f-p-032-s"
+              }
             },
             {
               "id": "es-f-p-033",
               "cue_en": "I don't want to go now.",
-              "expected": ["no quiero ir ahora", "yo no quiero ir ahora"],
-              "components": ["es-f-006", "es-f-001", "es-f-009", "es-f-004"],
+              "expected": [
+                "no quiero ir ahora",
+                "yo no quiero ir ahora"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-001",
+                "es-f-009",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "No quiero — ir ahora.",
-              "audio": { "cue": "es-f-p-033-c", "answer": "es-f-p-033-a", "answer_slow": "es-f-p-033-s" }
+              "audio": {
+                "cue": "es-f-p-033-c",
+                "answer": "es-f-p-033-a",
+                "answer_slow": "es-f-p-033-s"
+              }
             },
             {
               "id": "es-f-p-034",
               "cue_en": "I want to drink later.",
-              "expected": ["quiero beber luego", "yo quiero beber luego"],
-              "components": ["es-f-001", "es-f-003", "es-f-012"],
+              "expected": [
+                "quiero beber luego",
+                "yo quiero beber luego"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-003",
+                "es-f-012"
+              ],
               "difficulty": 2,
               "decompose_script": "Quiero beber — luego at the end.",
-              "audio": { "cue": "es-f-p-034-c", "answer": "es-f-p-034-a", "answer_slow": "es-f-p-034-s" }
+              "audio": {
+                "cue": "es-f-p-034-c",
+                "answer": "es-f-p-034-a",
+                "answer_slow": "es-f-p-034-s"
+              }
             },
             {
               "id": "es-f-p-035",
               "cue_en": "Ask me: do you want to eat later?",
-              "expected": ["quieres comer luego", "tú quieres comer luego"],
-              "components": ["es-f-005", "es-f-002", "es-f-012", "es-f-007"],
+              "expected": [
+                "quieres comer luego",
+                "tú quieres comer luego"
+              ],
+              "components": [
+                "es-f-005",
+                "es-f-002",
+                "es-f-012",
+                "es-f-007"
+              ],
               "difficulty": 2,
               "decompose_script": "Quieres comer luego — and let it rise.",
-              "audio": { "cue": "es-f-p-035-c", "answer": "es-f-p-035-a", "answer_slow": "es-f-p-035-s" }
+              "audio": {
+                "cue": "es-f-p-035-c",
+                "answer": "es-f-p-035-a",
+                "answer_slow": "es-f-p-035-s"
+              }
             },
             {
               "id": "es-f-p-036",
               "cue_en": "I don't want to go to the market.",
-              "expected": ["no quiero ir al mercado", "yo no quiero ir al mercado"],
-              "components": ["es-f-006", "es-f-001", "es-f-009", "es-f-010", "es-f-011"],
+              "expected": [
+                "no quiero ir al mercado",
+                "yo no quiero ir al mercado"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-001",
+                "es-f-009",
+                "es-f-010",
+                "es-f-011"
+              ],
               "difficulty": 2,
               "decompose_script": "No quiero, then the journey: ir al mercado.",
-              "audio": { "cue": "es-f-p-036-c", "answer": "es-f-p-036-a", "answer_slow": "es-f-p-036-s" }
+              "audio": {
+                "cue": "es-f-p-036-c",
+                "answer": "es-f-p-036-a",
+                "answer_slow": "es-f-p-036-s"
+              }
             },
             {
               "id": "es-f-p-037",
               "cue_en": "Again: I want to go.",
-              "expected": ["quiero ir", "yo quiero ir"],
-              "components": ["es-f-001", "es-f-009"],
+              "expected": [
+                "quiero ir",
+                "yo quiero ir"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-009"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-037-c", "answer": "es-f-p-037-a", "answer_slow": "es-f-p-037-s" }
+              "audio": {
+                "cue": "es-f-p-037-c",
+                "answer": "es-f-p-037-a",
+                "answer_slow": "es-f-p-037-s"
+              }
             },
             {
               "id": "es-f-p-038",
               "cue_en": "Now the whole thing: I want to go to the market now.",
-              "expected": ["quiero ir al mercado ahora", "yo quiero ir al mercado ahora"],
-              "components": ["es-f-001", "es-f-009", "es-f-010", "es-f-011", "es-f-004"],
+              "expected": [
+                "quiero ir al mercado ahora",
+                "yo quiero ir al mercado ahora"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-009",
+                "es-f-010",
+                "es-f-011",
+                "es-f-004"
+              ],
               "difficulty": 3,
               "decompose_script": "Three pieces: quiero — ir al mercado — ahora.",
-              "audio": { "cue": "es-f-p-038-c", "answer": "es-f-p-038-a", "answer_slow": "es-f-p-038-s" }
+              "audio": {
+                "cue": "es-f-p-038-c",
+                "answer": "es-f-p-038-a",
+                "answer_slow": "es-f-p-038-s"
+              }
             },
             {
               "id": "es-f-p-039",
               "cue_en": "Ask me: do you want to go to the market later?",
-              "expected": ["quieres ir al mercado luego", "tú quieres ir al mercado luego"],
-              "components": ["es-f-005", "es-f-009", "es-f-010", "es-f-011", "es-f-012", "es-f-007"],
+              "expected": [
+                "quieres ir al mercado luego",
+                "tú quieres ir al mercado luego"
+              ],
+              "components": [
+                "es-f-005",
+                "es-f-009",
+                "es-f-010",
+                "es-f-011",
+                "es-f-012",
+                "es-f-007"
+              ],
               "difficulty": 3,
               "decompose_script": "Quieres — ir al mercado — luego — rising at the end.",
-              "audio": { "cue": "es-f-p-039-c", "answer": "es-f-p-039-a", "answer_slow": "es-f-p-039-s" }
+              "audio": {
+                "cue": "es-f-p-039-c",
+                "answer": "es-f-p-039-a",
+                "answer_slow": "es-f-p-039-s"
+              }
             },
             {
               "id": "es-f-p-040",
               "cue_en": "And: I don't want to go to the market now.",
-              "expected": ["no quiero ir al mercado ahora", "yo no quiero ir al mercado ahora"],
-              "components": ["es-f-006", "es-f-001", "es-f-009", "es-f-010", "es-f-011", "es-f-004"],
+              "expected": [
+                "no quiero ir al mercado ahora",
+                "yo no quiero ir al mercado ahora"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-001",
+                "es-f-009",
+                "es-f-010",
+                "es-f-011",
+                "es-f-004"
+              ],
               "difficulty": 3,
               "decompose_script": "No quiero — ir al mercado — ahora.",
-              "audio": { "cue": "es-f-p-040-c", "answer": "es-f-p-040-a", "answer_slow": "es-f-p-040-s" }
+              "audio": {
+                "cue": "es-f-p-040-c",
+                "answer": "es-f-p-040-a",
+                "answer_slow": "es-f-p-040-s"
+              }
             }
           ]
         },
@@ -488,7 +1137,31 @@
               "target_text": "puedo",
               "romanization": null,
               "teach_script": "'I can' is 'puedo'. Puedo. It works exactly like quiero: puedo comer — I can eat.",
-              "audio": { "teach": "es-f-013-t" }
+              "audio": {
+                "teach": "es-f-013-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'I can' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'puedo'. Puedo.",
+                  "lang": "target"
+                },
+                {
+                  "text": "It works exactly like",
+                  "lang": "en"
+                },
+                {
+                  "text": "quiero: puedo comer",
+                  "lang": "target"
+                },
+                {
+                  "text": "— I can eat.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "es-f-014",
@@ -497,7 +1170,23 @@
               "target_text": "tengo que",
               "romanization": null,
               "teach_script": "'I have to' is 'tengo que'. Tengo que. Tengo que comer — I have to eat.",
-              "audio": { "teach": "es-f-014-t" }
+              "audio": {
+                "teach": "es-f-014-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'I have to' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'tengo que'. Tengo que. Tengo que comer",
+                  "lang": "target"
+                },
+                {
+                  "text": "— I have to eat.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "es-f-015",
@@ -506,7 +1195,27 @@
               "target_text": "puedes",
               "romanization": null,
               "teach_script": "'You can' is 'puedes'. Puedes. The same 'you' ending as quieres.",
-              "audio": { "teach": "es-f-015-t" }
+              "audio": {
+                "teach": "es-f-015-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'You can' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'puedes'. Puedes.",
+                  "lang": "target"
+                },
+                {
+                  "text": "The same 'you' ending as",
+                  "lang": "en"
+                },
+                {
+                  "text": "quieres.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "es-f-016",
@@ -515,131 +1224,307 @@
               "target_text": "a casa",
               "romanization": null,
               "teach_script": "'Home', when you're heading there, is 'a casa'. A casa. Ir a casa — to go home.",
-              "audio": { "teach": "es-f-016-t" }
+              "audio": {
+                "teach": "es-f-016-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'Home', when you're heading there, is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'a casa'. A casa. Ir a casa",
+                  "lang": "target"
+                },
+                {
+                  "text": "— to go home.",
+                  "lang": "en"
+                }
+              ]
             }
           ],
           "prompts": [
             {
               "id": "es-f-p-041",
               "cue_en": "How would you say: I can?",
-              "expected": ["puedo", "yo puedo"],
-              "components": ["es-f-013"],
+              "expected": [
+                "puedo",
+                "yo puedo"
+              ],
+              "components": [
+                "es-f-013"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-041-c", "answer": "es-f-p-041-a", "answer_slow": "es-f-p-041-s" }
+              "audio": {
+                "cue": "es-f-p-041-c",
+                "answer": "es-f-p-041-a",
+                "answer_slow": "es-f-p-041-s"
+              }
             },
             {
               "id": "es-f-p-042",
               "cue_en": "I can go now.",
-              "expected": ["puedo ir ahora", "yo puedo ir ahora"],
-              "components": ["es-f-013", "es-f-009", "es-f-004"],
+              "expected": [
+                "puedo ir ahora",
+                "yo puedo ir ahora"
+              ],
+              "components": [
+                "es-f-013",
+                "es-f-009",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "Puedo works like quiero: puedo — ir — ahora.",
-              "audio": { "cue": "es-f-p-042-c", "answer": "es-f-p-042-a", "answer_slow": "es-f-p-042-s" }
+              "audio": {
+                "cue": "es-f-p-042-c",
+                "answer": "es-f-p-042-a",
+                "answer_slow": "es-f-p-042-s"
+              }
             },
             {
               "id": "es-f-p-043",
               "cue_en": "I have to eat.",
-              "expected": ["tengo que comer", "yo tengo que comer"],
-              "components": ["es-f-014", "es-f-002"],
+              "expected": [
+                "tengo que comer",
+                "yo tengo que comer"
+              ],
+              "components": [
+                "es-f-014",
+                "es-f-002"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-043-c", "answer": "es-f-p-043-a", "answer_slow": "es-f-p-043-s" }
+              "audio": {
+                "cue": "es-f-p-043-c",
+                "answer": "es-f-p-043-a",
+                "answer_slow": "es-f-p-043-s"
+              }
             },
             {
               "id": "es-f-p-044",
               "cue_en": "Say: to go home.",
-              "expected": ["ir a casa"],
-              "components": ["es-f-009", "es-f-016"],
+              "expected": [
+                "ir a casa"
+              ],
+              "components": [
+                "es-f-009",
+                "es-f-016"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-044-c", "answer": "es-f-p-044-a", "answer_slow": "es-f-p-044-s" }
+              "audio": {
+                "cue": "es-f-p-044-c",
+                "answer": "es-f-p-044-a",
+                "answer_slow": "es-f-p-044-s"
+              }
             },
             {
               "id": "es-f-p-045",
               "cue_en": "I want to go home.",
-              "expected": ["quiero ir a casa", "yo quiero ir a casa"],
-              "components": ["es-f-001", "es-f-009", "es-f-016"],
+              "expected": [
+                "quiero ir a casa",
+                "yo quiero ir a casa"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-009",
+                "es-f-016"
+              ],
               "difficulty": 2,
               "decompose_script": "Quiero — ir a casa.",
-              "audio": { "cue": "es-f-p-045-c", "answer": "es-f-p-045-a", "answer_slow": "es-f-p-045-s" }
+              "audio": {
+                "cue": "es-f-p-045-c",
+                "answer": "es-f-p-045-a",
+                "answer_slow": "es-f-p-045-s"
+              }
             },
             {
               "id": "es-f-p-046",
               "cue_en": "I have to go home now.",
-              "expected": ["tengo que ir a casa ahora", "yo tengo que ir a casa ahora"],
-              "components": ["es-f-014", "es-f-009", "es-f-016", "es-f-004"],
+              "expected": [
+                "tengo que ir a casa ahora",
+                "yo tengo que ir a casa ahora"
+              ],
+              "components": [
+                "es-f-014",
+                "es-f-009",
+                "es-f-016",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "Tengo que — ir a casa — ahora.",
-              "audio": { "cue": "es-f-p-046-c", "answer": "es-f-p-046-a", "answer_slow": "es-f-p-046-s" }
+              "audio": {
+                "cue": "es-f-p-046-c",
+                "answer": "es-f-p-046-a",
+                "answer_slow": "es-f-p-046-s"
+              }
             },
             {
               "id": "es-f-p-047",
               "cue_en": "Just: you can.",
-              "expected": ["puedes", "tú puedes"],
-              "components": ["es-f-015"],
+              "expected": [
+                "puedes",
+                "tú puedes"
+              ],
+              "components": [
+                "es-f-015"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-047-c", "answer": "es-f-p-047-a", "answer_slow": "es-f-p-047-s" }
+              "audio": {
+                "cue": "es-f-p-047-c",
+                "answer": "es-f-p-047-a",
+                "answer_slow": "es-f-p-047-s"
+              }
             },
             {
               "id": "es-f-p-048",
               "cue_en": "I can eat later.",
-              "expected": ["puedo comer luego", "yo puedo comer luego"],
-              "components": ["es-f-013", "es-f-002", "es-f-012"],
+              "expected": [
+                "puedo comer luego",
+                "yo puedo comer luego"
+              ],
+              "components": [
+                "es-f-013",
+                "es-f-002",
+                "es-f-012"
+              ],
               "difficulty": 2,
               "decompose_script": "Puedo comer — luego at the end.",
-              "audio": { "cue": "es-f-p-048-c", "answer": "es-f-p-048-a", "answer_slow": "es-f-p-048-s" }
+              "audio": {
+                "cue": "es-f-p-048-c",
+                "answer": "es-f-p-048-a",
+                "answer_slow": "es-f-p-048-s"
+              }
             },
             {
               "id": "es-f-p-049",
               "cue_en": "Ask me: can you go to the market later?",
-              "expected": ["puedes ir al mercado luego", "tú puedes ir al mercado luego"],
-              "components": ["es-f-015", "es-f-009", "es-f-010", "es-f-011", "es-f-012", "es-f-007"],
+              "expected": [
+                "puedes ir al mercado luego",
+                "tú puedes ir al mercado luego"
+              ],
+              "components": [
+                "es-f-015",
+                "es-f-009",
+                "es-f-010",
+                "es-f-011",
+                "es-f-012",
+                "es-f-007"
+              ],
               "difficulty": 3,
               "decompose_script": "Puedes — ir al mercado — luego — rising at the end.",
-              "audio": { "cue": "es-f-p-049-c", "answer": "es-f-p-049-a", "answer_slow": "es-f-p-049-s" }
+              "audio": {
+                "cue": "es-f-p-049-c",
+                "answer": "es-f-p-049-a",
+                "answer_slow": "es-f-p-049-s"
+              }
             },
             {
               "id": "es-f-p-050",
               "cue_en": "I can't go now.",
-              "expected": ["no puedo ir ahora", "yo no puedo ir ahora"],
-              "components": ["es-f-006", "es-f-013", "es-f-009", "es-f-004"],
+              "expected": [
+                "no puedo ir ahora",
+                "yo no puedo ir ahora"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-013",
+                "es-f-009",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "No puedo — can't: no puedo ir — ahora.",
-              "audio": { "cue": "es-f-p-050-c", "answer": "es-f-p-050-a", "answer_slow": "es-f-p-050-s" }
+              "audio": {
+                "cue": "es-f-p-050-c",
+                "answer": "es-f-p-050-a",
+                "answer_slow": "es-f-p-050-s"
+              }
             },
             {
               "id": "es-f-p-051",
               "cue_en": "Ask me: can you eat now?",
-              "expected": ["puedes comer ahora", "tú puedes comer ahora"],
-              "components": ["es-f-015", "es-f-002", "es-f-004", "es-f-007"],
+              "expected": [
+                "puedes comer ahora",
+                "tú puedes comer ahora"
+              ],
+              "components": [
+                "es-f-015",
+                "es-f-002",
+                "es-f-004",
+                "es-f-007"
+              ],
               "difficulty": 2,
               "decompose_script": "Puedes comer ahora — let it rise.",
-              "audio": { "cue": "es-f-p-051-c", "answer": "es-f-p-051-a", "answer_slow": "es-f-p-051-s" }
+              "audio": {
+                "cue": "es-f-p-051-c",
+                "answer": "es-f-p-051-a",
+                "answer_slow": "es-f-p-051-s"
+              }
             },
             {
               "id": "es-f-p-052",
               "cue_en": "The big one: I can't go to the market now.",
-              "expected": ["no puedo ir al mercado ahora", "yo no puedo ir al mercado ahora"],
-              "components": ["es-f-006", "es-f-013", "es-f-009", "es-f-010", "es-f-011", "es-f-004"],
+              "expected": [
+                "no puedo ir al mercado ahora",
+                "yo no puedo ir al mercado ahora"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-013",
+                "es-f-009",
+                "es-f-010",
+                "es-f-011",
+                "es-f-004"
+              ],
               "difficulty": 3,
               "decompose_script": "No puedo, then the journey: ir al mercado — ahora.",
-              "audio": { "cue": "es-f-p-052-c", "answer": "es-f-p-052-a", "answer_slow": "es-f-p-052-s" }
+              "audio": {
+                "cue": "es-f-p-052-c",
+                "answer": "es-f-p-052-a",
+                "answer_slow": "es-f-p-052-s"
+              }
             },
             {
               "id": "es-f-p-053",
               "cue_en": "I have to go to the market later.",
-              "expected": ["tengo que ir al mercado luego", "yo tengo que ir al mercado luego"],
-              "components": ["es-f-014", "es-f-009", "es-f-010", "es-f-011", "es-f-012"],
+              "expected": [
+                "tengo que ir al mercado luego",
+                "yo tengo que ir al mercado luego"
+              ],
+              "components": [
+                "es-f-014",
+                "es-f-009",
+                "es-f-010",
+                "es-f-011",
+                "es-f-012"
+              ],
               "difficulty": 3,
               "decompose_script": "Tengo que — ir al mercado — luego.",
-              "audio": { "cue": "es-f-p-053-c", "answer": "es-f-p-053-a", "answer_slow": "es-f-p-053-s" }
+              "audio": {
+                "cue": "es-f-p-053-c",
+                "answer": "es-f-p-053-a",
+                "answer_slow": "es-f-p-053-s"
+              }
             },
             {
               "id": "es-f-p-054",
               "cue_en": "And: I don't want to go home now.",
-              "expected": ["no quiero ir a casa ahora", "yo no quiero ir a casa ahora"],
-              "components": ["es-f-006", "es-f-001", "es-f-009", "es-f-016", "es-f-004"],
+              "expected": [
+                "no quiero ir a casa ahora",
+                "yo no quiero ir a casa ahora"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-001",
+                "es-f-009",
+                "es-f-016",
+                "es-f-004"
+              ],
               "difficulty": 3,
               "decompose_script": "No quiero — ir a casa — ahora.",
-              "audio": { "cue": "es-f-p-054-c", "answer": "es-f-p-054-a", "answer_slow": "es-f-p-054-s" }
+              "audio": {
+                "cue": "es-f-p-054-c",
+                "answer": "es-f-p-054-a",
+                "answer_slow": "es-f-p-054-s"
+              }
             }
           ]
         },
@@ -653,7 +1538,19 @@
               "target_text": "esto",
               "romanization": null,
               "teach_script": "'This' is 'esto'. Esto.",
-              "audio": { "teach": "es-f-017-t" }
+              "audio": {
+                "teach": "es-f-017-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'This' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'esto'. Esto.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "es-f-018",
@@ -662,7 +1559,19 @@
               "target_text": "eso",
               "romanization": null,
               "teach_script": "'That' is 'eso'. Eso.",
-              "audio": { "teach": "es-f-018-t" }
+              "audio": {
+                "teach": "es-f-018-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'That' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'eso'. Eso.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "es-f-019",
@@ -671,7 +1580,23 @@
               "target_text": "es",
               "romanization": null,
               "teach_script": "'Is' is 'es'. Es. Esto es bueno — this is good.",
-              "audio": { "teach": "es-f-019-t" }
+              "audio": {
+                "teach": "es-f-019-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'Is' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'es'. Es. Esto es bueno",
+                  "lang": "target"
+                },
+                {
+                  "text": "— this is good.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "es-f-020",
@@ -680,129 +1605,288 @@
               "target_text": "bueno",
               "romanization": null,
               "teach_script": "'Good' is 'bueno'. Bueno.",
-              "audio": { "teach": "es-f-020-t" }
+              "audio": {
+                "teach": "es-f-020-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'Good' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'bueno'. Bueno.",
+                  "lang": "target"
+                }
+              ]
             }
           ],
           "prompts": [
             {
               "id": "es-f-p-055",
               "cue_en": "How would you say: this is good?",
-              "expected": ["esto es bueno"],
-              "components": ["es-f-017", "es-f-019", "es-f-020"],
+              "expected": [
+                "esto es bueno"
+              ],
+              "components": [
+                "es-f-017",
+                "es-f-019",
+                "es-f-020"
+              ],
               "difficulty": 1,
               "decompose_script": "Esto — es — bueno.",
-              "audio": { "cue": "es-f-p-055-c", "answer": "es-f-p-055-a", "answer_slow": "es-f-p-055-s" }
+              "audio": {
+                "cue": "es-f-p-055-c",
+                "answer": "es-f-p-055-a",
+                "answer_slow": "es-f-p-055-s"
+              }
             },
             {
               "id": "es-f-p-056",
               "cue_en": "That is good.",
-              "expected": ["eso es bueno"],
-              "components": ["es-f-018", "es-f-019", "es-f-020"],
+              "expected": [
+                "eso es bueno"
+              ],
+              "components": [
+                "es-f-018",
+                "es-f-019",
+                "es-f-020"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-056-c", "answer": "es-f-p-056-a", "answer_slow": "es-f-p-056-s" }
+              "audio": {
+                "cue": "es-f-p-056-c",
+                "answer": "es-f-p-056-a",
+                "answer_slow": "es-f-p-056-s"
+              }
             },
             {
               "id": "es-f-p-057",
               "cue_en": "This is not good.",
-              "expected": ["esto no es bueno"],
-              "components": ["es-f-017", "es-f-006", "es-f-019", "es-f-020"],
+              "expected": [
+                "esto no es bueno"
+              ],
+              "components": [
+                "es-f-017",
+                "es-f-006",
+                "es-f-019",
+                "es-f-020"
+              ],
               "difficulty": 2,
               "decompose_script": "No goes before es: esto — no es — bueno.",
-              "audio": { "cue": "es-f-p-057-c", "answer": "es-f-p-057-a", "answer_slow": "es-f-p-057-s" }
+              "audio": {
+                "cue": "es-f-p-057-c",
+                "answer": "es-f-p-057-a",
+                "answer_slow": "es-f-p-057-s"
+              }
             },
             {
               "id": "es-f-p-058",
               "cue_en": "I want this.",
-              "expected": ["quiero esto", "yo quiero esto"],
-              "components": ["es-f-001", "es-f-017"],
+              "expected": [
+                "quiero esto",
+                "yo quiero esto"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-017"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-058-c", "answer": "es-f-p-058-a", "answer_slow": "es-f-p-058-s" }
+              "audio": {
+                "cue": "es-f-p-058-c",
+                "answer": "es-f-p-058-a",
+                "answer_slow": "es-f-p-058-s"
+              }
             },
             {
               "id": "es-f-p-059",
               "cue_en": "I want that.",
-              "expected": ["quiero eso", "yo quiero eso"],
-              "components": ["es-f-001", "es-f-018"],
+              "expected": [
+                "quiero eso",
+                "yo quiero eso"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-018"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-059-c", "answer": "es-f-p-059-a", "answer_slow": "es-f-p-059-s" }
+              "audio": {
+                "cue": "es-f-p-059-c",
+                "answer": "es-f-p-059-a",
+                "answer_slow": "es-f-p-059-s"
+              }
             },
             {
               "id": "es-f-p-060",
               "cue_en": "Ask me: do you want this?",
-              "expected": ["quieres esto", "tú quieres esto"],
-              "components": ["es-f-005", "es-f-017", "es-f-007"],
+              "expected": [
+                "quieres esto",
+                "tú quieres esto"
+              ],
+              "components": [
+                "es-f-005",
+                "es-f-017",
+                "es-f-007"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-060-c", "answer": "es-f-p-060-a", "answer_slow": "es-f-p-060-s" }
+              "audio": {
+                "cue": "es-f-p-060-c",
+                "answer": "es-f-p-060-a",
+                "answer_slow": "es-f-p-060-s"
+              }
             },
             {
               "id": "es-f-p-061",
               "cue_en": "I don't want that.",
-              "expected": ["no quiero eso", "yo no quiero eso"],
-              "components": ["es-f-006", "es-f-001", "es-f-018"],
+              "expected": [
+                "no quiero eso",
+                "yo no quiero eso"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-001",
+                "es-f-018"
+              ],
               "difficulty": 2,
               "decompose_script": "No quiero — eso.",
-              "audio": { "cue": "es-f-p-061-c", "answer": "es-f-p-061-a", "answer_slow": "es-f-p-061-s" }
+              "audio": {
+                "cue": "es-f-p-061-c",
+                "answer": "es-f-p-061-a",
+                "answer_slow": "es-f-p-061-s"
+              }
             },
             {
               "id": "es-f-p-062",
               "cue_en": "Just: is.",
-              "expected": ["es"],
-              "components": ["es-f-019"],
+              "expected": [
+                "es"
+              ],
+              "components": [
+                "es-f-019"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-062-c", "answer": "es-f-p-062-a", "answer_slow": "es-f-p-062-s" }
+              "audio": {
+                "cue": "es-f-p-062-c",
+                "answer": "es-f-p-062-a",
+                "answer_slow": "es-f-p-062-s"
+              }
             },
             {
               "id": "es-f-p-063",
               "cue_en": "Ask me: is that good?",
-              "expected": ["eso es bueno"],
-              "components": ["es-f-018", "es-f-019", "es-f-020", "es-f-007"],
+              "expected": [
+                "eso es bueno"
+              ],
+              "components": [
+                "es-f-018",
+                "es-f-019",
+                "es-f-020",
+                "es-f-007"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-063-c", "answer": "es-f-p-063-a", "answer_slow": "es-f-p-063-s" }
+              "audio": {
+                "cue": "es-f-p-063-c",
+                "answer": "es-f-p-063-a",
+                "answer_slow": "es-f-p-063-s"
+              }
             },
             {
               "id": "es-f-p-064",
               "cue_en": "That is not good.",
-              "expected": ["eso no es bueno"],
-              "components": ["es-f-018", "es-f-006", "es-f-019", "es-f-020"],
+              "expected": [
+                "eso no es bueno"
+              ],
+              "components": [
+                "es-f-018",
+                "es-f-006",
+                "es-f-019",
+                "es-f-020"
+              ],
               "difficulty": 2,
               "decompose_script": "Eso — no es — bueno.",
-              "audio": { "cue": "es-f-p-064-c", "answer": "es-f-p-064-a", "answer_slow": "es-f-p-064-s" }
+              "audio": {
+                "cue": "es-f-p-064-c",
+                "answer": "es-f-p-064-a",
+                "answer_slow": "es-f-p-064-s"
+              }
             },
             {
               "id": "es-f-p-065",
               "cue_en": "From earlier: I want to eat now.",
-              "expected": ["quiero comer ahora", "yo quiero comer ahora"],
-              "components": ["es-f-001", "es-f-002", "es-f-004"],
+              "expected": [
+                "quiero comer ahora",
+                "yo quiero comer ahora"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-002",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "Quiero — comer — ahora.",
-              "audio": { "cue": "es-f-p-065-c", "answer": "es-f-p-065-a", "answer_slow": "es-f-p-065-s" }
+              "audio": {
+                "cue": "es-f-p-065-c",
+                "answer": "es-f-p-065-a",
+                "answer_slow": "es-f-p-065-s"
+              }
             },
             {
               "id": "es-f-p-066",
               "cue_en": "I don't want this.",
-              "expected": ["no quiero esto", "yo no quiero esto"],
-              "components": ["es-f-006", "es-f-001", "es-f-017"],
+              "expected": [
+                "no quiero esto",
+                "yo no quiero esto"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-001",
+                "es-f-017"
+              ],
               "difficulty": 2,
               "decompose_script": "No quiero — esto.",
-              "audio": { "cue": "es-f-p-066-c", "answer": "es-f-p-066-a", "answer_slow": "es-f-p-066-s" }
+              "audio": {
+                "cue": "es-f-p-066-c",
+                "answer": "es-f-p-066-a",
+                "answer_slow": "es-f-p-066-s"
+              }
             },
             {
               "id": "es-f-p-067",
               "cue_en": "Ask me: is this good?",
-              "expected": ["esto es bueno"],
-              "components": ["es-f-017", "es-f-019", "es-f-020", "es-f-007"],
+              "expected": [
+                "esto es bueno"
+              ],
+              "components": [
+                "es-f-017",
+                "es-f-019",
+                "es-f-020",
+                "es-f-007"
+              ],
               "difficulty": 2,
               "decompose_script": "Esto es bueno — rising at the end.",
-              "audio": { "cue": "es-f-p-067-c", "answer": "es-f-p-067-a", "answer_slow": "es-f-p-067-s" }
+              "audio": {
+                "cue": "es-f-p-067-c",
+                "answer": "es-f-p-067-a",
+                "answer_slow": "es-f-p-067-s"
+              }
             },
             {
               "id": "es-f-p-068",
               "cue_en": "And: this is not good.",
-              "expected": ["esto no es bueno"],
-              "components": ["es-f-017", "es-f-006", "es-f-019", "es-f-020"],
+              "expected": [
+                "esto no es bueno"
+              ],
+              "components": [
+                "es-f-017",
+                "es-f-006",
+                "es-f-019",
+                "es-f-020"
+              ],
               "difficulty": 2,
               "decompose_script": "Esto — no es — bueno.",
-              "audio": { "cue": "es-f-p-068-c", "answer": "es-f-p-068-a", "answer_slow": "es-f-p-068-s" }
+              "audio": {
+                "cue": "es-f-p-068-c",
+                "answer": "es-f-p-068-a",
+                "answer_slow": "es-f-p-068-s"
+              }
             }
           ]
         },
@@ -816,7 +1900,23 @@
               "target_text": "pero",
               "romanization": null,
               "teach_script": "'But' is 'pero'. Pero. It glues two little sentences together.",
-              "audio": { "teach": "es-f-021-t" }
+              "audio": {
+                "teach": "es-f-021-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'But' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'pero'. Pero.",
+                  "lang": "target"
+                },
+                {
+                  "text": "It glues two little sentences together.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "es-f-022",
@@ -825,7 +1925,19 @@
               "target_text": "comprar",
               "romanization": null,
               "teach_script": "'To buy' is 'comprar'. Comprar.",
-              "audio": { "teach": "es-f-022-t" }
+              "audio": {
+                "teach": "es-f-022-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'To buy' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'comprar'. Comprar.",
+                  "lang": "target"
+                }
+              ]
             },
             {
               "id": "es-f-023",
@@ -834,132 +1946,318 @@
               "target_text": "voy a",
               "romanization": null,
               "teach_script": "Here is your whole future: 'voy a' — I'm going to. Voy a. Voy a comer — I'm going to eat. Any verb you know can follow it.",
-              "audio": { "teach": "es-f-023-t" }
+              "audio": {
+                "teach": "es-f-023-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "Here is your whole future:",
+                  "lang": "en"
+                },
+                {
+                  "text": "'voy a'",
+                  "lang": "target"
+                },
+                {
+                  "text": "— I'm going to.",
+                  "lang": "en"
+                },
+                {
+                  "text": "Voy a. Voy a comer",
+                  "lang": "target"
+                },
+                {
+                  "text": "— I'm going to eat. Any verb you know can follow it.",
+                  "lang": "en"
+                }
+              ]
             }
           ],
           "prompts": [
             {
               "id": "es-f-p-069",
               "cue_en": "Just: but.",
-              "expected": ["pero"],
-              "components": ["es-f-021"],
+              "expected": [
+                "pero"
+              ],
+              "components": [
+                "es-f-021"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-069-c", "answer": "es-f-p-069-a", "answer_slow": "es-f-p-069-s" }
+              "audio": {
+                "cue": "es-f-p-069-c",
+                "answer": "es-f-p-069-a",
+                "answer_slow": "es-f-p-069-s"
+              }
             },
             {
               "id": "es-f-p-070",
               "cue_en": "To buy.",
-              "expected": ["comprar"],
-              "components": ["es-f-022"],
+              "expected": [
+                "comprar"
+              ],
+              "components": [
+                "es-f-022"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-070-c", "answer": "es-f-p-070-a", "answer_slow": "es-f-p-070-s" }
+              "audio": {
+                "cue": "es-f-p-070-c",
+                "answer": "es-f-p-070-a",
+                "answer_slow": "es-f-p-070-s"
+              }
             },
             {
               "id": "es-f-p-071",
               "cue_en": "I want to buy this.",
-              "expected": ["quiero comprar esto", "yo quiero comprar esto"],
-              "components": ["es-f-001", "es-f-022", "es-f-017"],
+              "expected": [
+                "quiero comprar esto",
+                "yo quiero comprar esto"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-022",
+                "es-f-017"
+              ],
               "difficulty": 2,
               "decompose_script": "Quiero comprar — esto.",
-              "audio": { "cue": "es-f-p-071-c", "answer": "es-f-p-071-a", "answer_slow": "es-f-p-071-s" }
+              "audio": {
+                "cue": "es-f-p-071-c",
+                "answer": "es-f-p-071-a",
+                "answer_slow": "es-f-p-071-s"
+              }
             },
             {
               "id": "es-f-p-072",
               "cue_en": "The future scaffold — say: I'm going to.",
-              "expected": ["voy a", "yo voy a"],
-              "components": ["es-f-023"],
+              "expected": [
+                "voy a",
+                "yo voy a"
+              ],
+              "components": [
+                "es-f-023"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-072-c", "answer": "es-f-p-072-a", "answer_slow": "es-f-p-072-s" }
+              "audio": {
+                "cue": "es-f-p-072-c",
+                "answer": "es-f-p-072-a",
+                "answer_slow": "es-f-p-072-s"
+              }
             },
             {
               "id": "es-f-p-073",
               "cue_en": "I'm going to buy that.",
-              "expected": ["voy a comprar eso", "yo voy a comprar eso"],
-              "components": ["es-f-023", "es-f-022", "es-f-018"],
+              "expected": [
+                "voy a comprar eso",
+                "yo voy a comprar eso"
+              ],
+              "components": [
+                "es-f-023",
+                "es-f-022",
+                "es-f-018"
+              ],
               "difficulty": 2,
               "decompose_script": "Voy a — plus any verb: voy a comprar — eso.",
-              "audio": { "cue": "es-f-p-073-c", "answer": "es-f-p-073-a", "answer_slow": "es-f-p-073-s" }
+              "audio": {
+                "cue": "es-f-p-073-c",
+                "answer": "es-f-p-073-a",
+                "answer_slow": "es-f-p-073-s"
+              }
             },
             {
               "id": "es-f-p-074",
               "cue_en": "I'm going to eat now.",
-              "expected": ["voy a comer ahora", "yo voy a comer ahora"],
-              "components": ["es-f-023", "es-f-002", "es-f-004"],
+              "expected": [
+                "voy a comer ahora",
+                "yo voy a comer ahora"
+              ],
+              "components": [
+                "es-f-023",
+                "es-f-002",
+                "es-f-004"
+              ],
               "difficulty": 2,
               "decompose_script": "Voy a comer — ahora.",
-              "audio": { "cue": "es-f-p-074-c", "answer": "es-f-p-074-a", "answer_slow": "es-f-p-074-s" }
+              "audio": {
+                "cue": "es-f-p-074-c",
+                "answer": "es-f-p-074-a",
+                "answer_slow": "es-f-p-074-s"
+              }
             },
             {
               "id": "es-f-p-075",
               "cue_en": "I'm going to go to the market.",
-              "expected": ["voy a ir al mercado", "yo voy a ir al mercado"],
-              "components": ["es-f-023", "es-f-009", "es-f-010", "es-f-011"],
+              "expected": [
+                "voy a ir al mercado",
+                "yo voy a ir al mercado"
+              ],
+              "components": [
+                "es-f-023",
+                "es-f-009",
+                "es-f-010",
+                "es-f-011"
+              ],
               "difficulty": 2,
               "decompose_script": "Voy a ir — al mercado. Yes, 'going to go' is normal Spanish.",
-              "audio": { "cue": "es-f-p-075-c", "answer": "es-f-p-075-a", "answer_slow": "es-f-p-075-s" }
+              "audio": {
+                "cue": "es-f-p-075-c",
+                "answer": "es-f-p-075-a",
+                "answer_slow": "es-f-p-075-s"
+              }
             },
             {
               "id": "es-f-p-076",
               "cue_en": "Ask me: do you want to buy this?",
-              "expected": ["quieres comprar esto", "tú quieres comprar esto"],
-              "components": ["es-f-005", "es-f-022", "es-f-017", "es-f-007"],
+              "expected": [
+                "quieres comprar esto",
+                "tú quieres comprar esto"
+              ],
+              "components": [
+                "es-f-005",
+                "es-f-022",
+                "es-f-017",
+                "es-f-007"
+              ],
               "difficulty": 2,
               "decompose_script": "Quieres comprar esto — let it rise.",
-              "audio": { "cue": "es-f-p-076-c", "answer": "es-f-p-076-a", "answer_slow": "es-f-p-076-s" }
+              "audio": {
+                "cue": "es-f-p-076-c",
+                "answer": "es-f-p-076-a",
+                "answer_slow": "es-f-p-076-s"
+              }
             },
             {
               "id": "es-f-p-077",
               "cue_en": "I'm not going to buy that.",
-              "expected": ["no voy a comprar eso", "yo no voy a comprar eso"],
-              "components": ["es-f-006", "es-f-023", "es-f-022", "es-f-018"],
+              "expected": [
+                "no voy a comprar eso",
+                "yo no voy a comprar eso"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-023",
+                "es-f-022",
+                "es-f-018"
+              ],
               "difficulty": 2,
               "decompose_script": "No before voy: no voy a comprar — eso.",
-              "audio": { "cue": "es-f-p-077-c", "answer": "es-f-p-077-a", "answer_slow": "es-f-p-077-s" }
+              "audio": {
+                "cue": "es-f-p-077-c",
+                "answer": "es-f-p-077-a",
+                "answer_slow": "es-f-p-077-s"
+              }
             },
             {
               "id": "es-f-p-078",
               "cue_en": "I have to buy this.",
-              "expected": ["tengo que comprar esto", "yo tengo que comprar esto"],
-              "components": ["es-f-014", "es-f-022", "es-f-017"],
+              "expected": [
+                "tengo que comprar esto",
+                "yo tengo que comprar esto"
+              ],
+              "components": [
+                "es-f-014",
+                "es-f-022",
+                "es-f-017"
+              ],
               "difficulty": 2,
               "decompose_script": "Tengo que comprar — esto.",
-              "audio": { "cue": "es-f-p-078-c", "answer": "es-f-p-078-a", "answer_slow": "es-f-p-078-s" }
+              "audio": {
+                "cue": "es-f-p-078-c",
+                "answer": "es-f-p-078-a",
+                "answer_slow": "es-f-p-078-s"
+              }
             },
             {
               "id": "es-f-p-079",
               "cue_en": "That is good, but I want this.",
-              "expected": ["eso es bueno pero quiero esto", "eso es bueno pero yo quiero esto"],
-              "components": ["es-f-018", "es-f-019", "es-f-020", "es-f-021", "es-f-001", "es-f-017"],
+              "expected": [
+                "eso es bueno pero quiero esto",
+                "eso es bueno pero yo quiero esto"
+              ],
+              "components": [
+                "es-f-018",
+                "es-f-019",
+                "es-f-020",
+                "es-f-021",
+                "es-f-001",
+                "es-f-017"
+              ],
               "difficulty": 3,
               "decompose_script": "Two little sentences glued with pero: eso es bueno — pero — quiero esto.",
-              "audio": { "cue": "es-f-p-079-c", "answer": "es-f-p-079-a", "answer_slow": "es-f-p-079-s" }
+              "audio": {
+                "cue": "es-f-p-079-c",
+                "answer": "es-f-p-079-a",
+                "answer_slow": "es-f-p-079-s"
+              }
             },
             {
               "id": "es-f-p-080",
               "cue_en": "This is good, but that is not good.",
-              "expected": ["esto es bueno pero eso no es bueno"],
-              "components": ["es-f-017", "es-f-019", "es-f-020", "es-f-021", "es-f-018", "es-f-006"],
+              "expected": [
+                "esto es bueno pero eso no es bueno"
+              ],
+              "components": [
+                "es-f-017",
+                "es-f-019",
+                "es-f-020",
+                "es-f-021",
+                "es-f-018",
+                "es-f-006"
+              ],
               "difficulty": 3,
               "decompose_script": "Esto es bueno — pero — eso no es bueno.",
-              "audio": { "cue": "es-f-p-080-c", "answer": "es-f-p-080-a", "answer_slow": "es-f-p-080-s" }
+              "audio": {
+                "cue": "es-f-p-080-c",
+                "answer": "es-f-p-080-a",
+                "answer_slow": "es-f-p-080-s"
+              }
             },
             {
               "id": "es-f-p-081",
               "cue_en": "I want to buy this, but it's not good — say: but this is not good.",
-              "expected": ["quiero comprar esto pero esto no es bueno", "yo quiero comprar esto pero esto no es bueno"],
-              "components": ["es-f-001", "es-f-022", "es-f-017", "es-f-021", "es-f-006", "es-f-019", "es-f-020"],
+              "expected": [
+                "quiero comprar esto pero esto no es bueno",
+                "yo quiero comprar esto pero esto no es bueno"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-022",
+                "es-f-017",
+                "es-f-021",
+                "es-f-006",
+                "es-f-019",
+                "es-f-020"
+              ],
               "difficulty": 3,
               "decompose_script": "Quiero comprar esto — pero — esto no es bueno.",
-              "audio": { "cue": "es-f-p-081-c", "answer": "es-f-p-081-a", "answer_slow": "es-f-p-081-s" }
+              "audio": {
+                "cue": "es-f-p-081-c",
+                "answer": "es-f-p-081-a",
+                "answer_slow": "es-f-p-081-s"
+              }
             },
             {
               "id": "es-f-p-082",
               "cue_en": "I'm going to go home, but I have to eat now.",
-              "expected": ["voy a ir a casa pero tengo que comer ahora", "yo voy a ir a casa pero tengo que comer ahora"],
-              "components": ["es-f-023", "es-f-009", "es-f-016", "es-f-021", "es-f-014", "es-f-002", "es-f-004"],
+              "expected": [
+                "voy a ir a casa pero tengo que comer ahora",
+                "yo voy a ir a casa pero tengo que comer ahora"
+              ],
+              "components": [
+                "es-f-023",
+                "es-f-009",
+                "es-f-016",
+                "es-f-021",
+                "es-f-014",
+                "es-f-002",
+                "es-f-004"
+              ],
               "difficulty": 3,
               "decompose_script": "Voy a ir a casa — pero — tengo que comer ahora.",
-              "audio": { "cue": "es-f-p-082-c", "answer": "es-f-p-082-a", "answer_slow": "es-f-p-082-s" }
+              "audio": {
+                "cue": "es-f-p-082-c",
+                "answer": "es-f-p-082-a",
+                "answer_slow": "es-f-p-082-s"
+              }
             }
           ]
         },
@@ -973,7 +2271,23 @@
               "target_text": "vas a",
               "romanization": null,
               "teach_script": "'You're going to' is 'vas a'. Vas a. Vas a comer — you're going to eat.",
-              "audio": { "teach": "es-f-024-t" }
+              "audio": {
+                "teach": "es-f-024-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'You're going to' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'vas a'. Vas a. Vas a comer",
+                  "lang": "target"
+                },
+                {
+                  "text": "— you're going to eat.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "es-f-025",
@@ -982,7 +2296,23 @@
               "target_text": "mañana",
               "romanization": null,
               "teach_script": "'Tomorrow' is 'mañana'. Mañana. A time word — so it goes at the end.",
-              "audio": { "teach": "es-f-025-t" }
+              "audio": {
+                "teach": "es-f-025-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'Tomorrow' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'mañana'. Mañana.",
+                  "lang": "target"
+                },
+                {
+                  "text": "A time word — so it goes at the end.",
+                  "lang": "en"
+                }
+              ]
             },
             {
               "id": "es-f-026",
@@ -991,105 +2321,259 @@
               "target_text": "porque",
               "romanization": null,
               "teach_script": "'Because' is 'porque'. Porque. Like pero, it glues two sentences — and now you can give reasons.",
-              "audio": { "teach": "es-f-026-t" }
+              "audio": {
+                "teach": "es-f-026-t"
+              },
+              "teach_segments": [
+                {
+                  "text": "'Because' is",
+                  "lang": "en"
+                },
+                {
+                  "text": "'porque'. Porque.",
+                  "lang": "target"
+                },
+                {
+                  "text": "Like",
+                  "lang": "en"
+                },
+                {
+                  "text": "pero,",
+                  "lang": "target"
+                },
+                {
+                  "text": "it glues two sentences — and now you can give reasons.",
+                  "lang": "en"
+                }
+              ]
             }
           ],
           "prompts": [
             {
               "id": "es-f-p-083",
               "cue_en": "You're going to — say it.",
-              "expected": ["vas a", "tú vas a"],
-              "components": ["es-f-024"],
+              "expected": [
+                "vas a",
+                "tú vas a"
+              ],
+              "components": [
+                "es-f-024"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-083-c", "answer": "es-f-p-083-a", "answer_slow": "es-f-p-083-s" }
+              "audio": {
+                "cue": "es-f-p-083-c",
+                "answer": "es-f-p-083-a",
+                "answer_slow": "es-f-p-083-s"
+              }
             },
             {
               "id": "es-f-p-084",
               "cue_en": "Just: tomorrow.",
-              "expected": ["mañana"],
-              "components": ["es-f-025"],
+              "expected": [
+                "mañana"
+              ],
+              "components": [
+                "es-f-025"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-084-c", "answer": "es-f-p-084-a", "answer_slow": "es-f-p-084-s" }
+              "audio": {
+                "cue": "es-f-p-084-c",
+                "answer": "es-f-p-084-a",
+                "answer_slow": "es-f-p-084-s"
+              }
             },
             {
               "id": "es-f-p-085",
               "cue_en": "I'm going to go tomorrow.",
-              "expected": ["voy a ir mañana", "yo voy a ir mañana"],
-              "components": ["es-f-023", "es-f-009", "es-f-025"],
+              "expected": [
+                "voy a ir mañana",
+                "yo voy a ir mañana"
+              ],
+              "components": [
+                "es-f-023",
+                "es-f-009",
+                "es-f-025"
+              ],
               "difficulty": 2,
               "decompose_script": "Voy a ir — mañana at the end.",
-              "audio": { "cue": "es-f-p-085-c", "answer": "es-f-p-085-a", "answer_slow": "es-f-p-085-s" }
+              "audio": {
+                "cue": "es-f-p-085-c",
+                "answer": "es-f-p-085-a",
+                "answer_slow": "es-f-p-085-s"
+              }
             },
             {
               "id": "es-f-p-086",
               "cue_en": "Ask me: are you going to go to the market tomorrow?",
-              "expected": ["vas a ir al mercado mañana", "tú vas a ir al mercado mañana"],
-              "components": ["es-f-024", "es-f-009", "es-f-010", "es-f-011", "es-f-025", "es-f-007"],
+              "expected": [
+                "vas a ir al mercado mañana",
+                "tú vas a ir al mercado mañana"
+              ],
+              "components": [
+                "es-f-024",
+                "es-f-009",
+                "es-f-010",
+                "es-f-011",
+                "es-f-025",
+                "es-f-007"
+              ],
               "difficulty": 3,
               "decompose_script": "Vas a — ir al mercado — mañana — and let it rise.",
-              "audio": { "cue": "es-f-p-086-c", "answer": "es-f-p-086-a", "answer_slow": "es-f-p-086-s" }
+              "audio": {
+                "cue": "es-f-p-086-c",
+                "answer": "es-f-p-086-a",
+                "answer_slow": "es-f-p-086-s"
+              }
             },
             {
               "id": "es-f-p-087",
               "cue_en": "I'm going to buy that tomorrow.",
-              "expected": ["voy a comprar eso mañana", "yo voy a comprar eso mañana"],
-              "components": ["es-f-023", "es-f-022", "es-f-018", "es-f-025"],
+              "expected": [
+                "voy a comprar eso mañana",
+                "yo voy a comprar eso mañana"
+              ],
+              "components": [
+                "es-f-023",
+                "es-f-022",
+                "es-f-018",
+                "es-f-025"
+              ],
               "difficulty": 2,
               "decompose_script": "Voy a comprar eso — mañana at the end.",
-              "audio": { "cue": "es-f-p-087-c", "answer": "es-f-p-087-a", "answer_slow": "es-f-p-087-s" }
+              "audio": {
+                "cue": "es-f-p-087-c",
+                "answer": "es-f-p-087-a",
+                "answer_slow": "es-f-p-087-s"
+              }
             },
             {
               "id": "es-f-p-088",
               "cue_en": "Just: because.",
-              "expected": ["porque"],
-              "components": ["es-f-026"],
+              "expected": [
+                "porque"
+              ],
+              "components": [
+                "es-f-026"
+              ],
               "difficulty": 1,
-              "audio": { "cue": "es-f-p-088-c", "answer": "es-f-p-088-a", "answer_slow": "es-f-p-088-s" }
+              "audio": {
+                "cue": "es-f-p-088-c",
+                "answer": "es-f-p-088-a",
+                "answer_slow": "es-f-p-088-s"
+              }
             },
             {
               "id": "es-f-p-089",
               "cue_en": "I want to go home because I have to eat.",
-              "expected": ["quiero ir a casa porque tengo que comer", "yo quiero ir a casa porque tengo que comer"],
-              "components": ["es-f-001", "es-f-009", "es-f-016", "es-f-026", "es-f-014", "es-f-002"],
+              "expected": [
+                "quiero ir a casa porque tengo que comer",
+                "yo quiero ir a casa porque tengo que comer"
+              ],
+              "components": [
+                "es-f-001",
+                "es-f-009",
+                "es-f-016",
+                "es-f-026",
+                "es-f-014",
+                "es-f-002"
+              ],
               "difficulty": 3,
               "decompose_script": "First clause — porque — second clause: quiero ir a casa — porque — tengo que comer.",
-              "audio": { "cue": "es-f-p-089-c", "answer": "es-f-p-089-a", "answer_slow": "es-f-p-089-s" }
+              "audio": {
+                "cue": "es-f-p-089-c",
+                "answer": "es-f-p-089-a",
+                "answer_slow": "es-f-p-089-s"
+              }
             },
             {
               "id": "es-f-p-090",
               "cue_en": "I can't go now because I have to eat.",
-              "expected": ["no puedo ir ahora porque tengo que comer", "yo no puedo ir ahora porque tengo que comer"],
-              "components": ["es-f-006", "es-f-013", "es-f-009", "es-f-004", "es-f-026", "es-f-014", "es-f-002"],
+              "expected": [
+                "no puedo ir ahora porque tengo que comer",
+                "yo no puedo ir ahora porque tengo que comer"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-013",
+                "es-f-009",
+                "es-f-004",
+                "es-f-026",
+                "es-f-014",
+                "es-f-002"
+              ],
               "difficulty": 3,
               "decompose_script": "No puedo ir ahora — porque — tengo que comer.",
-              "audio": { "cue": "es-f-p-090-c", "answer": "es-f-p-090-a", "answer_slow": "es-f-p-090-s" }
+              "audio": {
+                "cue": "es-f-p-090-c",
+                "answer": "es-f-p-090-a",
+                "answer_slow": "es-f-p-090-s"
+              }
             },
             {
               "id": "es-f-p-091",
               "cue_en": "Ask me: are you going to buy this?",
-              "expected": ["vas a comprar esto", "tú vas a comprar esto"],
-              "components": ["es-f-024", "es-f-022", "es-f-017", "es-f-007"],
+              "expected": [
+                "vas a comprar esto",
+                "tú vas a comprar esto"
+              ],
+              "components": [
+                "es-f-024",
+                "es-f-022",
+                "es-f-017",
+                "es-f-007"
+              ],
               "difficulty": 2,
               "decompose_script": "Vas a comprar esto — rising at the end.",
-              "audio": { "cue": "es-f-p-091-c", "answer": "es-f-p-091-a", "answer_slow": "es-f-p-091-s" }
+              "audio": {
+                "cue": "es-f-p-091-c",
+                "answer": "es-f-p-091-a",
+                "answer_slow": "es-f-p-091-s"
+              }
             },
             {
               "id": "es-f-p-092",
               "cue_en": "I'm not going to go tomorrow.",
-              "expected": ["no voy a ir mañana", "yo no voy a ir mañana"],
-              "components": ["es-f-006", "es-f-023", "es-f-009", "es-f-025"],
+              "expected": [
+                "no voy a ir mañana",
+                "yo no voy a ir mañana"
+              ],
+              "components": [
+                "es-f-006",
+                "es-f-023",
+                "es-f-009",
+                "es-f-025"
+              ],
               "difficulty": 2,
               "decompose_script": "No voy a ir — mañana.",
-              "audio": { "cue": "es-f-p-092-c", "answer": "es-f-p-092-a", "answer_slow": "es-f-p-092-s" }
+              "audio": {
+                "cue": "es-f-p-092-c",
+                "answer": "es-f-p-092-a",
+                "answer_slow": "es-f-p-092-s"
+              }
             },
             {
               "id": "es-f-p-093",
               "cue_en": "I'm going to eat later because I want to go now.",
-              "expected": ["voy a comer luego porque quiero ir ahora", "yo voy a comer luego porque quiero ir ahora"],
-              "components": ["es-f-023", "es-f-002", "es-f-012", "es-f-026", "es-f-001", "es-f-009", "es-f-004"],
+              "expected": [
+                "voy a comer luego porque quiero ir ahora",
+                "yo voy a comer luego porque quiero ir ahora"
+              ],
+              "components": [
+                "es-f-023",
+                "es-f-002",
+                "es-f-012",
+                "es-f-026",
+                "es-f-001",
+                "es-f-009",
+                "es-f-004"
+              ],
               "difficulty": 3,
               "decompose_script": "Voy a comer luego — porque — quiero ir ahora.",
-              "audio": { "cue": "es-f-p-093-c", "answer": "es-f-p-093-a", "answer_slow": "es-f-p-093-s" }
+              "audio": {
+                "cue": "es-f-p-093-c",
+                "answer": "es-f-p-093-a",
+                "answer_slow": "es-f-p-093-s"
+              }
             },
             {
               "id": "es-f-p-094",
@@ -1098,10 +2582,24 @@
                 "no puedo ir al mercado ahora porque tengo que comer",
                 "yo no puedo ir al mercado ahora porque tengo que comer"
               ],
-              "components": ["es-f-006", "es-f-013", "es-f-009", "es-f-010", "es-f-011", "es-f-004", "es-f-026", "es-f-014", "es-f-002"],
+              "components": [
+                "es-f-006",
+                "es-f-013",
+                "es-f-009",
+                "es-f-010",
+                "es-f-011",
+                "es-f-004",
+                "es-f-026",
+                "es-f-014",
+                "es-f-002"
+              ],
               "difficulty": 3,
               "decompose_script": "Three pieces: no puedo ir al mercado ahora — porque — tengo que comer.",
-              "audio": { "cue": "es-f-p-094-c", "answer": "es-f-p-094-a", "answer_slow": "es-f-p-094-s" }
+              "audio": {
+                "cue": "es-f-p-094-c",
+                "answer": "es-f-p-094-a",
+                "answer_slow": "es-f-p-094-s"
+              }
             },
             {
               "id": "es-f-p-095",
@@ -1110,19 +2608,49 @@
                 "voy a ir al mercado mañana porque tengo que comprar esto",
                 "yo voy a ir al mercado mañana porque tengo que comprar esto"
               ],
-              "components": ["es-f-023", "es-f-009", "es-f-010", "es-f-011", "es-f-025", "es-f-026", "es-f-014", "es-f-022", "es-f-017"],
+              "components": [
+                "es-f-023",
+                "es-f-009",
+                "es-f-010",
+                "es-f-011",
+                "es-f-025",
+                "es-f-026",
+                "es-f-014",
+                "es-f-022",
+                "es-f-017"
+              ],
               "difficulty": 3,
               "decompose_script": "Voy a ir al mercado mañana — porque — tengo que comprar esto.",
-              "audio": { "cue": "es-f-p-095-c", "answer": "es-f-p-095-a", "answer_slow": "es-f-p-095-s" }
+              "audio": {
+                "cue": "es-f-p-095-c",
+                "answer": "es-f-p-095-a",
+                "answer_slow": "es-f-p-095-s"
+              }
             },
             {
               "id": "es-f-p-096",
               "cue_en": "Last one this week: that is good, but I'm going to buy this tomorrow.",
-              "expected": ["eso es bueno pero voy a comprar esto mañana", "eso es bueno pero yo voy a comprar esto mañana"],
-              "components": ["es-f-018", "es-f-019", "es-f-020", "es-f-021", "es-f-023", "es-f-022", "es-f-017", "es-f-025"],
+              "expected": [
+                "eso es bueno pero voy a comprar esto mañana",
+                "eso es bueno pero yo voy a comprar esto mañana"
+              ],
+              "components": [
+                "es-f-018",
+                "es-f-019",
+                "es-f-020",
+                "es-f-021",
+                "es-f-023",
+                "es-f-022",
+                "es-f-017",
+                "es-f-025"
+              ],
               "difficulty": 3,
               "decompose_script": "Eso es bueno — pero — voy a comprar esto mañana.",
-              "audio": { "cue": "es-f-p-096-c", "answer": "es-f-p-096-a", "answer_slow": "es-f-p-096-s" }
+              "audio": {
+                "cue": "es-f-p-096-c",
+                "answer": "es-f-p-096-a",
+                "answer_slow": "es-f-p-096-s"
+              }
             }
           ]
         }
@@ -1134,59 +2662,213 @@
       "id": "modal-verb-time",
       "shape": "(no) [modal] [verb] ([time])",
       "slots": [
-        { "name": "negation", "fillers": ["es-f-006"], "optional": true },
-        { "name": "modal", "fillers": ["es-f-001", "es-f-005", "es-f-013", "es-f-014", "es-f-015", "es-f-023", "es-f-024"] },
-        { "name": "verb", "fillers": ["es-f-002", "es-f-003", "es-f-009", "es-f-022"] },
-        { "name": "time", "fillers": ["es-f-004", "es-f-012", "es-f-025"], "optional": true }
+        {
+          "name": "negation",
+          "fillers": [
+            "es-f-006"
+          ],
+          "optional": true
+        },
+        {
+          "name": "modal",
+          "fillers": [
+            "es-f-001",
+            "es-f-005",
+            "es-f-013",
+            "es-f-014",
+            "es-f-015",
+            "es-f-023",
+            "es-f-024"
+          ]
+        },
+        {
+          "name": "verb",
+          "fillers": [
+            "es-f-002",
+            "es-f-003",
+            "es-f-009",
+            "es-f-022"
+          ]
+        },
+        {
+          "name": "time",
+          "fillers": [
+            "es-f-004",
+            "es-f-012",
+            "es-f-025"
+          ],
+          "optional": true
+        }
       ]
     },
     {
       "id": "demonstrative-opinion",
       "shape": "[esto/eso] (no) es bueno",
       "slots": [
-        { "name": "demonstrative", "fillers": ["es-f-017", "es-f-018"] },
-        { "name": "negation", "fillers": ["es-f-006"], "optional": true },
-        { "name": "copula", "fillers": ["es-f-019"] },
-        { "name": "adjective", "fillers": ["es-f-020"] }
+        {
+          "name": "demonstrative",
+          "fillers": [
+            "es-f-017",
+            "es-f-018"
+          ]
+        },
+        {
+          "name": "negation",
+          "fillers": [
+            "es-f-006"
+          ],
+          "optional": true
+        },
+        {
+          "name": "copula",
+          "fillers": [
+            "es-f-019"
+          ]
+        },
+        {
+          "name": "adjective",
+          "fillers": [
+            "es-f-020"
+          ]
+        }
       ]
     },
     {
       "id": "want-object",
       "shape": "(no) [quiero/quieres] [esto/eso]",
       "slots": [
-        { "name": "negation", "fillers": ["es-f-006"], "optional": true },
-        { "name": "want", "fillers": ["es-f-001", "es-f-005"] },
-        { "name": "object", "fillers": ["es-f-017", "es-f-018"] }
+        {
+          "name": "negation",
+          "fillers": [
+            "es-f-006"
+          ],
+          "optional": true
+        },
+        {
+          "name": "want",
+          "fillers": [
+            "es-f-001",
+            "es-f-005"
+          ]
+        },
+        {
+          "name": "object",
+          "fillers": [
+            "es-f-017",
+            "es-f-018"
+          ]
+        }
       ]
     },
     {
       "id": "go-to-market",
       "shape": "[modal] ir al mercado ([time])",
       "slots": [
-        { "name": "modal", "fillers": ["es-f-001", "es-f-005", "es-f-013", "es-f-014", "es-f-015", "es-f-023", "es-f-024"] },
-        { "name": "motion", "fillers": ["es-f-009"] },
-        { "name": "connector", "fillers": ["es-f-010"] },
-        { "name": "place", "fillers": ["es-f-011"] },
-        { "name": "time", "fillers": ["es-f-004", "es-f-012", "es-f-025"], "optional": true }
+        {
+          "name": "modal",
+          "fillers": [
+            "es-f-001",
+            "es-f-005",
+            "es-f-013",
+            "es-f-014",
+            "es-f-015",
+            "es-f-023",
+            "es-f-024"
+          ]
+        },
+        {
+          "name": "motion",
+          "fillers": [
+            "es-f-009"
+          ]
+        },
+        {
+          "name": "connector",
+          "fillers": [
+            "es-f-010"
+          ]
+        },
+        {
+          "name": "place",
+          "fillers": [
+            "es-f-011"
+          ]
+        },
+        {
+          "name": "time",
+          "fillers": [
+            "es-f-004",
+            "es-f-012",
+            "es-f-025"
+          ],
+          "optional": true
+        }
       ]
     },
     {
       "id": "go-home",
       "shape": "[modal] ir a casa ([time])",
       "slots": [
-        { "name": "modal", "fillers": ["es-f-001", "es-f-005", "es-f-013", "es-f-014", "es-f-015", "es-f-023", "es-f-024"] },
-        { "name": "motion", "fillers": ["es-f-009"] },
-        { "name": "place", "fillers": ["es-f-016"] },
-        { "name": "time", "fillers": ["es-f-004", "es-f-012", "es-f-025"], "optional": true }
+        {
+          "name": "modal",
+          "fillers": [
+            "es-f-001",
+            "es-f-005",
+            "es-f-013",
+            "es-f-014",
+            "es-f-015",
+            "es-f-023",
+            "es-f-024"
+          ]
+        },
+        {
+          "name": "motion",
+          "fillers": [
+            "es-f-009"
+          ]
+        },
+        {
+          "name": "place",
+          "fillers": [
+            "es-f-016"
+          ]
+        },
+        {
+          "name": "time",
+          "fillers": [
+            "es-f-004",
+            "es-f-012",
+            "es-f-025"
+          ],
+          "optional": true
+        }
       ]
     }
   ],
   "system_lines": {
-    "confirm": { "text": "Yes —", "audio": "sys-confirm" },
-    "almost": { "text": "Almost — listen:", "audio": "sys-almost" },
-    "miss_intro": { "text": "Here it is again —", "audio": "sys-miss-intro" },
-    "session_open": { "text": "Ready. Here we go.", "audio": "sys-session-open" },
-    "victory_intro": { "text": "Last stretch — you build these yourself.", "audio": "sys-victory-intro" },
-    "session_close": { "text": "That's the session. You're done for today — or keep going.", "audio": "sys-session-close" }
+    "confirm": {
+      "text": "Yes —",
+      "audio": "sys-confirm"
+    },
+    "almost": {
+      "text": "Almost — listen:",
+      "audio": "sys-almost"
+    },
+    "miss_intro": {
+      "text": "Here it is again —",
+      "audio": "sys-miss-intro"
+    },
+    "session_open": {
+      "text": "Ready. Here we go.",
+      "audio": "sys-session-open"
+    },
+    "victory_intro": {
+      "text": "Last stretch — you build these yourself.",
+      "audio": "sys-victory-intro"
+    },
+    "session_close": {
+      "text": "That's the session. You're done for today — or keep going.",
+      "audio": "sys-session-close"
+    }
   }
 }

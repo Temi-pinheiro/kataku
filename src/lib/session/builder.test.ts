@@ -13,6 +13,10 @@ function item(id: string, target: string): ContentItem {
     target_text: target,
     romanization: null,
     teach_script: `The word is ${target}.`,
+    teach_segments: [
+      { text: 'The word is', lang: 'en' },
+      { text: `${target}.`, lang: 'target' },
+    ],
     audio: { teach: `${id}-t` },
   };
 }

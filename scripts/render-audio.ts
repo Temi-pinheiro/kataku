@@ -246,7 +246,18 @@ function collectJobs(pack: CoursePack): Job[] {
   for (const unit of pack.units) {
     for (const lesson of unit.lessons) {
       for (const item of lesson.items) {
-        jobs.push({ key: item.audio.teach, text: item.teach_script, tier: 'premium', lang: pack.language, slow: false });
+        // One clip per language segment: English narration on the cheap
+        // voice, target-language words on the premium voice — a single
+        // mixed render anglicizes the target words ("komair").
+        item.teach_segments.forEach((seg, i) => {
+          jobs.push({
+            key: `${item.id}-t-${i}`,
+            text: seg.text,
+            tier: seg.lang === 'target' ? 'premium' : 'cheap',
+            lang: seg.lang === 'target' ? pack.language : 'en',
+            slow: false,
+          });
+        });
       }
       for (const p of lesson.prompts) {
         const answer = sentenceCase(p.expected[0]);
