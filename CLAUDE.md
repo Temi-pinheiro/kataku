@@ -9,14 +9,14 @@ Read both before changing architecture.
 ## Stack (decided — don't churn)
 
 - Expo SDK 56, React Native, TypeScript. Check https://docs.expo.dev/versions/v56.0.0/ before using Expo APIs — SDK 56 changed things.
-- Audio: `expo-audio` (playback + attempt recording). STT: `expo-speech-recognition` and `expo-speech-transcriber` (iOS), both behind `src/lib/stt/` — app code never imports them directly (stretch contract). Fallback TTS: `expo-speech`.
+- Audio: `expo-audio` (playback + attempt recording). STT: `expo-speech-recognition` behind the `SpeechRecognizer` interface in `src/lib/stt/types.ts`; implementations live in `src/services/stt/` and app code never imports recognizer packages directly (stretch contract). `expo-speech-transcriber` was evaluated and rejected (v0.1.9 is hardcoded to en_US — see docs/m0-findings.md). Fallback TTS: `expo-speech`.
 - Storage: `expo-sqlite`, schema in `src/db/schema.ts` (mirrors plan.md §7). State: zustand.
 - No backend, no auth, no analytics. Content = JSON packs + pre-rendered audio.
 
 ## Layout
 
 - `src/lib/` — pure logic, **no react-native imports**, unit-tested with vitest (`npm test`). Matching, scheduler, state machine, session builder, speakable counter, cost meter live here.
-- `src/db/` — SQLite schema + data access. `src/screens/` — the only four screens (Home, Session, WeeklyReview, Settings) plus `M0Spike`. Resist adding screens.
+- `src/db/` — SQLite schema + data access. `src/services/` — wrappers around native modules (STT, audio). `src/screens/` — the only four screens (Home, Session, WeeklyReview, Settings) plus `M0Spike`. Resist adding screens.
 - `content/<lang>/` — course JSON per plan.md §5.1 schema; `content/SPEC.md` is the pedagogy spec. `content/<lang>/audio/` is gitignored (rendered, hash-keyed).
 - `scripts/` — `validate-content.ts`, `render-audio.ts` (run with tsx via npm scripts).
 - `docs/` — findings (`m0-findings.md`), `OWNER-TODO.md` (things only the owner can do).

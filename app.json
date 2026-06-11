@@ -43,8 +43,7 @@
         }
       ],
       "expo-sqlite",
-      "expo-notifications",
-      "expo-speech-transcriber"
+      "expo-notifications"
     ]
   }
 }
