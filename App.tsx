@@ -5,8 +5,7 @@ import { INSTALLED_LANGUAGES, PACKS } from './src/packs';
 import { useApp } from './src/store';
 import { useTheme } from './src/hooks/useTheme';
 import { loadPack, openDb } from './src/db';
-import { teachingAudio } from './src/services/instances';
-import { configureAudioSession } from './src/services/audio';
+import { voiceEngine } from './src/services/instances';
 import { HomeScreen } from './src/screens/HomeScreen';
 import { LessonBoundary } from './src/components/LessonBoundary';
 import { SessionScreen } from './src/screens/SessionScreen';
@@ -31,10 +30,10 @@ export default function App() {
         if ((row?.pack_version ?? -1) !== PACKS[lang].version) {
           await loadPack(PACKS[lang]);
         }
-        await teachingAudio.loadPackIndex(lang);
+        await voiceEngine.loadPackIndex(lang);
       }
       setSettings(await loadPersistedSettings());
-      await configureAudioSession();
+      await voiceEngine.init();
       setReady(true);
     })().catch((e) => {
       console.error('init failed', e);

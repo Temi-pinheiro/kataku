@@ -32,7 +32,7 @@ import {
   type SavedSessionProgress,
   type SavedStepKey,
 } from '../db';
-import { recognizer, teachingAudio } from '../services/instances';
+import { recognizer, voiceEngine } from '../services/instances';
 
 /** Session steps as the UI runs them: plan steps + spoken ritual moments. */
 type UiStep =
@@ -409,12 +409,12 @@ function AnnounceCard({ pack, line, onDone }: { pack: CoursePack; line: string; 
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      await teachingAudio.play({ key: pack.system_lines[line]?.audio, fallbackText: text, lang: 'en' });
+      await voiceEngine.play({ key: pack.system_lines[line]?.audio, fallbackText: text, lang: 'en' });
       if (!cancelled) setTimeout(onDone, 350);
     })();
     return () => {
       cancelled = true;
-      teachingAudio.stop();
+      voiceEngine.stop();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [line]);
@@ -447,7 +447,7 @@ function TeachCard({ item, lang, onDone }: { item: ContentItem; lang: InstalledL
         : [{ text: item.teach_script, lang: 'en' as const }];
       for (const [i, seg] of segments.entries()) {
         if (cancelled) return;
-        await teachingAudio.play({
+        await voiceEngine.play({
           key: `${item.id}-t-${i}`,
           fallbackText: seg.text,
           lang: seg.lang === 'target' ? lang : 'en',
@@ -457,7 +457,7 @@ function TeachCard({ item, lang, onDone }: { item: ContentItem; lang: InstalledL
     })();
     return () => {
       cancelled = true;
-      teachingAudio.stop();
+      voiceEngine.stop();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item.id, playKey]);
@@ -529,7 +529,6 @@ function PromptCard({
     prompt,
     lang,
     systemLines: pack.system_lines,
-    audio: teachingAudio,
     recognizer,
     thinkMs,
     onVolume: (level) => {
@@ -668,12 +667,12 @@ function OutroCard({
   const { p } = useTheme();
   const styles = useMemo(() => makeStyles(p), [p]);
   useEffect(() => {
-    void teachingAudio.play({
+    void voiceEngine.play({
       key: pack.system_lines.session_close?.audio,
       fallbackText: pack.system_lines.session_close?.text ?? 'Done.',
       lang: 'en',
     });
-    return () => teachingAudio.stop();
+    return () => voiceEngine.stop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -88,12 +88,14 @@ export class NativeRecognizer implements SpeechRecognizer {
       continuous: options.continuous ?? false,
       requiresOnDeviceRecognition: onDevice,
       addsPunctuation: false,
-      // Explicit so a library default change can't send tutor audio to the
-      // earpiece mid-listen (the playback session handles the rest of the time).
+      // MUST match the engine's app-wide session exactly (playAndRecord +
+      // forced speaker, mode 'default'): identical config on every start
+      // means the session never actually changes — no flips, no races, no
+      // earpiece. 'measurement' mode is a known receiver-forcer; never use it.
       iosCategory: {
         category: 'playAndRecord',
         categoryOptions: ['defaultToSpeaker', 'allowBluetooth'],
-        mode: 'measurement',
+        mode: 'default',
       },
       ...(callbacks.onVolume ? { volumeChangeEventOptions: { enabled: true, intervalMillis: 100 } } : {}),
       ...(options.recordAudio
