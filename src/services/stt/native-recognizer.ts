@@ -16,6 +16,11 @@ export class NativeRecognizer implements SpeechRecognizer {
 
   private subscriptions: { remove(): void }[] = [];
 
+  async requestPermissions(): Promise<boolean> {
+    const permission = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
+    return permission.granted;
+  }
+
   async availability(locale: string): Promise<SttAvailability> {
     const available = ExpoSpeechRecognitionModule.isRecognitionAvailable();
     let onDevice = false;
@@ -45,6 +50,12 @@ export class NativeRecognizer implements SpeechRecognizer {
 
     let finished = false;
     listen('speechstart', () => callbacks.onSpeechStart?.());
+    if (callbacks.onVolume) {
+      // expo-speech-recognition reports roughly -2 (silence) to 10 (loud).
+      listen('volumechange', (e: { value: number }) => {
+        callbacks.onVolume?.(Math.min(1, Math.max(0, (e.value + 2) / 12)));
+      });
+    }
     listen('result', (e: { results: { transcript: string }[]; isFinal: boolean }) => {
       const transcript = e.results[0]?.transcript ?? '';
       if (e.isFinal) {
@@ -73,9 +84,10 @@ export class NativeRecognizer implements SpeechRecognizer {
     ExpoSpeechRecognitionModule.start({
       lang: options.locale,
       interimResults: true,
-      continuous: false,
+      continuous: options.continuous ?? false,
       requiresOnDeviceRecognition: onDevice,
       addsPunctuation: false,
+      ...(callbacks.onVolume ? { volumeChangeEventOptions: { enabled: true, intervalMillis: 100 } } : {}),
       ...(options.recordAudio
         ? {
             // Library default output directory; the attempt store moves the

@@ -1,90 +1,212 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { BigButton } from '../components/BigButton';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
+import { SymbolView } from 'expo-symbols';
 import { INSTALLED_LANGUAGES, LANGUAGE_NAMES, PACKS } from '../packs';
 import { useApp } from '../store';
-import { colors, type } from '../theme';
+import { colors, radii, space, type } from '../theme';
 import { allLessons } from '../lib/content/types';
-import { completedChunkCount, openDb } from '../db';
+import { buildSession } from '../lib/session/builder';
+import { masteredItemIds } from '../lib/scheduler/scheduler';
+import { roundSpeakable, speakableCountForPack } from '../lib/review/speakable';
+import { completedChunkCount, getAllMastery, loadSessionProgress, openDb } from '../db';
+
+interface HomeData {
+  chunksDone: number;
+  doneToday: boolean;
+  nextLessonRef: string | null;
+  nextNewBlocks: number;
+  resumeStep: { lessonRef: string; step: number; total: number } | null;
+  speakable: number;
+}
 
 export function HomeScreen() {
   const { setScreen, language, setLanguage } = useApp();
-  const [chunksDone, setChunksDone] = useState<number | null>(null);
-  const [doneToday, setDoneToday] = useState(false);
+  const [data, setData] = useState<HomeData | null>(null);
 
   const refresh = useCallback(async () => {
     const db = await openDb();
-    const n = await completedChunkCount(language);
-    setChunksDone(n);
+    const [chunksDone, mastery, saved] = await Promise.all([
+      completedChunkCount(language),
+      getAllMastery(),
+      loadSessionProgress(language),
+    ]);
     const today = new Date().toISOString().slice(0, 10);
     const row = await db.getFirstAsync<{ n: number }>(
       'SELECT COUNT(*) AS n FROM session WHERE language = ? AND core_completed = 1 AND started_at >= ?',
       language,
       today,
     );
-    setDoneToday((row?.n ?? 0) > 0);
+    const plan = buildSession(PACKS[language], chunksDone, mastery, new Date());
+    const mastered = new Set(masteredItemIds(mastery).filter((id) => id.startsWith(`${language}-`)));
+    setData({
+      chunksDone,
+      doneToday: (row?.n ?? 0) > 0,
+      nextLessonRef: plan?.lessonRef ?? null,
+      nextNewBlocks: plan?.newItemIds.length ?? 0,
+      resumeStep: saved ? { lessonRef: saved.lessonRef, step: saved.stepIndex + 1, total: saved.stepKeys.length } : null,
+      speakable: roundSpeakable(speakableCountForPack(PACKS[language], mastered)),
+    });
   }, [language]);
 
   useEffect(() => {
     refresh();
   }, [refresh]);
 
-  const total = allLessons(PACKS[language]).length;
-  const dayLabel =
-    chunksDone === null ? ' ' : chunksDone >= total ? 'Foundation complete' : `Day ${chunksDone + 1} of Foundation`;
+  const totalLessons = allLessons(PACKS[language]).length;
+  const d = data;
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.brand}>Kataku</Text>
-      <View style={styles.chips}>
-        {INSTALLED_LANGUAGES.map((l) => (
-          <Text key={l} style={[styles.chip, l === language && styles.chipActive]} onPress={() => setLanguage(l)}>
-            {l.toUpperCase()}
-          </Text>
-        ))}
-      </View>
-      <Text style={styles.lang}>{LANGUAGE_NAMES[language]}</Text>
-      <Text style={styles.day}>{dayLabel}</Text>
+      <Animated.View entering={FadeInDown.duration(300)}>
+        <Text style={styles.brand}>kataku</Text>
+        <View style={styles.chips}>
+          {INSTALLED_LANGUAGES.map((l) => (
+            <Pressable
+              key={l}
+              onPress={() => {
+                Haptics.selectionAsync();
+                setLanguage(l);
+              }}
+              style={[styles.chip, l === language && styles.chipActive]}
+            >
+              <Text style={[styles.chipText, l === language && styles.chipTextActive]}>{l.toUpperCase()}</Text>
+            </Pressable>
+          ))}
+        </View>
+        <Text style={styles.langTitle}>{LANGUAGE_NAMES[language]}</Text>
+      </Animated.View>
 
-      <BigButton
-        label={doneToday ? 'Keep going' : "Start today's session"}
-        onPress={() => setScreen('session')}
-      />
-      {doneToday && <Text style={styles.done}>Today is done — anything more is extra.</Text>}
+      <Animated.View entering={FadeInDown.delay(60).duration(300)} style={styles.weekArc}>
+        {Array.from({ length: totalLessons }).map((_, i) => {
+          const filled = d ? i < d.chunksDone : false;
+          const isToday = d ? i === d.chunksDone : false;
+          return (
+            <View
+              key={i}
+              style={[styles.daySeg, filled && styles.daySegDone, isToday && styles.daySegToday]}
+            />
+          );
+        })}
+        <Text style={styles.weekLabel}>
+          {d ? (d.chunksDone >= totalLessons ? 'Foundation week 1 — complete' : `day ${d.chunksDone + 1} of ${totalLessons}`) : ' '}
+        </Text>
+      </Animated.View>
 
-      <View style={styles.footer}>
-        <Text style={styles.link} onPress={() => setScreen('review')}>
-          Weekly review
-        </Text>
-        <Text style={styles.link} onPress={() => setScreen('settings')}>
-          Settings
-        </Text>
-        <Text style={styles.link} onPress={() => setScreen('m0spike')}>
-          Mic test
-        </Text>
-      </View>
+      {d?.resumeStep && (
+        <Animated.View entering={FadeInDown.delay(100).duration(300)}>
+          <Pressable style={styles.resume} onPress={() => setScreen('session')}>
+            <SymbolView name="play.circle.fill" size={26} tintColor={colors.warn} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.resumeTitle}>Resume lesson {d.resumeStep.lessonRef}</Text>
+              <Text style={styles.resumeMeta}>
+                step {d.resumeStep.step} of {d.resumeStep.total}
+              </Text>
+            </View>
+            <SymbolView name="chevron.right" size={14} tintColor={colors.faint} />
+          </Pressable>
+        </Animated.View>
+      )}
+
+      <Animated.View entering={FadeInDown.delay(140).duration(300)}>
+        <Pressable
+          style={({ pressed }) => [styles.cta, pressed && { transform: [{ scale: 0.985 }] }]}
+          onPress={() => {
+            Haptics.selectionAsync();
+            setScreen('session');
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <Text style={styles.ctaTitle}>{d?.doneToday ? 'Keep going' : "Start today's session"}</Text>
+            <Text style={styles.ctaMeta}>
+              {d?.nextLessonRef
+                ? `Lesson ${d.nextLessonRef} · ${d.nextNewBlocks} new blocks · ~15 min`
+                : d
+                  ? 'all lessons complete'
+                  : ' '}
+            </Text>
+            {d?.doneToday && <Text style={styles.ctaDone}>today is done — anything more is extra</Text>}
+          </View>
+          <SymbolView name="mic.circle.fill" size={52} tintColor={colors.onAccent} />
+        </Pressable>
+      </Animated.View>
+
+      <Animated.View entering={FadeInDown.delay(200).duration(300)} style={styles.secondaryRow}>
+        <Pressable style={styles.secondary} onPress={() => setScreen('review')}>
+          <Text style={styles.secondaryValue}>{d ? `~${d.speakable.toLocaleString()}` : '—'}</Text>
+          <Text style={styles.secondaryLabel}>sentences you can say</Text>
+          <Text style={styles.secondaryLink}>weekly review →</Text>
+        </Pressable>
+        <Pressable style={styles.secondary} onPress={() => setScreen('settings')}>
+          <SymbolView name="gearshape.fill" size={26} tintColor={colors.dim} />
+          <Text style={[styles.secondaryLabel, { marginTop: space.s }]}>think time · coach · spend</Text>
+          <Text style={styles.secondaryLink}>settings →</Text>
+        </Pressable>
+      </Animated.View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.bg, padding: 24, justifyContent: 'center' },
-  brand: { color: colors.dim, fontSize: type.small, letterSpacing: 2, textTransform: 'uppercase' },
-  chips: { flexDirection: 'row', gap: 8, marginTop: 16 },
+  screen: { flex: 1, backgroundColor: colors.bg, paddingHorizontal: space.l, paddingTop: 76, gap: space.m },
+  brand: { color: colors.faint, fontSize: type.caption, letterSpacing: 3, textTransform: 'uppercase' },
+
+  chips: { flexDirection: 'row', gap: space.s, marginTop: space.m },
   chip: {
-    color: colors.dim,
     backgroundColor: colors.card,
-    borderRadius: 999,
+    borderRadius: radii.pill,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    fontSize: type.small,
-    fontWeight: '700',
-    overflow: 'hidden',
   },
-  chipActive: { color: '#0B0F14', backgroundColor: colors.accent },
-  lang: { color: colors.text, fontSize: type.giant, fontWeight: '800', marginTop: 12 },
-  day: { color: colors.dim, fontSize: type.body, marginBottom: 32 },
-  done: { color: colors.dim, fontSize: type.small, textAlign: 'center', marginTop: 4 },
-  footer: { flexDirection: 'row', gap: 24, justifyContent: 'center', marginTop: 48 },
-  link: { color: colors.dim, fontSize: type.body, textDecorationLine: 'underline' },
+  chipActive: { backgroundColor: colors.accent },
+  chipText: { color: colors.dim, fontSize: type.small, fontWeight: '700' },
+  chipTextActive: { color: colors.onAccent },
+
+  langTitle: { color: colors.text, fontSize: type.hero, fontWeight: '800', marginTop: space.m, letterSpacing: -0.5 },
+
+  weekArc: { flexDirection: 'row', alignItems: 'center', gap: 6, flexWrap: 'wrap' },
+  daySeg: { width: 26, height: 6, borderRadius: 3, backgroundColor: colors.raised },
+  daySegDone: { backgroundColor: colors.accent },
+  daySegToday: { backgroundColor: colors.stroke, borderWidth: 1, borderColor: colors.accent },
+  weekLabel: { color: colors.faint, fontSize: type.caption, marginLeft: space.s },
+
+  resume: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.m,
+    backgroundColor: colors.card,
+    borderRadius: radii.m,
+    borderWidth: 1,
+    borderColor: colors.warnDeep,
+    padding: space.m,
+  },
+  resumeTitle: { color: colors.text, fontSize: type.body, fontWeight: '700' },
+  resumeMeta: { color: colors.dim, fontSize: type.small },
+
+  cta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.m,
+    backgroundColor: colors.accent,
+    borderRadius: radii.l,
+    padding: space.l,
+    minHeight: 110,
+  },
+  ctaTitle: { color: colors.onAccent, fontSize: type.title, fontWeight: '800' },
+  ctaMeta: { color: colors.onAccent, opacity: 0.75, fontSize: type.small, marginTop: 4 },
+  ctaDone: { color: colors.onAccent, opacity: 0.6, fontSize: type.caption, marginTop: 6 },
+
+  secondaryRow: { flexDirection: 'row', gap: space.m },
+  secondary: {
+    flex: 1,
+    backgroundColor: colors.card,
+    borderRadius: radii.l,
+    padding: space.m,
+    minHeight: 116,
+    justifyContent: 'space-between',
+  },
+  secondaryValue: { color: colors.accent, fontSize: type.title, fontWeight: '800' },
+  secondaryLabel: { color: colors.dim, fontSize: type.caption, lineHeight: 16 },
+  secondaryLink: { color: colors.faint, fontSize: type.caption, marginTop: space.s },
 });

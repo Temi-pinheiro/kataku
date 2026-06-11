@@ -8,11 +8,20 @@ import {
   type LoopEvent,
   type LoopState,
 } from '../lib/voice-loop/machine';
-import type { SpeechRecognizer } from '../lib/stt/types';
 import { playMicTone, TeachingAudio, type SpeakRequest } from '../services/audio';
+import type { SpeechRecognizer } from '../lib/stt/types';
 import { sttLocaleFor } from '../db';
 
-const LISTEN_CAP_MS = 10_000; // §3.1
+/**
+ * Listening is learner-paced (the M0 lesson test failed partly on this):
+ * the recognizer runs in continuous mode and the utterance ends only on
+ * tap-to-finish, ~2.6s of transcript silence after speech began, or the
+ * hard cap — never on the OS's aggressive end-of-speech detection, because
+ * beginners pause mid-sentence to construct (that pause is the method).
+ */
+const LISTEN_CAP_MS = 12_000;
+const SILENCE_AFTER_SPEECH_MS = 2_600;
+const SILENCE_POLL_MS = 250;
 
 export interface VoiceLoopDeps {
   prompt: ContentPrompt;
@@ -21,6 +30,8 @@ export interface VoiceLoopDeps {
   audio: TeachingAudio;
   recognizer: SpeechRecognizer;
   thinkMs: number;
+  /** Live mic level 0–1 (~10 Hz) for the orb. */
+  onVolume?: (level: number) => void;
   onFinished: (finalState: LoopState) => void;
 }
 
@@ -29,6 +40,8 @@ export interface VoiceLoopView {
   /** Verbatim target-language transcript, partial or final (§3.1). */
   heard: string;
   send: (event: LoopEvent) => void;
+  /** Tap-to-finish: "I'm done talking" — finalizes the utterance. */
+  finishListening: () => void;
 }
 
 function speakRequestFor(kind: AudioKind, deps: VoiceLoopDeps): SpeakRequest {
@@ -66,6 +79,8 @@ export function useVoiceLoop(deps: VoiceLoopDeps): VoiceLoopView {
   const depsRef = useRef(deps);
   depsRef.current = deps;
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const silenceRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const lastSpeechAtRef = useRef<number | null>(null);
   const listeningRef = useRef(false);
   const finishedRef = useRef(false);
 
@@ -73,11 +88,29 @@ export function useVoiceLoop(deps: VoiceLoopDeps): VoiceLoopView {
     setState((s) => loopReducer(s, event));
   }, []);
 
+  const clearWatchdogs = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (silenceRef.current) clearInterval(silenceRef.current);
+    timerRef.current = null;
+    silenceRef.current = null;
+  }, []);
+
+  const finishListening = useCallback(() => {
+    depsRef.current.recognizer.stop(); // delivers onFinal with what was said
+  }, []);
+
+  /** Hard mic close — the mic is never open while the tutor speaks. */
+  const stopMic = useCallback(() => {
+    depsRef.current.recognizer.abort();
+    listeningRef.current = false;
+    depsRef.current.onVolume?.(0);
+  }, []);
+
   // Start the loop once per prompt.
   useEffect(() => {
     send({ type: 'START' });
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      clearWatchdogs();
       depsRef.current.recognizer.abort();
       depsRef.current.audio.stop();
     };
@@ -87,15 +120,22 @@ export function useVoiceLoop(deps: VoiceLoopDeps): VoiceLoopView {
   const startRecognizer = useCallback(async () => {
     if (listeningRef.current) return;
     listeningRef.current = true;
+    lastSpeechAtRef.current = null;
     setHeard('');
     const d = depsRef.current;
     await d.recognizer.start(
-      { locale: sttLocaleFor(d.lang), preferOnDevice: true, recordAudio: true },
+      { locale: sttLocaleFor(d.lang), preferOnDevice: true, continuous: true, recordAudio: true },
       {
         onSpeechStart: () => {
+          lastSpeechAtRef.current = Date.now();
           if (stateRef.current.phase === 'think') send({ type: 'EARLY_SPEECH' });
         },
-        onPartial: (t) => setHeard(t),
+        onVolume: (level) => d.onVolume?.(level),
+        onPartial: (t) => {
+          if (t.trim().length > 0) lastSpeechAtRef.current = Date.now();
+          setHeard(t);
+          if (stateRef.current.phase === 'think') send({ type: 'EARLY_SPEECH' });
+        },
         onFinal: (t) => {
           listeningRef.current = false;
           setHeard(t);
@@ -119,13 +159,13 @@ export function useVoiceLoop(deps: VoiceLoopDeps): VoiceLoopView {
   // React to phase / pending-audio changes by performing the side effects.
   useEffect(() => {
     const d = depsRef.current;
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
+    clearWatchdogs();
 
-    // Pending audio plays first, in order, then AUDIO_DONE.
+    // Pending audio plays first, in order, then AUDIO_DONE. Close the mic
+    // before any tutor audio (REPEAT/SKIP can arrive with the mic hot) —
+    // otherwise the speaker output leaks into the next transcript.
     if (state.pendingAudio.length > 0) {
+      stopMic();
       let cancelled = false;
       (async () => {
         for (const kind of state.pendingAudio) {
@@ -147,12 +187,20 @@ export function useVoiceLoop(deps: VoiceLoopDeps): VoiceLoopView {
         startRecognizer();
         timerRef.current = setTimeout(() => send({ type: 'THINK_TIMEOUT' }), d.thinkMs);
         break;
-      case 'listen':
-        startRecognizer(); // no-op if already running from the think window
-        timerRef.current = setTimeout(() => {
-          d.recognizer.stop(); // ask for a final; onEnd covers silence
-        }, LISTEN_CAP_MS);
+      case 'listen': {
+        startRecognizer(); // no-op if already hot from the think window
+        timerRef.current = setTimeout(() => finishListening(), LISTEN_CAP_MS);
+        // Silence watchdog: armed only once speech has been heard.
+        silenceRef.current = setInterval(() => {
+          const last = lastSpeechAtRef.current;
+          if (stateRef.current.phase !== 'listen' || last === null) return;
+          if (Date.now() - last >= SILENCE_AFTER_SPEECH_MS) {
+            clearWatchdogs();
+            finishListening();
+          }
+        }, SILENCE_POLL_MS);
         break;
+      }
       case 'done':
         if (!finishedRef.current) {
           finishedRef.current = true;
@@ -162,7 +210,7 @@ export function useVoiceLoop(deps: VoiceLoopDeps): VoiceLoopView {
         break;
     }
     return undefined;
-  }, [state.phase, state.pendingAudio, send, startRecognizer]);
+  }, [state.phase, state.pendingAudio, send, startRecognizer, finishListening, clearWatchdogs, stopMic]);
 
-  return { state, heard, send };
+  return { state, heard, send, finishListening };
 }

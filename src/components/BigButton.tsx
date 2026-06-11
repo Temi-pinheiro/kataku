@@ -1,34 +1,65 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, type ViewStyle } from 'react-native';
-import { colors, type } from '../theme';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
+import { colors, radii, type } from '../theme';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface Props {
   label: string;
   onPress: () => void;
-  kind?: 'primary' | 'ghost';
+  kind?: 'primary' | 'ghost' | 'quiet';
+  small?: boolean;
   style?: ViewStyle;
 }
 
-export function BigButton({ label, onPress, kind = 'primary', style }: Props) {
+/** The app's button: 56pt target, spring press, selection haptic. */
+export function BigButton({ label, onPress, kind = 'primary', small, style }: Props) {
+  const scale = useSharedValue(1);
+  const animated = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+
   return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [styles.base, kind === 'primary' ? styles.primary : styles.ghost, pressed && { opacity: 0.7 }, style]}
+    <AnimatedPressable
+      onPress={() => {
+        Haptics.selectionAsync();
+        onPress();
+      }}
+      onPressIn={() => {
+        scale.value = withSpring(0.96, { damping: 18, stiffness: 320 });
+      }}
+      onPressOut={() => {
+        scale.value = withSpring(1, { damping: 14, stiffness: 220 });
+      }}
+      style={[styles.base, styles[kind], small && styles.small, animated, style]}
     >
-      <Text style={[styles.label, kind === 'ghost' && { color: colors.text }]}>{label}</Text>
-    </Pressable>
+      <Text
+        style={[
+          styles.label,
+          small && styles.labelSmall,
+          kind !== 'primary' && { color: kind === 'quiet' ? colors.dim : colors.text },
+        ]}
+      >
+        {label}
+      </Text>
+    </AnimatedPressable>
   );
 }
 
 const styles = StyleSheet.create({
   base: {
-    paddingVertical: 18,
+    minHeight: 56,
+    paddingVertical: 16,
     paddingHorizontal: 28,
-    borderRadius: 16,
+    borderRadius: radii.l,
     alignItems: 'center',
+    justifyContent: 'center',
     marginVertical: 6,
   },
   primary: { backgroundColor: colors.accent },
-  ghost: { backgroundColor: colors.card },
-  label: { fontSize: type.body, fontWeight: '700', color: '#0B0F14' },
+  ghost: { backgroundColor: colors.raised },
+  quiet: { backgroundColor: 'transparent' },
+  small: { minHeight: 44, paddingVertical: 10, paddingHorizontal: 18, borderRadius: radii.m },
+  label: { fontSize: type.body, fontWeight: '700', color: colors.onAccent, letterSpacing: 0.2 },
+  labelSmall: { fontSize: type.small },
 });

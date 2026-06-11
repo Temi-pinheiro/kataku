@@ -16,7 +16,8 @@ Read both before changing architecture.
 ## Layout
 
 - `src/lib/` — pure logic, **no react-native imports**, unit-tested with vitest (`npm test`). Matching, scheduler, state machine, session builder, speakable counter, cost meter live here.
-- `src/db/` — SQLite schema + data access. `src/services/` — wrappers around native modules (STT, audio). `src/screens/` — the only four screens (Home, Session, WeeklyReview, Settings) plus `M0Spike`. Resist adding screens.
+- `src/db/` — SQLite schema + data access. `src/services/` — wrappers around native modules (STT, audio). `src/screens/` — the only four screens (Home, Session, WeeklyReview, Settings) plus `M0Spike` (reached via Settings → Developer). Resist adding screens. `src/components/` — shared UI (MicOrb, FeedbackSheet, etc.); UI work follows `docs/design-principles.md` (voice-state visibility, learner-ends-the-utterance, motion-as-state, no red, leaving is safe).
+- UI stack: react-native-reanimated (motion), expo-haptics, expo-symbols (SF Symbols). Theme tokens in `src/theme.ts` only — no inline colors/sizes.
 - `content/<lang>/` — course JSON per plan.md §5.1 schema; `content/SPEC.md` is the pedagogy spec. `content/<lang>/audio/` is gitignored (rendered, hash-keyed).
 - `scripts/` — `validate-content.ts`, `render-audio.ts` (run with tsx via npm scripts).
 - `docs/` — findings (`m0-findings.md`), `OWNER-TODO.md` (things only the owner can do).

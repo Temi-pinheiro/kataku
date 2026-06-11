@@ -136,6 +136,48 @@ export async function spendEvents(sinceIso: string): Promise<SpendEvent[]> {
   return rows.map((r) => ({ at: r.at, provider: r.provider, feature: r.feature, units: r.units, unit: r.unit, costUsd: r.cost_usd }));
 }
 
+// ---- in-progress session (real pause/resume; leaving a lesson never loses it) ----
+
+export type SavedStepKey =
+  | { k: 't'; id: string } // teach item
+  | { k: 'p'; id: string; r: boolean; v: boolean } // prompt (isRecycle, isVictoryLap)
+  | { k: 'a'; line: string }; // spoken announcement (system_lines key)
+
+export interface SavedSessionProgress {
+  sessionId: number;
+  lessonRef: string;
+  stepKeys: SavedStepKey[];
+  stepIndex: number;
+  newItemIds: string[];
+  recycledItemIds: string[];
+  isLastLesson: boolean;
+}
+
+export async function saveSessionProgress(language: string, p: SavedSessionProgress): Promise<void> {
+  await setSetting(`session_progress.${language}`, JSON.stringify(p));
+}
+
+export async function loadSessionProgress(language: string): Promise<SavedSessionProgress | null> {
+  const raw = await getSetting(`session_progress.${language}`, '');
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as SavedSessionProgress;
+  } catch {
+    return null;
+  }
+}
+
+export async function clearSessionProgress(language: string): Promise<void> {
+  const d = await openDb();
+  await d.runAsync('DELETE FROM settings WHERE key = ?', `session_progress.${language}`);
+}
+
+/** Drop an abandoned (never-finished) session row. */
+export async function deleteUnfinishedSession(id: number): Promise<void> {
+  const d = await openDb();
+  await d.runAsync('DELETE FROM session WHERE id = ? AND ended_at IS NULL', id);
+}
+
 // ---- settings ----
 
 export async function getSetting(key: string, fallback: string): Promise<string> {
