@@ -81,7 +81,8 @@ export class NativeRecognizer implements SpeechRecognizer {
 
     const onDevice = options.preferOnDevice ? (await this.availability(options.locale)).onDevice : false;
 
-    ExpoSpeechRecognitionModule.start({
+    try {
+      ExpoSpeechRecognitionModule.start({
       lang: options.locale,
       interimResults: true,
       continuous: options.continuous ?? false,
@@ -105,15 +106,27 @@ export class NativeRecognizer implements SpeechRecognizer {
             },
           }
         : {}),
-    });
+      });
+    } catch (e) {
+      this.removeListeners();
+      callbacks.onError({ code: 'start_failed', message: (e as Error)?.message ?? 'recognizer failed to start' });
+    }
   }
 
   stop(): void {
-    ExpoSpeechRecognitionModule.stop();
+    try {
+      ExpoSpeechRecognitionModule.stop();
+    } catch {
+      // no active session — nothing to stop
+    }
   }
 
   abort(): void {
-    ExpoSpeechRecognitionModule.abort();
+    try {
+      ExpoSpeechRecognitionModule.abort();
+    } catch {
+      // no active session — nothing to abort
+    }
     this.removeListeners();
   }
 

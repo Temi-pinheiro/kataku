@@ -172,11 +172,16 @@ export function useVoiceLoop(deps: VoiceLoopDeps): VoiceLoopView {
       stopMic();
       let cancelled = false;
       (async () => {
-        for (const kind of state.pendingAudio) {
-          if (cancelled) return;
-          await d.audio.play(speakRequestFor(kind, d));
+        try {
+          for (const kind of state.pendingAudio) {
+            if (cancelled) return;
+            await d.audio.play(speakRequestFor(kind, d));
+          }
+        } finally {
+          // AUDIO_DONE must fire no matter what — a failed clip can cost
+          // its sound, never the lesson.
+          if (!cancelled) send({ type: 'AUDIO_DONE' });
         }
-        if (!cancelled) send({ type: 'AUDIO_DONE' });
       })();
       return () => {
         cancelled = true;

@@ -6,6 +6,18 @@ any UI work; patterns are borrowed from voice assistants (state model),
 Duolingo (session anatomy, feedback sheet), Pimsleur (audio ritual), and
 Apple HIG (typography, motion, touch targets).
 
+## The core loop, first principles (owner, round 4)
+
+Three things make a great language app: **the audio plays out · you can
+say it · you get feedback.** Everything else serves those. The learner
+sets the pace: after a teach line or a result, the app HOLDS — nothing
+auto-advances except the natural cue→think→listen chain. **Two big
+transport buttons, fixed positions, every step** (left = Again / Repeat /
+Try again / Slower · right = Next / Skip), tappable without looking.
+And a lesson must be unkillable: audio and bookkeeping failures degrade
+silently, AUDIO_DONE always fires, and anything that still escapes hits
+the LessonBoundary, which resumes from the persisted step.
+
 ## The five rules
 
 1. **Never let the learner speak into a void.** Every audio state is

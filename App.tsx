@@ -8,6 +8,7 @@ import { loadPack, openDb } from './src/db';
 import { teachingAudio } from './src/services/instances';
 import { configureAudioSession } from './src/services/audio';
 import { HomeScreen } from './src/screens/HomeScreen';
+import { LessonBoundary } from './src/components/LessonBoundary';
 import { SessionScreen } from './src/screens/SessionScreen';
 import { WeeklyReviewScreen } from './src/screens/WeeklyReviewScreen';
 import { SettingsScreen, loadPersistedSettings } from './src/screens/SettingsScreen';
@@ -17,6 +18,7 @@ export default function App() {
   const { screen, setSettings } = useApp();
   const { p, scheme } = useTheme();
   const [ready, setReady] = useState(false);
+  const [lessonEpoch, setLessonEpoch] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -53,7 +55,11 @@ export default function App() {
     <View style={[styles.app, { backgroundColor: p.bg }]}>
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
       {screen === 'home' && <HomeScreen />}
-      {screen === 'session' && <SessionScreen />}
+      {screen === 'session' && (
+        <LessonBoundary p={p} onRecover={() => setLessonEpoch((e) => e + 1)}>
+          <SessionScreen key={lessonEpoch} />
+        </LessonBoundary>
+      )}
       {screen === 'review' && <WeeklyReviewScreen />}
       {screen === 'settings' && <SettingsScreen />}
       {screen === 'm0spike' && <M0SpikeScreen />}

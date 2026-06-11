@@ -75,7 +75,7 @@ export function FeedbackSheet({ kind, answer, transcript, decompose, lang, retry
         <Text style={styles.heard}>didn't catch anything that time</Text>
       ) : null}
 
-      {retrying ? <Text style={[styles.retry, { color: palette.tint }]}>one more try after the audio →</Text> : null}
+      {retrying ? <Text style={[styles.retry, { color: palette.tint }]}>you've got one more go — Try again</Text> : null}
     </Animated.View>
   );
 }

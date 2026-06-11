@@ -34,11 +34,17 @@ export interface SpeakRequest {
  * true is what turns playback into a phone call (receiver routing).
  */
 async function assertSpeakerRoute(): Promise<void> {
-  await setAudioModeAsync({
-    playsInSilentMode: true,
-    allowsRecording: false,
-    shouldRouteThroughEarpiece: false,
-  });
+  try {
+    await setAudioModeAsync({
+      playsInSilentMode: true,
+      allowsRecording: false,
+      shouldRouteThroughEarpiece: false,
+    });
+  } catch {
+    // The recognizer's session can still be tearing down right after a
+    // result — this call may reject in that window (the crash the owner
+    // hit after feedback). Best-effort: the next clip re-asserts.
+  }
 }
 
 export const configureAudioSession = assertSpeakerRoute;
@@ -66,19 +72,27 @@ export class TeachingAudio {
     return this.available.has(key) || key in BUNDLED;
   }
 
-  /** Play one line; resolves when it finishes (or immediately on stop()). */
+  /**
+   * Play one line; resolves when it finishes (or immediately on stop()).
+   * NEVER rejects — a lesson must not be able to die on an audio hiccup
+   * (plan hard rule: degrade gracefully, never block a session).
+   */
   async play(req: SpeakRequest): Promise<void> {
-    this.cancelled = false;
-    await assertSpeakerRoute();
-    const bundled = req.key ? BUNDLED[req.key] : undefined;
-    if (bundled !== undefined) {
-      return this.playFile(bundled);
+    try {
+      this.cancelled = false;
+      await assertSpeakerRoute();
+      const bundled = req.key ? BUNDLED[req.key] : undefined;
+      if (bundled !== undefined) {
+        return await this.playFile(bundled);
+      }
+      const uri = req.key ? this.available.get(req.key) : undefined;
+      if (uri) {
+        return await this.playFile(uri);
+      }
+      return await this.speak(req);
+    } catch (e) {
+      console.warn('audio: clip failed, continuing', req.key, e);
     }
-    const uri = req.key ? this.available.get(req.key) : undefined;
-    if (uri) {
-      return this.playFile(uri);
-    }
-    return this.speak(req);
   }
 
   /**
@@ -107,7 +121,11 @@ export class TeachingAudio {
         if (status.didJustFinish || this.cancelled) settle();
       });
       this.settleActive = settle;
-      player.play();
+      try {
+        player.play();
+      } catch {
+        settle();
+      }
     });
   }
 
@@ -143,11 +161,15 @@ const TONES = {
 
 const tonePlayers: Partial<Record<keyof typeof TONES, AudioPlayer>> = {};
 
-/** open = mic is hot, say it · close = got it, capture ended. */
+/** open = mic is hot, say it · close = got it, capture ended. Never throws. */
 export async function playMicTone(kind: 'open' | 'close' = 'open'): Promise<void> {
-  await assertSpeakerRoute();
-  if (!tonePlayers[kind]) tonePlayers[kind] = createAudioPlayer(TONES[kind]);
-  const player = tonePlayers[kind]!;
-  player.seekTo(0);
-  player.play();
+  try {
+    await assertSpeakerRoute();
+    if (!tonePlayers[kind]) tonePlayers[kind] = createAudioPlayer(TONES[kind]);
+    const player = tonePlayers[kind]!;
+    player.seekTo(0);
+    player.play();
+  } catch {
+    // A missed tone is not worth interrupting a lesson.
+  }
 }

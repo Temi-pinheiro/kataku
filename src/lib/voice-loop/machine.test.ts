@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  canRetry,
   initialLoopState,
   loopReducer,
   outcomeForMastery,
@@ -38,7 +39,12 @@ describe('happy path', () => {
     expect(s.feedbackKind).toBe('pass');
     expect(s.pendingAudio).toEqual(['confirm', 'answer']);
 
+    // Result audio ends → HOLD in feedback; the learner advances.
     s = run([{ type: 'AUDIO_DONE' }], s);
+    expect(s.phase).toBe('feedback');
+    expect(s.pendingAudio).toEqual([]);
+
+    s = run([{ type: 'NEXT' }], s);
     expect(s.phase).toBe('done');
     expect(outcomeForMastery(s)).toBe('pass');
     expect(shouldRecycle(s)).toBe(false);
@@ -64,14 +70,20 @@ describe('miss and retry', () => {
     expect(s.pendingAudio).toEqual(['decompose', 'answer_slow', 'answer']);
   });
 
-  it('offers exactly one retry, then moves on regardless', () => {
+  it('offers exactly one learner-chosen retry, then only Next remains', () => {
     let s = run(toFirstMiss);
-    s = run([{ type: 'AUDIO_DONE' }], s);
+    expect(canRetry(s)).toBe(true);
+    s = run([{ type: 'AUDIO_DONE' }, { type: 'TRY_AGAIN' }], s);
     expect(s.phase).toBe('listen');
     expect(s.retriesUsed).toBe(1);
 
-    // Retry also misses → feedback plays → done, no second retry.
+    // Retry also misses → retry exhausted: TRY_AGAIN ignored, NEXT advances.
     s = run([{ type: 'FINAL_TRANSCRIPT', transcript: 'selamat pagi' }, { type: 'AUDIO_DONE' }], s);
+    expect(s.phase).toBe('feedback');
+    expect(canRetry(s)).toBe(false);
+    const ignored = run([{ type: 'TRY_AGAIN' }], s);
+    expect(ignored.phase).toBe('feedback');
+    s = run([{ type: 'NEXT' }], s);
     expect(s.phase).toBe('done');
     expect(s.attempts).toHaveLength(2);
   });
@@ -79,7 +91,13 @@ describe('miss and retry', () => {
   it('counts the first unaided attempt for mastery even if the retry passes', () => {
     let s = run(toFirstMiss);
     s = run(
-      [{ type: 'AUDIO_DONE' }, { type: 'FINAL_TRANSCRIPT', transcript: 'saya mau makan sekarang' }, { type: 'AUDIO_DONE' }],
+      [
+        { type: 'AUDIO_DONE' },
+        { type: 'TRY_AGAIN' },
+        { type: 'FINAL_TRANSCRIPT', transcript: 'saya mau makan sekarang' },
+        { type: 'AUDIO_DONE' },
+        { type: 'NEXT' },
+      ],
       s,
     );
     expect(s.phase).toBe('done');
@@ -118,7 +136,8 @@ describe('near-miss', () => {
     ]);
     expect(s.feedbackKind).toBe('near');
     expect(s.pendingAudio).toEqual(['almost', 'answer']);
-    s = run([{ type: 'AUDIO_DONE' }], s);
+    expect(canRetry(s)).toBe(true);
+    s = run([{ type: 'AUDIO_DONE' }, { type: 'TRY_AGAIN' }], s);
     expect(s.phase).toBe('listen');
   });
 });
@@ -137,32 +156,47 @@ describe('controls', () => {
     expect(s.phase).toBe('feedback');
     expect(s.feedbackKind).toBe('skip');
     expect(s.pendingAudio).toEqual(['answer']);
-    s = run([{ type: 'AUDIO_DONE' }], s);
+    expect(canRetry(s)).toBe(false);
+    s = run([{ type: 'AUDIO_DONE' }, { type: 'NEXT' }], s);
     expect(s.phase).toBe('done');
     expect(outcomeForMastery(s)).toBe('miss');
     expect(shouldRecycle(s)).toBe(true);
   });
 
-  it('SLOWER queues the slow answer during feedback and after done', () => {
+  it('SLOWER waits for the queue, then replays the slow answer', () => {
     let s = run([
       { type: 'START' },
       { type: 'AUDIO_DONE' },
       { type: 'THINK_TIMEOUT' },
       { type: 'FINAL_TRANSCRIPT', transcript: 'saya mau makan sekarang' },
     ]);
+    // Ignored while the result audio is still playing (no queue restarts).
     s = run([{ type: 'SLOWER' }], s);
-    expect(s.pendingAudio).toEqual(['confirm', 'answer', 'answer_slow']);
+    expect(s.pendingAudio).toEqual(['confirm', 'answer']);
 
-    s = run([{ type: 'AUDIO_DONE' }], s);
-    expect(s.phase).toBe('done');
-    s = run([{ type: 'SLOWER' }], s);
+    s = run([{ type: 'AUDIO_DONE' }, { type: 'SLOWER' }], s);
+    expect(s.phase).toBe('feedback');
     expect(s.pendingAudio).toEqual(['answer_slow']);
+  });
+
+  it('NEXT advances even while result audio is still playing (skip ahead)', () => {
+    let s = run([
+      { type: 'START' },
+      { type: 'AUDIO_DONE' },
+      { type: 'THINK_TIMEOUT' },
+      { type: 'FINAL_TRANSCRIPT', transcript: 'saya mau makan sekarang' },
+    ]);
+    expect(s.pendingAudio.length).toBeGreaterThan(0);
+    s = run([{ type: 'NEXT' }], s);
+    expect(s.phase).toBe('done');
+    expect(s.pendingAudio).toEqual([]);
   });
 
   it('ignores events that make no sense for the phase', () => {
     const idle = initialLoopState(PROMPT);
     expect(loopReducer(idle, { type: 'AUDIO_DONE' })).toBe(idle);
-    const done = run([{ type: 'START' }, { type: 'AUDIO_DONE' }, { type: 'SKIP' }, { type: 'AUDIO_DONE' }]);
+    const done = run([{ type: 'START' }, { type: 'AUDIO_DONE' }, { type: 'SKIP' }, { type: 'NEXT' }]);
+    expect(done.phase).toBe('done');
     expect(loopReducer(done, { type: 'FINAL_TRANSCRIPT', transcript: 'x' })).toBe(done);
   });
 });

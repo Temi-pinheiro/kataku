@@ -16,7 +16,7 @@ import type { ContentItem, ContentPrompt, CoursePack } from '../lib/content/type
 import { allItems, allPrompts } from '../lib/content/types';
 import { buildSession, type SessionPlan } from '../lib/session/builder';
 import { newMastery, recordOutcome, type MasteryState } from '../lib/scheduler/scheduler';
-import { lastAttempt, outcomeForMastery, MAX_RETRIES, type LoopState } from '../lib/voice-loop/machine';
+import { canRetry, lastAttempt, outcomeForMastery, type LoopState } from '../lib/voice-loop/machine';
 import { useVoiceLoop } from '../hooks/useVoiceLoop';
 import {
   clearSessionProgress,
@@ -221,23 +221,28 @@ export function SessionScreen() {
     async (prompt: ContentPrompt, loopState: LoopState) => {
       promptsDoneRef.current += 1;
       const now = new Date();
-      for (const [i, attempt] of loopState.attempts.entries()) {
-        await recordAttempt({
-          promptId: prompt.id,
-          at: now.toISOString(),
-          transcript: attempt.transcript,
-          result: attempt.evaluation.result,
-          thinkMs: null,
-          retries: i,
-          audioUri: null,
-        });
-      }
-      const outcome = outcomeForMastery(loopState);
-      for (const itemId of prompt.components) {
-        const prev = masteryRef.current.get(itemId) ?? newMastery(itemId, now);
-        const updated = recordOutcome(prev, outcome, now);
-        masteryRef.current.set(itemId, updated);
-        await upsertMastery(updated);
+      try {
+        for (const [i, attempt] of loopState.attempts.entries()) {
+          await recordAttempt({
+            promptId: prompt.id,
+            at: now.toISOString(),
+            transcript: attempt.transcript,
+            result: attempt.evaluation.result,
+            thinkMs: null,
+            retries: i,
+            audioUri: null,
+          });
+        }
+        const outcome = outcomeForMastery(loopState);
+        for (const itemId of prompt.components) {
+          const prev = masteryRef.current.get(itemId) ?? newMastery(itemId, now);
+          const updated = recordOutcome(prev, outcome, now);
+          masteryRef.current.set(itemId, updated);
+          await upsertMastery(updated);
+        }
+      } catch (e) {
+        // A bookkeeping failure may cost one prompt's stats, never the lesson.
+        console.warn('progress write failed, continuing', e);
       }
       advance();
     },
@@ -428,12 +433,15 @@ function AnnounceCard({ pack, line, onDone }: { pack: CoursePack; line: string; 
 function TeachCard({ item, lang, onDone }: { item: ContentItem; lang: InstalledLanguage; onDone: () => void }) {
   const { p } = useTheme();
   const styles = useMemo(() => makeStyles(p), [p]);
-  const [replayKey, setReplayKey] = useState(0);
+  const [playKey, setPlayKey] = useState(0);
+  const [speaking, setSpeaking] = useState(true);
+
+  // Plays the teach line, then WAITS — the learner advances (first
+  // principles: hear it, then decide: Again or Next).
   useEffect(() => {
     let cancelled = false;
+    setSpeaking(true);
     (async () => {
-      // Segment by segment, each in its own voice/locale — also fixes the
-      // device-TTS fallback, which now speaks target words natively.
       const segments = item.teach_segments?.length
         ? item.teach_segments
         : [{ text: item.teach_script, lang: 'en' as const }];
@@ -445,14 +453,14 @@ function TeachCard({ item, lang, onDone }: { item: ContentItem; lang: InstalledL
           lang: seg.lang === 'target' ? lang : 'en',
         });
       }
-      if (!cancelled) setTimeout(() => !cancelled && onDone(), 1000);
+      if (!cancelled) setSpeaking(false);
     })();
     return () => {
       cancelled = true;
       teachingAudio.stop();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [item.id, replayKey]);
+  }, [item.id, playKey]);
 
   return (
     <View style={styles.stepArea}>
@@ -462,9 +470,35 @@ function TeachCard({ item, lang, onDone }: { item: ContentItem; lang: InstalledL
         <Text style={styles.teachTarget}>{item.target_text}</Text>
         {item.romanization ? <Text style={styles.dim}>{item.romanization}</Text> : null}
         <View style={{ height: space.l }} />
-        <TutorDots />
-        <BigButton label="Hear it again" kind="quiet" small onPress={() => setReplayKey((k) => k + 1)} />
+        {speaking ? <TutorDots /> : <View style={{ height: 28 }} />}
       </Animated.View>
+      <Transport
+        left={{ label: 'Again', onPress: () => setPlayKey((k) => k + 1) }}
+        right={{ label: 'Next', onPress: onDone, primary: true }}
+        styles={styles}
+      />
+    </View>
+  );
+}
+
+/** The two big fixed buttons — same positions every step, tappable blind. */
+function Transport({
+  left,
+  right,
+  styles,
+}: {
+  left: { label: string; onPress: () => void } | null;
+  right: { label: string; onPress: () => void; primary?: boolean };
+  styles: ReturnType<typeof makeStyles>;
+}) {
+  return (
+    <View style={styles.controls}>
+      {left ? (
+        <BigButton label={left.label} kind="ghost" style={styles.control} onPress={left.onPress} />
+      ) : (
+        <View style={styles.control} />
+      )}
+      <BigButton label={right.label} kind={right.primary ? 'primary' : 'ghost'} style={styles.control} onPress={right.onPress} />
     </View>
   );
 }
@@ -519,10 +553,6 @@ function PromptCard({
   }, [phase, feedbackKind]);
 
   const final = lastAttempt(state);
-  const retrying =
-    !state.skipped &&
-    (state.feedbackKind === 'near' || state.feedbackKind === 'miss') &&
-    state.retriesUsed < MAX_RETRIES;
   const inFeedback = state.phase === 'feedback' || state.phase === 'done';
 
   const banner: { label: string; tint: string } = (() => {
@@ -584,30 +614,34 @@ function PromptCard({
             transcript={final?.transcript ?? ''}
             decompose={prompt.decompose_script}
             lang={lang}
-            retrying={retrying}
+            retrying={canRetry(state)}
           />
         )}
       </View>
 
-      <View style={styles.controls}>
-        {!inFeedback ? (
-          <>
-            <BigButton
-              label="Repeat"
-              kind="ghost"
-              small
-              style={styles.control}
-              onPress={() => {
-                setThinkKey((k) => k + 1);
-                send({ type: 'REPEAT' });
-              }}
-            />
-            <BigButton label="Skip" kind="ghost" small style={styles.control} onPress={() => send({ type: 'SKIP' })} />
-          </>
-        ) : (
-          <BigButton label="Slower" kind="ghost" small style={styles.control} onPress={() => send({ type: 'SLOWER' })} />
-        )}
-      </View>
+      {!inFeedback ? (
+        <Transport
+          left={{
+            label: 'Repeat',
+            onPress: () => {
+              setThinkKey((k) => k + 1);
+              send({ type: 'REPEAT' });
+            },
+          }}
+          right={{ label: 'Skip', onPress: () => send({ type: 'SKIP' }) }}
+          styles={styles}
+        />
+      ) : (
+        <Transport
+          left={
+            canRetry(state)
+              ? { label: 'Try again', onPress: () => send({ type: 'TRY_AGAIN' }) }
+              : { label: 'Slower', onPress: () => send({ type: 'SLOWER' }) }
+          }
+          right={{ label: 'Next', onPress: () => send({ type: 'NEXT' }), primary: true }}
+          styles={styles}
+        />
+      )}
     </View>
   );
 }

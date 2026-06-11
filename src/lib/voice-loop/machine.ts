@@ -56,7 +56,11 @@ export type LoopEvent =
   | { type: 'LISTEN_TIMEOUT' }
   | { type: 'REPEAT' }
   | { type: 'SLOWER' }
-  | { type: 'SKIP' };
+  | { type: 'SKIP' }
+  // Learner-paced progression (the bottom transport buttons): feedback
+  // holds until the learner decides — nothing advances on its own.
+  | { type: 'NEXT' }
+  | { type: 'TRY_AGAIN' };
 
 export const MAX_RETRIES = 1;
 
@@ -136,19 +140,20 @@ export function loopReducer(state: LoopState, event: LoopEvent, opts: EvaluateOp
 
     case 'feedback':
       switch (event.type) {
-        case 'AUDIO_DONE': {
-          const retryable =
-            !state.skipped &&
-            (state.feedbackKind === 'near' || state.feedbackKind === 'miss') &&
-            state.retriesUsed < MAX_RETRIES;
-          if (retryable) {
-            // One retry, then move on regardless (§3.1).
+        case 'AUDIO_DONE':
+          // The result audio finished; hold here — the learner advances.
+          return { ...state, pendingAudio: [] };
+        case 'NEXT':
+          return { ...state, phase: 'done', pendingAudio: [] };
+        case 'TRY_AGAIN':
+          if (canRetry(state)) {
             return { ...state, phase: 'listen', retriesUsed: state.retriesUsed + 1, pendingAudio: [] };
           }
-          return { ...state, phase: 'done', pendingAudio: [] };
-        }
+          return state;
         case 'SLOWER':
-          return { ...state, pendingAudio: [...state.pendingAudio, 'answer_slow'] };
+          // Ignored while the queue is still playing — replays would restart it.
+          if (state.pendingAudio.length > 0) return state;
+          return { ...state, pendingAudio: ['answer_slow'] };
         default:
           return state;
       }
@@ -195,4 +200,13 @@ export function lastAttempt(state: LoopState): Attempt | null {
 /** A prompt whose first attempt wasn't a clean pass goes back into the pool sooner. */
 export function shouldRecycle(state: LoopState): boolean {
   return outcomeForMastery(state) !== 'pass';
+}
+
+/** One retry on a near/miss, never after a skip (§3.1). */
+export function canRetry(state: LoopState): boolean {
+  return (
+    !state.skipped &&
+    (state.feedbackKind === 'near' || state.feedbackKind === 'miss') &&
+    state.retriesUsed < MAX_RETRIES
+  );
 }
