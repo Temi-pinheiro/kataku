@@ -37,24 +37,20 @@ ELEVENLABS_VOICE_ID=...          # pick a multilingual voice in their Voice Libr
 ## 2. ~~Bake-off~~ DONE (2026-06-11): ElevenLabs won — render + rebuild
 
 Winner set in `VOICES` (`scripts/render-audio.ts`); voice id from `.env`.
-Indonesian rendered from the free tier. Remaining:
+**All three packs rendered 2026-06-11** (id 324 + es 320 + fr 320 clips,
+~37 MB, `validate-content --require-audio` clean; the owner's ElevenLabs
+credits covered everything — no Starter month needed). Remaining:
 
-- **es + fr renders need ~11.5k more ElevenLabs credits** — one Starter
-  month (~$5) covers both; cancel after rendering. Then:
-  ```bash
-  npm run render-audio -- --lang es
-  npm run render-audio -- --lang fr
-  npm run validate-content -- --require-audio
-  ```
-- Each render regenerates `src/generated/audio-map.<lang>.ts` (bundles the
-  clips into the next build). **Rebuild on the phone** to hear the real
-  tutor:
+- **Rebuild on the phone** to hear the real tutor (the audio maps bundle
+  the clips into the build):
   ```bash
   npx expo run:ios --device
   ```
 - zh voice is provisional (same ElevenLabs voice) — re-audition tone
   quality when Mandarin starts; slow-render naturalness is the criterion
   that decided this bake-off (see m0-findings).
+- Content edits later: edit pack JSON → bump `"version"` → validate →
+  re-render (hash manifest re-renders only changed lines) → rebuild.
 
 ## 3. Review content before/while rendering (you are the editor — plan §5.2)
 
