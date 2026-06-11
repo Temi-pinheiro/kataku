@@ -81,22 +81,6 @@ export function HomeScreen() {
         <Text style={styles.langTitle}>{LANGUAGE_NAMES[language]}</Text>
       </Animated.View>
 
-      <Animated.View entering={FadeInDown.delay(60).duration(300)} style={styles.weekArc}>
-        {Array.from({ length: totalLessons }).map((_, i) => {
-          const filled = d ? i < d.chunksDone : false;
-          const isToday = d ? i === d.chunksDone : false;
-          return (
-            <View
-              key={i}
-              style={[styles.daySeg, filled && styles.daySegDone, isToday && styles.daySegToday]}
-            />
-          );
-        })}
-        <Text style={styles.weekLabel}>
-          {d ? (d.chunksDone >= totalLessons ? 'Foundation week 1 — complete' : `day ${d.chunksDone + 1} of ${totalLessons}`) : ' '}
-        </Text>
-      </Animated.View>
-
       {d?.resumeStep && (
         <Animated.View entering={FadeInDown.delay(100).duration(300)}>
           <Pressable style={styles.resume} onPress={() => setScreen('session')}>
@@ -125,6 +109,22 @@ export function HomeScreen() {
             <Text style={styles.ctaMeta}>build sentences out loud, one block at a time</Text>
           </View>
           <SymbolView name="bubble.left.and.text.bubble.right.fill" size={48} tintColor={p.onAccent} />
+        </Pressable>
+      </Animated.View>
+
+      <Animated.View entering={FadeInDown.delay(170).duration(300)}>
+        <Pressable
+          style={({ pressed }) => [styles.convo, pressed && { transform: [{ scale: 0.985 }] }]}
+          onPress={() => {
+            Haptics.selectionAsync();
+            setScreen('conversation');
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <Text style={styles.convoTitle}>Have a conversation</Text>
+            <Text style={styles.convoMeta}>all voice, both ways — it corrects by rephrasing</Text>
+          </View>
+          <SymbolView name="waveform.circle.fill" size={40} tintColor={p.live} />
         </Pressable>
       </Animated.View>
 
@@ -162,11 +162,19 @@ const makeStyles = (p: Palette) =>
 
   langTitle: { color: p.text, fontSize: type.hero, fontWeight: '800', marginTop: space.m, letterSpacing: -0.5 },
 
-  weekArc: { flexDirection: 'row', alignItems: 'center', gap: 6, flexWrap: 'wrap' },
-  daySeg: { width: 26, height: 6, borderRadius: 3, backgroundColor: p.raised },
-  daySegDone: { backgroundColor: p.accent },
-  daySegToday: { backgroundColor: p.stroke, borderWidth: 1, borderColor: p.accent },
-  weekLabel: { color: p.faint, fontSize: type.caption, marginLeft: space.s },
+  convo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.m,
+    backgroundColor: p.card,
+    borderRadius: radii.l,
+    borderWidth: 1,
+    borderColor: p.stroke,
+    padding: space.l,
+    minHeight: 88,
+  },
+  convoTitle: { color: p.text, fontSize: type.heading, fontWeight: '800' },
+  convoMeta: { color: p.dim, fontSize: type.small, marginTop: 4 },
 
   resume: {
     flexDirection: 'row',

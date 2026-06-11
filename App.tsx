@@ -10,6 +10,7 @@ import { HomeScreen } from './src/screens/HomeScreen';
 import { LessonBoundary } from './src/components/LessonBoundary';
 import { SessionScreen } from './src/screens/SessionScreen';
 import { TeacherScreen } from './src/screens/TeacherScreen';
+import { ConversationScreen } from './src/screens/ConversationScreen';
 import { WeeklyReviewScreen } from './src/screens/WeeklyReviewScreen';
 import { SettingsScreen, loadPersistedSettings } from './src/screens/SettingsScreen';
 import { M0SpikeScreen } from './src/screens/M0SpikeScreen';
@@ -58,6 +59,11 @@ export default function App() {
       {screen === 'teacher' && (
         <LessonBoundary p={p} onRecover={() => setLessonEpoch((e) => e + 1)}>
           <TeacherScreen key={`t${lessonEpoch}`} />
+        </LessonBoundary>
+      )}
+      {screen === 'conversation' && (
+        <LessonBoundary p={p} onRecover={() => setLessonEpoch((e) => e + 1)}>
+          <ConversationScreen key={`c${lessonEpoch}`} />
         </LessonBoundary>
       )}
       {screen === 'session' && (

@@ -17,6 +17,9 @@ export const PRICES: Record<string, PriceEntry> = {
   'openai:teacher_output': { unitPrice: 0.0006, unit: '1k_tokens' },
   // Runtime TTS for dynamic teacher lines, cached per line on disk.
   'openai:tts_runtime': { unitPrice: 0.012, unit: '1k_chars' },
+  // Conversation mode (S1) — same model family as the teacher.
+  'openai:conversation_input': { unitPrice: 0.00015, unit: '1k_tokens' },
+  'openai:conversation_output': { unitPrice: 0.0006, unit: '1k_tokens' },
   // LLM coach, Tier 1 (plan §4.3) — small model, a few hundred tokens/call.
   'anthropic:coach_input': { unitPrice: 0.001, unit: '1k_tokens' },
   'anthropic:coach_output': { unitPrice: 0.005, unit: '1k_tokens' },

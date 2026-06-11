@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { InstalledLanguage } from './packs';
 
-export type Screen = 'home' | 'teacher' | 'session' | 'review' | 'settings' | 'm0spike';
+export type Screen = 'home' | 'teacher' | 'conversation' | 'session' | 'review' | 'settings' | 'm0spike';
 
 export interface Settings {
   thinkSeconds: number; // 2–10, default 4 (plan §3.1)
