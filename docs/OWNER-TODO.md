@@ -34,31 +34,27 @@ ELEVENLABS_VOICE_ID=...          # pick a multilingual voice in their Voice Libr
   service account. Say "wire up Google TTS" in a session if you want a
   4th bake-off voice; otherwise 3 candidates is a fine audition.
 
-## 2. Bake-off (blind), then render all three packs
+## 2. ~~Bake-off~~ DONE (2026-06-11): ElevenLabs won — render + rebuild
 
-```bash
-npm run render-audio -- --bakeoff
-# → content/bakeoff/: samples named id-answer-1--A.mp3 etc.
-#   Letters are shuffled per provider. DON'T open key.json until you've picked.
-# Listen, pick the best letter for Indonesian (and zh for later), then:
-cat content/bakeoff/key.json        # reveal which provider each letter was
-# Set the winner in VOICES at the top of scripts/render-audio.ts, then:
-npm run render-audio -- --lang id
-npm run render-audio -- --lang es
-npm run render-audio -- --lang fr
-npm run validate-content -- --require-audio
-```
+Winner set in `VOICES` (`scripts/render-audio.ts`); voice id from `.env`.
+Indonesian rendered from the free tier. Remaining:
 
-Each render finishes by regenerating `src/generated/audio-map.<lang>.ts`,
-which bundles the clips into the next app build — then rebuild on the phone:
-
-```bash
-npx expo run:ios --device
-```
-
-The robotic voice problem disappears at this step: every teach line, answer,
-and slow answer plays the rendered voice; device TTS remains only as a
-fallback for unrendered/dynamic lines.
+- **es + fr renders need ~11.5k more ElevenLabs credits** — one Starter
+  month (~$5) covers both; cancel after rendering. Then:
+  ```bash
+  npm run render-audio -- --lang es
+  npm run render-audio -- --lang fr
+  npm run validate-content -- --require-audio
+  ```
+- Each render regenerates `src/generated/audio-map.<lang>.ts` (bundles the
+  clips into the next build). **Rebuild on the phone** to hear the real
+  tutor:
+  ```bash
+  npx expo run:ios --device
+  ```
+- zh voice is provisional (same ElevenLabs voice) — re-audition tone
+  quality when Mandarin starts; slow-render naturalness is the criterion
+  that decided this bake-off (see m0-findings).
 
 ## 3. Review content before/while rendering (you are the editor — plan §5.2)
 

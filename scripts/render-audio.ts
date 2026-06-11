@@ -33,24 +33,36 @@ interface VoiceChoice {
  * blind bake-off (M2) — placeholders below until then. Cheap = English
  * cues/system lines.
  */
-const VOICES: Record<string, { premium: VoiceChoice; cheap: VoiceChoice }> = {
+/**
+ * Bake-off decided by the owner 2026-06-11 (blind, two rounds):
+ * ElevenLabs won overall — Azure's slow renders (SSML rate) sounded like
+ * time-stretched playback; ElevenLabs regenerates slow speech naturally.
+ * The premium voice id lives in .env (ELEVENLABS_VOICE_ID). English cues
+ * stay on cheap OpenAI per the §4.1 spend split.
+ */
+const ELEVEN_VOICE = (): string => {
+  const v = ENV.ELEVENLABS_VOICE_ID;
+  if (!v) throw new Error('ELEVENLABS_VOICE_ID missing (.env) — the bake-off winner needs it');
+  return v;
+};
+
+const VOICES: Record<string, { premium: () => VoiceChoice; cheap: () => VoiceChoice }> = {
   id: {
-    premium: { provider: 'openai', voice: 'coral' }, // TODO: bake-off winner (realism rule, plan §4.1)
-    cheap: { provider: 'openai', voice: 'alloy' },
+    premium: () => ({ provider: 'elevenlabs', voice: ELEVEN_VOICE() }),
+    cheap: () => ({ provider: 'openai', voice: 'alloy' }),
   },
   zh: {
-    premium: { provider: 'openai', voice: 'coral' }, // TODO: bake-off winner (realism rule, plan §4.1)
-    cheap: { provider: 'openai', voice: 'alloy' },
+    // Provisional: re-audition tone quality when Mandarin starts (M5/S2).
+    premium: () => ({ provider: 'elevenlabs', voice: ENV.ELEVENLABS_VOICE_ZH ?? ELEVEN_VOICE() }),
+    cheap: () => ({ provider: 'openai', voice: 'alloy' }),
   },
-  // es/fr are quality baselines, not realism-critical (owner already speaks
-  // them) — a good multilingual OpenAI voice is fine without a bake-off.
   es: {
-    premium: { provider: 'openai', voice: 'coral' },
-    cheap: { provider: 'openai', voice: 'alloy' },
+    premium: () => ({ provider: 'elevenlabs', voice: ELEVEN_VOICE() }),
+    cheap: () => ({ provider: 'openai', voice: 'alloy' }),
   },
   fr: {
-    premium: { provider: 'openai', voice: 'coral' },
-    cheap: { provider: 'openai', voice: 'alloy' },
+    premium: () => ({ provider: 'elevenlabs', voice: ELEVEN_VOICE() }),
+    cheap: () => ({ provider: 'openai', voice: 'alloy' }),
   },
 };
 
@@ -262,6 +274,8 @@ async function renderPack(lang: string, dryRun: boolean): Promise<void> {
   const pack = JSON.parse(readFileSync(packPath, 'utf8')) as CoursePack;
   const voices = VOICES[lang];
   if (!voices) throw new Error(`No voice config for "${lang}" — add it to VOICES in scripts/render-audio.ts`);
+  const premium = voices.premium();
+  const cheap = voices.cheap();
 
   const audioDir = join(__dirname, '..', 'content', lang, 'audio');
   const manifestPath = join(audioDir, 'render-manifest.json');
@@ -270,12 +284,13 @@ async function renderPack(lang: string, dryRun: boolean): Promise<void> {
   const jobs = collectJobs(pack);
   const premiumChars = jobs.filter((j) => j.tier === 'premium').reduce((n, j) => n + j.text.length, 0);
   const cheapChars = jobs.filter((j) => j.tier === 'cheap').reduce((n, j) => n + j.text.length, 0);
-  console.log(`${jobs.length} clips | premium ${premiumChars} chars (${voices.premium.provider}:${voices.premium.voice}) | cheap ${cheapChars} chars (${voices.cheap.provider}:${voices.cheap.voice})`);
+  console.log(`${jobs.length} clips | premium ${premiumChars} chars (${premium.provider}) | cheap ${cheapChars} chars (${cheap.provider}:${cheap.voice})`);
 
   let rendered = 0;
   let skipped = 0;
+  const pending: { job: Job; choice: VoiceChoice; hash: string; outPath: string }[] = [];
   for (const job of jobs) {
-    const choice = job.tier === 'premium' ? voices.premium : voices.cheap;
+    const choice = job.tier === 'premium' ? premium : cheap;
     const hash = createHash('sha256')
       .update(JSON.stringify({ text: job.text, provider: choice.provider, voice: choice.voice, slow: job.slow }))
       .digest('hex');
@@ -285,17 +300,29 @@ async function renderPack(lang: string, dryRun: boolean): Promise<void> {
       continue;
     }
     if (dryRun) {
-      console.log(`  would render ${job.key} [${choice.provider}/${choice.voice}${job.slow ? ' slow' : ''}]: ${job.text.slice(0, 60)}`);
+      console.log(`  would render ${job.key} [${choice.provider}${job.slow ? ' slow' : ''}]: ${job.text.slice(0, 60)}`);
       rendered++;
       continue;
     }
-    mkdirSync(audioDir, { recursive: true });
-    const audio = await RENDERERS[choice.provider](job.text, { voice: choice.voice, lang: job.lang, slow: job.slow });
-    writeFileSync(outPath, audio);
-    manifest[job.key] = { hash, provider: choice.provider, voice: choice.voice };
+    pending.push({ job, choice, hash, outPath });
+  }
+
+  // Small batches: faster than serial, within free-tier concurrency limits.
+  // Interrupted/failed runs resume via the manifest — just re-run.
+  const BATCH = 2;
+  mkdirSync(audioDir, { recursive: true });
+  for (let i = 0; i < pending.length; i += BATCH) {
+    const batch = pending.slice(i, i + BATCH);
+    await Promise.all(
+      batch.map(async ({ job, choice, hash, outPath }) => {
+        const audio = await RENDERERS[choice.provider](job.text, { voice: choice.voice, lang: job.lang, slow: job.slow });
+        writeFileSync(outPath, audio);
+        manifest[job.key] = { hash, provider: choice.provider, voice: choice.voice };
+        rendered++;
+      }),
+    );
     writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
-    rendered++;
-    console.log(`  rendered ${job.key} (${audio.length} bytes)`);
+    if ((i / BATCH) % 20 === 0) console.log(`  …${Math.min(i + BATCH, pending.length)}/${pending.length}`);
   }
   console.log(`${dryRun ? 'would render' : 'rendered'} ${rendered}, unchanged ${skipped}`);
   if (!dryRun) generateAudioMap(lang);

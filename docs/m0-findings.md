@@ -56,3 +56,22 @@ the documented path.
   dynamic lines). Bake-off → render → bundle is the immediate next step.
 - Owner already has an Apple Developer account → TestFlight/EAS distribution
   unblocked whenever we're ready to set it up.
+
+## M2 voice bake-off result (2026-06-11, blind, two rounds)
+
+- **Winner: ElevenLabs** (eleven_multilingual_v2, owner's chosen voice id in
+  `.env`) for id/es/fr premium lines; zh provisional until Mandarin starts.
+- Decisive factor: **slow-render naturalness**. Azure (runner-up on
+  authenticity) does slow via SSML rate, which the owner judged "like
+  playback at 0.75× — not natural at all"; ElevenLabs regenerates slow
+  speech with natural prosody. The slow answer plays on every miss, so this
+  is half the listening experience — weight it heavily in any future
+  audition (zh!).
+- OpenAI was eliminated in round one; Google never competed (adapter
+  stubbed, no GCP project).
+- English cues + system lines stay on OpenAI `alloy` (§4.1 spend split).
+- Process note: round one was accidentally unblinded-by-reshuffle (two runs,
+  two mappings) — fixed with sticky key.json; rounds two/three were clean.
+- Cost: ElevenLabs free tier (~10k credits/mo) covers the Indonesian pack;
+  es+fr (~11.5k more chars) likely need one Starter month (~$5), cancellable
+  after rendering — exactly the §4.1 forecast.
