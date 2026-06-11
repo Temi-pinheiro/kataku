@@ -93,6 +93,18 @@ const BAKEOFF_SAMPLES: { name: string; lang: string; text: string; slow?: boolea
   { name: 'zh-tone-pair', lang: 'zh', text: '买。卖。买卖。' },
   { name: 'zh-answer-2', lang: 'zh', text: '我现在不能去，因为我要吃饭。' },
   { name: 'zh-long', lang: 'zh', text: '我今天不能去市场，因为我要吃饭，但是我明天会去买。' },
+  // Spanish / French (quality-baseline packs) — answer + slow + teach mix.
+  { name: 'es-answer', lang: 'es', text: 'No puedo ir al mercado ahora porque tengo que comer.' },
+  { name: 'es-answer-slow', lang: 'es', text: 'No puedo ir al mercado ahora porque tengo que comer.', slow: true },
+  { name: 'es-teach-long', lang: 'es', text: "'Tomorrow' is 'mañana'. Mañana. Voy a ir mañana — I'm going to go tomorrow." },
+  { name: 'fr-answer', lang: 'fr', text: 'Je ne peux pas aller au marché maintenant parce que je dois manger.' },
+  { name: 'fr-answer-slow', lang: 'fr', text: 'Je ne peux pas aller au marché maintenant parce que je dois manger.', slow: true },
+  { name: 'fr-teach-long', lang: 'fr', text: "'Tomorrow' is 'demain'. Demain. Je vais aller demain — I'm going to go tomorrow." },
+  // Conversational register — what the S1 conversation-mode partner will
+  // sound like: natural everyday speech, a question, real rhythm.
+  { name: 'id-conv', lang: 'id', text: 'Kamu sudah makan belum? Tadi aku ke pasar, tapi nggak beli apa-apa karena buru-buru.' },
+  { name: 'es-conv', lang: 'es', text: '¿Ya comiste? Fui al mercado esta mañana, pero no compré nada porque no tenía tiempo.' },
+  { name: 'fr-conv', lang: 'fr', text: "Tu as déjà mangé ? Je suis allé au marché ce matin, mais j'ai rien acheté parce que j'avais pas le temps." },
 ];
 
 const BCP47: Record<string, string> = { id: 'id-ID', zh: 'zh-CN', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', en: 'en-US' };
@@ -318,11 +330,15 @@ async function bakeoff(): Promise<void> {
   const outDir = join(__dirname, '..', 'content', 'bakeoff');
   mkdirSync(outDir, { recursive: true });
   // Default audition voices per provider; swap freely before running.
+  const eleven = ENV.ELEVENLABS_VOICE_ID ?? '';
   const candidates: { provider: ProviderName; voice: Record<string, string> }[] = [
-    { provider: 'openai', voice: { id: 'coral', zh: 'coral' } },
-    { provider: 'azure', voice: { id: 'id-ID-GadisNeural', zh: 'zh-CN-XiaoxiaoNeural' } },
-    { provider: 'elevenlabs', voice: { id: ENV.ELEVENLABS_VOICE_ID ?? '', zh: ENV.ELEVENLABS_VOICE_ZH ?? ENV.ELEVENLABS_VOICE_ID ?? '' } },
-    { provider: 'google', voice: { id: '', zh: '' } },
+    { provider: 'openai', voice: { id: 'coral', zh: 'coral', es: 'coral', fr: 'coral' } },
+    {
+      provider: 'azure',
+      voice: { id: 'id-ID-GadisNeural', zh: 'zh-CN-XiaoxiaoNeural', es: 'es-ES-ElviraNeural', fr: 'fr-FR-DeniseNeural' },
+    },
+    { provider: 'elevenlabs', voice: { id: eleven, zh: ENV.ELEVENLABS_VOICE_ZH ?? eleven, es: eleven, fr: eleven } },
+    { provider: 'google', voice: { id: '', zh: '', es: '', fr: '' } },
   ];
   // Blind listening: providers get shuffled letters; the mapping goes to
   // key.json, to be read only after picking winners. An existing key.json
@@ -341,8 +357,16 @@ async function bakeoff(): Promise<void> {
     }
   }
 
+  // `--only A,B` renders just those letters (finalist rounds).
+  const onlyIdx = process.argv.indexOf('--only');
+  const only = onlyIdx >= 0 ? new Set(process.argv[onlyIdx + 1]?.toUpperCase().split(',')) : null;
+
   for (const c of candidates) {
     const letter = providerToLetter.get(c.provider)!;
+    if (only && !only.has(letter)) {
+      console.log(`  voice ${letter}: skipped (--only)`);
+      continue;
+    }
     let rendered = 0;
     for (const sample of BAKEOFF_SAMPLES) {
       const file = join(outDir, `${sample.name}--${letter}.mp3`);
