@@ -9,6 +9,7 @@ import { voiceEngine } from './src/services/instances';
 import { HomeScreen } from './src/screens/HomeScreen';
 import { LessonBoundary } from './src/components/LessonBoundary';
 import { SessionScreen } from './src/screens/SessionScreen';
+import { TeacherScreen } from './src/screens/TeacherScreen';
 import { WeeklyReviewScreen } from './src/screens/WeeklyReviewScreen';
 import { SettingsScreen, loadPersistedSettings } from './src/screens/SettingsScreen';
 import { M0SpikeScreen } from './src/screens/M0SpikeScreen';
@@ -54,6 +55,11 @@ export default function App() {
     <View style={[styles.app, { backgroundColor: p.bg }]}>
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
       {screen === 'home' && <HomeScreen />}
+      {screen === 'teacher' && (
+        <LessonBoundary p={p} onRecover={() => setLessonEpoch((e) => e + 1)}>
+          <TeacherScreen key={`t${lessonEpoch}`} />
+        </LessonBoundary>
+      )}
       {screen === 'session' && (
         <LessonBoundary p={p} onRecover={() => setLessonEpoch((e) => e + 1)}>
           <SessionScreen key={lessonEpoch} />

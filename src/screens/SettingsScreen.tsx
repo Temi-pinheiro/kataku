@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, Share, StyleSheet, Switch, Text, View } from 'react-native';
+import { Pressable, ScrollView, Share, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { SymbolView } from 'expo-symbols';
 import { BigButton } from '../components/BigButton';
@@ -8,6 +8,7 @@ import { radii, space, type, type Palette } from '../theme';
 import { useTheme } from '../hooks/useTheme';
 import { exportProgress, getSetting, setSetting, spendEvents } from '../db';
 import { formatUsd, monthToDateUsd } from '../lib/cost/meter';
+import { getOpenAIKey, setOpenAIKey } from '../services/keys';
 
 const THEME_OPTIONS: { value: Settings['theme']; label: string }[] = [
   { value: 'system', label: 'System' },
@@ -20,6 +21,12 @@ export function SettingsScreen() {
   const { p } = useTheme();
   const styles = useMemo(() => makeStyles(p), [p]);
   const [mtd, setMtd] = useState<string>('…');
+  const [keyDraft, setKeyDraft] = useState('');
+  const [keyPresent, setKeyPresent] = useState(false);
+
+  useEffect(() => {
+    getOpenAIKey().then((k) => setKeyPresent(Boolean(k)));
+  }, []);
 
   useEffect(() => {
     const monthStart = new Date();
@@ -72,10 +79,52 @@ export function SettingsScreen() {
         ))}
       </View>
 
+      <Text style={styles.section}>Teacher</Text>
+      <View style={styles.keyCard}>
+        <Text style={styles.label}>OpenAI API key</Text>
+        <Text style={styles.rowValue}>
+          {keyPresent ? 'saved in the device keychain' : 'powers the live teacher and its voice'}
+        </Text>
+        <TextInput
+          style={styles.keyInput}
+          value={keyDraft}
+          onChangeText={setKeyDraft}
+          placeholder={keyPresent ? 'paste to replace…' : 'sk-…'}
+          placeholderTextColor={p.faint}
+          autoCapitalize="none"
+          autoCorrect={false}
+          secureTextEntry
+        />
+        {keyDraft.trim().length > 0 && (
+          <BigButton
+            label="Save key"
+            small
+            onPress={async () => {
+              await setOpenAIKey(keyDraft);
+              setKeyDraft('');
+              setKeyPresent(true);
+            }}
+          />
+        )}
+      </View>
+
       <Text style={styles.section}>Lesson</Text>
       <Row styles={styles} label="Think time" value={`${settings.thinkSeconds}s`}>
         <Stepper styles={styles} p={p} onMinus={() => bumpThink(-1)} onPlus={() => bumpThink(1)} />
       </Row>
+      <Pressable
+        style={styles.row}
+        onPress={() => {
+          Haptics.selectionAsync();
+          setScreen('session');
+        }}
+      >
+        <View style={{ flex: 1 }}>
+          <Text style={styles.label}>Classic drill deck</Text>
+          <Text style={styles.rowValue}>the structured prompt lessons — fully offline</Text>
+        </View>
+        <SymbolView name="chevron.right" size={14} tintColor={p.faint} />
+      </Pressable>
 
       <Text style={styles.section}>Coach & spend</Text>
       <Row styles={styles} label="AI coach" value="≈$1–2/mo">
@@ -189,6 +238,15 @@ const makeStyles = (p: Palette) =>
     label: { color: p.text, fontSize: type.body },
     rowValue: { color: p.faint, fontSize: type.caption, marginTop: 2 },
     value: { color: p.accent, fontSize: type.body, fontWeight: '700' },
+    keyCard: { backgroundColor: p.card, borderRadius: radii.m, padding: space.m, gap: space.s },
+    keyInput: {
+      backgroundColor: p.raised,
+      borderRadius: radii.s,
+      paddingHorizontal: space.m,
+      paddingVertical: 12,
+      color: p.text,
+      fontSize: type.small,
+    },
     stepper: { flexDirection: 'row', gap: space.s },
     step: {
       width: 44,

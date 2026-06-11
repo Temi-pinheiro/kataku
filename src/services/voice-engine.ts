@@ -1,7 +1,5 @@
 import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
-import * as Speech from 'expo-speech';
 import { Directory, Paths } from 'expo-file-system';
-import { sttLocaleFor } from '../db';
 import { AUDIO_MAP as AUDIO_ID } from '../generated/audio-map.id';
 import { AUDIO_MAP as AUDIO_ES } from '../generated/audio-map.es';
 import { AUDIO_MAP as AUDIO_FR } from '../generated/audio-map.fr';
@@ -28,22 +26,23 @@ import { AUDIO_MAP as AUDIO_FR } from '../generated/audio-map.fr';
  *
  * 3. Nothing here ever throws. A clip can lose its sound; the lesson keeps
  *    going (plan hard rule: degrade gracefully, never block a session).
+ *
+ * 4. NO device-TTS fallback, ever (owner directive). Sources are rendered
+ *    pack clips (bundle/download) or runtime-TTS files cached by the tts
+ *    service. A missing source = silence + on-screen text, never the
+ *    default OS voice.
  */
 
 const BUNDLED: Record<string, number> = { ...AUDIO_ID, ...AUDIO_ES, ...AUDIO_FR };
 
-const CLIP_HARD_CAP_MS = 12_000;
+const CLIP_HARD_CAP_MS = 30_000; // runtime-TTS teacher turns can run long
 const CLIP_MARGIN_MS = 2_000;
 
 export interface SpeakRequest {
-  /** Pack audio key, e.g. "id-f-p-004-a". Omit for dynamic lines. */
+  /** Pack audio key, e.g. "id-f-p-004-a". */
   key?: string;
-  /** Spoken via device TTS when the key has no rendered file. */
-  fallbackText: string;
-  /** Pack language code ('id') or 'en'. */
-  lang: string;
-  /** Fallback-only speed hint; rendered slow clips are separate files. */
-  slow?: boolean;
+  /** Direct file uri (runtime-TTS cache). Takes precedence over key. */
+  uri?: string;
 }
 
 const TONES = {
@@ -84,7 +83,7 @@ class VoiceEngine {
         if (m) this.downloaded.set(m[1], entry.uri);
       }
     } catch {
-      // no downloaded pack — bundle + device TTS carry the lesson
+      // no downloaded pack — bundled clips carry the lesson
     }
   }
 
@@ -95,6 +94,7 @@ class VoiceEngine {
   /**
    * Speak one line. Serialized: concurrent callers queue up. Resolves when
    * the clip ends, is cancelled, or the watchdog fires. Never rejects.
+   * Missing source → resolves silently (text carries the meaning).
    */
   play(req: SpeakRequest): Promise<void> {
     const gen = this.generation;
@@ -102,14 +102,13 @@ class VoiceEngine {
       if (gen !== this.generation) return; // cancelled while queued
       await this.init();
       try {
-        const source = req.key !== undefined ? (BUNDLED[req.key] ?? this.downloaded.get(req.key)) : undefined;
+        const source =
+          req.uri ?? (req.key !== undefined ? (BUNDLED[req.key] ?? this.downloaded.get(req.key)) : undefined);
         if (source !== undefined) {
           await this.playSource(source);
-        } else {
-          await this.speakFallback(req);
         }
       } catch (e) {
-        console.warn('voice-engine: clip failed, continuing', req.key, e);
+        console.warn('voice-engine: clip failed, continuing', req.key ?? req.uri, e);
       }
     });
     this.chain = run;
@@ -142,7 +141,6 @@ class VoiceEngine {
   /** Cut whatever is playing or queued; pending play() calls resolve. */
   stop(): void {
     this.generation++;
-    Speech.stop();
     this.cancelCurrent?.();
   }
 
@@ -185,40 +183,6 @@ class VoiceEngine {
       } catch {
         settle();
       }
-    });
-  }
-
-  private speakFallback(req: SpeakRequest): Promise<void> {
-    if (!req.fallbackText.trim()) return Promise.resolve();
-    return new Promise((resolve) => {
-      let settled = false;
-      const settle = () => {
-        if (settled) return;
-        settled = true;
-        this.cancelCurrent = null;
-        resolve();
-      };
-      this.cancelCurrent = () => {
-        Speech.stop();
-        settle();
-      };
-      const watchdog = setTimeout(settle, CLIP_HARD_CAP_MS);
-      Speech.speak(req.fallbackText, {
-        language: req.lang === 'en' ? 'en-US' : sttLocaleFor(req.lang),
-        rate: req.slow ? 0.6 : 1.0,
-        onDone: () => {
-          clearTimeout(watchdog);
-          settle();
-        },
-        onStopped: () => {
-          clearTimeout(watchdog);
-          settle();
-        },
-        onError: () => {
-          clearTimeout(watchdog);
-          settle();
-        },
-      });
     });
   }
 }

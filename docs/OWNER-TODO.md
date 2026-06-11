@@ -1,5 +1,12 @@
 # Owner TODO — everything that needs *you*
 
+## 0. NOW: put your OpenAI key on the phone (teacher mode needs it)
+
+Rebuild (`npx expo run:ios --device`), then in the app: **Settings →
+Teacher → paste your OpenAI API key** (same key as `.env`, stored in the
+device keychain only). That unlocks the live teacher chat and its voice.
+No key → teacher screen explains itself; nothing crashes.
+
 Updated 2026-06-11 after the owner's M0 device run. M0 is done
 (`docs/m0-findings.md`); device-TTS fallback judged unusable as the tutor
 voice, so **rendered audio is the critical path**. Apple Developer account:

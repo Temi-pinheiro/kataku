@@ -9,7 +9,8 @@ Read both before changing architecture.
 ## Stack (decided — don't churn)
 
 - Expo SDK 56, React Native, TypeScript. Check https://docs.expo.dev/versions/v56.0.0/ before using Expo APIs — SDK 56 changed things.
-- Audio: `expo-audio` (playback + attempt recording). STT: `expo-speech-recognition` behind the `SpeechRecognizer` interface in `src/lib/stt/types.ts`; implementations live in `src/services/stt/` and app code never imports recognizer packages directly (stretch contract). `expo-speech-transcriber` was evaluated and rejected (v0.1.9 is hardcoded to en_US — see docs/m0-findings.md). Fallback TTS: `expo-speech`.
+- Audio: `expo-audio` behind `src/services/voice-engine.ts` (ONE app-life audio-session config — see the engine header; do not regress). STT: `expo-speech-recognition` behind the `SpeechRecognizer` interface in `src/lib/stt/types.ts`; implementations live in `src/services/stt/`. `expo-speech-transcriber` rejected (en_US-only); **`expo-speech` REMOVED — no device-TTS fallback, ever (owner directive)**: missing audio = silence + text. Dynamic lines voice via `src/services/tts.ts` (OpenAI, disk-cached per line); static packs stay on the rendered ElevenLabs clips.
+- **The primary lesson is the teacher chat** (`TeacherScreen` + `src/services/teacher.ts`, owner pivot 2026-06-11): an LLM teacher running the owner's Michel Thomas spec (`src/services/teacher-prompt.ts`), text-first, per-bubble audio on demand, voice input via the recognizer. The deck flow (`SessionScreen`) remains as the offline "classic drill deck" under Settings. API key lives in the device keychain (`src/services/keys.ts`); all teacher/TTS calls are cost-metered.
 - Storage: `expo-sqlite`, schema in `src/db/schema.ts` (mirrors plan.md §7). State: zustand.
 - No backend, no auth, no analytics. Content = JSON packs + pre-rendered audio.
 

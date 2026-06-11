@@ -117,21 +117,14 @@ export function HomeScreen() {
           style={({ pressed }) => [styles.cta, pressed && { transform: [{ scale: 0.985 }] }]}
           onPress={() => {
             Haptics.selectionAsync();
-            setScreen('session');
+            setScreen('teacher');
           }}
         >
           <View style={{ flex: 1 }}>
-            <Text style={styles.ctaTitle}>{d?.doneToday ? 'Keep going' : "Start today's session"}</Text>
-            <Text style={styles.ctaMeta}>
-              {d?.nextLessonRef
-                ? `Lesson ${d.nextLessonRef} · ${d.nextNewBlocks} new blocks · ~15 min`
-                : d
-                  ? 'all lessons complete'
-                  : ' '}
-            </Text>
-            {d?.doneToday && <Text style={styles.ctaDone}>today is done — anything more is extra</Text>}
+            <Text style={styles.ctaTitle}>Sit with the teacher</Text>
+            <Text style={styles.ctaMeta}>build sentences out loud, one block at a time</Text>
           </View>
-          <SymbolView name="mic.circle.fill" size={52} tintColor={p.onAccent} />
+          <SymbolView name="bubble.left.and.text.bubble.right.fill" size={48} tintColor={p.onAccent} />
         </Pressable>
       </Animated.View>
 

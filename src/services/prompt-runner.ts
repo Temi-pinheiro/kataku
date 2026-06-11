@@ -242,24 +242,20 @@ export class PromptRunner {
   }
 
   private requestFor(kind: AudioKind): SpeakRequest {
-    const { prompt, lang, systemLines } = this.deps;
+    const { prompt, systemLines } = this.deps;
     switch (kind) {
       case 'cue':
-        return { key: prompt.audio.cue, fallbackText: prompt.cue_en, lang: 'en' };
+        return { key: prompt.audio.cue };
       case 'answer':
-        return { key: prompt.audio.answer, fallbackText: prompt.expected[0], lang };
+        return { key: prompt.audio.answer };
       case 'answer_slow':
-        return { key: prompt.audio.answer_slow, fallbackText: prompt.expected[0], lang, slow: true };
+        return { key: prompt.audio.answer_slow };
       case 'decompose':
-        return { key: prompt.audio.decompose, fallbackText: prompt.decompose_script ?? '', lang: 'en' };
+        return { key: prompt.audio.decompose };
       case 'confirm':
-        return { key: systemLines.confirm?.audio, fallbackText: systemLines.confirm?.text ?? 'Yes —', lang: 'en' };
+        return { key: systemLines.confirm?.audio };
       case 'almost':
-        return {
-          key: systemLines.almost?.audio,
-          fallbackText: systemLines.almost?.text ?? 'Almost — listen:',
-          lang: 'en',
-        };
+        return { key: systemLines.almost?.audio };
     }
   }
 }

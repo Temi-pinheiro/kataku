@@ -409,7 +409,7 @@ function AnnounceCard({ pack, line, onDone }: { pack: CoursePack; line: string; 
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      await voiceEngine.play({ key: pack.system_lines[line]?.audio, fallbackText: text, lang: 'en' });
+      await voiceEngine.play({ key: pack.system_lines[line]?.audio });
       if (!cancelled) setTimeout(onDone, 350);
     })();
     return () => {
@@ -461,11 +461,7 @@ function TeachCard({ item, lang, onDone }: { item: ContentItem; lang: InstalledL
           await sleep(echo ? ECHO_GAP_MS : SEGMENT_GAP_MS);
           if (cancelled) return;
         }
-        await voiceEngine.play({
-          key: `${item.id}-t-${i}`,
-          fallbackText: seg.text,
-          lang: seg.lang === 'target' ? lang : 'en',
-        });
+        await voiceEngine.play({ key: `${item.id}-t-${i}` });
       }
       if (cancelled) return;
       setSpeaking(false);
@@ -703,11 +699,7 @@ function OutroCard({
   const { p } = useTheme();
   const styles = useMemo(() => makeStyles(p), [p]);
   useEffect(() => {
-    void voiceEngine.play({
-      key: pack.system_lines.session_close?.audio,
-      fallbackText: pack.system_lines.session_close?.text ?? 'Done.',
-      lang: 'en',
-    });
+    void voiceEngine.play({ key: pack.system_lines.session_close?.audio });
     return () => voiceEngine.stop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
