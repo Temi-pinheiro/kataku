@@ -2,9 +2,16 @@
 
 # Kataku — voice-first language learning app
 
-Single-user, local-first, iPhone-first. `plan.md` is the source of truth;
-`stretch-spec.md` specs post-v1 features whose v1 hooks are contractual.
-Read both before changing architecture.
+Single-user, local-first, iPhone-first. `plan.md` is the source of truth
+for v1; `final-spec.md` (owner-decided 2026-06-12) specs the final app —
+F0 v1-completions, F1 pronunciation lab, F2 story mode, F3 live capture,
+F4 persona voices, F5 mastery map, protocol-week-as-spine — and supersedes
+`stretch-spec.md` where the teacher-chat pivot changed things (S2→F1,
+S3 reframed into protocols/scenarios; stretch-spec's v1 hooks stay
+contractual). Read plan.md + final-spec.md before changing architecture.
+Final-spec features build only AFTER the pre-build roadmap (conversation
+mode signed off → protocols promoted → it/zh/ja → archive → push →
+first TestFlight build).
 
 ## Stack (decided — don't churn)
 
