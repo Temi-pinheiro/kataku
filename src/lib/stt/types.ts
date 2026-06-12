@@ -40,9 +40,14 @@ export interface SttStartOptions {
    */
   continuous?: boolean;
   /**
+   * Vocabulary bias for the recognizer — short taught words ("teh") get
+   * missed without it. Chat modes pass the taught/mastered vocabulary;
+   * the GRADED drill deck must NOT pass expected answers (recognizer
+   * auto-correct would create false passes — plan §10).
+   */
+  contextualStrings?: string[];
+  /**
    * Persist the utterance audio (16 kHz mono) for replay/tone-scoring.
-   * NOTE: never feed expected answers as contextual hints — that inflates
-   * the recognizer's auto-correct and creates false passes (plan §10).
    */
   recordAudio?: boolean;
 }

@@ -88,6 +88,7 @@ export class NativeRecognizer implements SpeechRecognizer {
       continuous: options.continuous ?? false,
       requiresOnDeviceRecognition: onDevice,
       addsPunctuation: false,
+      ...(options.contextualStrings?.length ? { contextualStrings: options.contextualStrings } : {}),
       // MUST match the engine's app-wide session exactly (playAndRecord +
       // forced speaker, mode 'default'): identical config on every start
       // means the session never actually changes — no flips, no races, no

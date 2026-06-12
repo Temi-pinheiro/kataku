@@ -221,7 +221,16 @@ export function ConversationScreen() {
         };
 
         await recognizer.start(
-          { locale: sttLocaleFor(language), preferOnDevice: true, continuous: true, recordAudio: false },
+          {
+            locale: sttLocaleFor(language),
+            preferOnDevice: true,
+            continuous: true,
+            recordAudio: false,
+            // Bias recognition toward the learner's own vocabulary — short
+            // words ("teh") get swallowed without hints. Safe: the partner
+            // LLM judges meaning either way; the no-hints ban is the deck's.
+            contextualStrings: whitelistRef.current.slice(0, 60),
+          },
           {
             onSpeechStart: () => {
               sawMicEvent = true;

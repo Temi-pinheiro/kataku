@@ -34,6 +34,18 @@ const DIGEST_EVERY_LEARNER_TURNS = 8;
 /** A sitting with this many answers marks the day done. */
 const DAY_MARK_LEARNER_TURNS = 10;
 
+// Mic pacing (mirrors conversation mode): the recognizer gives up early and
+// reports empty finals — those are OUR problem, never the learner's.
+/** Recognizer hiccups inside this window restart invisibly. */
+const MIN_LISTEN_MS = 5000;
+/** Speech followed by this much stillness = the answer is finished. */
+const SILENCE_AFTER_SPEECH_MS = 2600;
+/** Tap + total silence for this long → close the mic quietly. */
+const NO_SPEECH_WINDOW_MS = 12000;
+/** No recognizer events at all for this long = dead mic; restart it. */
+const DEAD_MIC_MS = 4000;
+const MAX_DEAD_RESTARTS = 3;
+
 /**
  * The lesson IS a conversation (owner pivot): the teacher writes, you can
  * hear any line on demand, and you answer by voice (or keyboard). Full
@@ -55,9 +67,13 @@ export function TeacherScreen() {
   const [notice, setNotice] = useState<string | null>(null);
   const [input, setInput] = useState('');
   const [listening, setListening] = useState(false);
-  const [playingIdx, setPlayingIdx] = useState<number | null>(null);
+  const [playingKey, setPlayingKey] = useState<string | null>(null);
   const [spendLabel, setSpendLabel] = useState('');
   const scrollRef = useRef<ScrollView>(null);
+  const listenTokenRef = useRef(0);
+  const watchdogRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const userStopRef = useRef(false);
+  const playSeqRef = useRef(0);
   const storageKey = `teacher_chat.${language}`;
   const digestedUpToRef = useRef(0);
   const sittingStartRef = useRef(new Date().toISOString());
@@ -142,6 +158,8 @@ export function TeacherScreen() {
     })();
     return () => {
       cancelled = true;
+      listenTokenRef.current += 1;
+      if (watchdogRef.current) clearInterval(watchdogRef.current);
       recognizer.abort();
       voiceEngine.stop();
     };
@@ -193,63 +211,180 @@ export function TeacherScreen() {
   // ---- voice input: listen first, transcript lands in the editable field ----
 
   const stopListening = useCallback(() => {
+    listenTokenRef.current += 1; // invalidate every in-flight callback
+    if (watchdogRef.current) {
+      clearInterval(watchdogRef.current);
+      watchdogRef.current = null;
+    }
     recognizer.abort();
     setListening(false);
   }, []);
 
   const toggleMic = useCallback(async () => {
     if (listening) {
-      recognizer.stop(); // finalize what was said
+      userStopRef.current = true;
+      recognizer.stop(); // deliberate finish: finalize what was said
       return;
     }
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     voiceEngine.stop(); // never listen while the teacher is speaking
-    setPlayingIdx(null);
+    setPlayingKey(null);
     setListening(true);
     voiceEngine.tone('open');
-    await recognizer.start(
-      { locale: sttLocaleFor(language), preferOnDevice: true, continuous: true, recordAudio: false },
-      {
-        onPartial: (t) => setInput(t),
-        onFinal: (t) => {
-          setInput(t);
-          setListening(false);
-          voiceEngine.tone('close');
+
+    const token = ++listenTokenRef.current;
+    userStopRef.current = false;
+    const openedAt = Date.now();
+    let spoke = false;
+    let best = '';
+    let lastChangeAt = Date.now();
+    let lastEventAt = Date.now();
+    let deadRestarts = 0;
+
+    // Bias recognition toward what the teacher has actually taught — short
+    // words ("teh") get swallowed without hints. Safe here: the LLM judges
+    // the answer either way; the no-hints ban belongs to the graded deck.
+    const hintWords = new Set<string>();
+    for (const t of turnsRef.current) {
+      if (t.role !== 'teacher') continue;
+      for (const w of targetOnly(t.text).split(/[^\p{L}\p{M}'’-]+/u)) {
+        if (w) hintWords.add(w.toLowerCase());
+      }
+    }
+    const hints = [...hintWords].slice(-60); // newest teachings last — keep those
+
+    const closeMic = () => {
+      if (token !== listenTokenRef.current) return;
+      stopListening();
+      voiceEngine.tone('close');
+    };
+
+    const attempt = async () => {
+      if (token !== listenTokenRef.current) return;
+      recognizer.abort();
+      await new Promise((r) => setTimeout(r, 120)); // let the session settle
+      if (token !== listenTokenRef.current) return;
+      lastEventAt = Date.now();
+      await recognizer.start(
+        {
+          locale: sttLocaleFor(language),
+          preferOnDevice: true,
+          continuous: true,
+          recordAudio: false,
+          contextualStrings: hints,
         },
-        onEnd: () => setListening(false),
-        onError: () => setListening(false),
-      },
-    );
-  }, [listening, language]);
+        {
+          onVolume: () => {
+            lastEventAt = Date.now();
+          },
+          onSpeechStart: () => {
+            spoke = true;
+            lastChangeAt = Date.now();
+          },
+          onPartial: (t) => {
+            if (token !== listenTokenRef.current) return;
+            lastEventAt = Date.now();
+            if (t.trim()) {
+              spoke = true;
+              best = t;
+              lastChangeAt = Date.now();
+              setInput(t);
+            }
+          },
+          onFinal: (t) => {
+            if (token !== listenTokenRef.current) return;
+            const text = (t.trim() || best).trim();
+            if (text) {
+              setInput(text);
+              closeMic();
+            } else {
+              retryOrClose(); // empty final = recognizer gave up, not the learner
+            }
+          },
+          onEnd: () => {
+            if (token === listenTokenRef.current) retryOrClose();
+          },
+          onError: () => {
+            if (token === listenTokenRef.current) retryOrClose();
+          },
+        },
+      );
+    };
 
-  // ---- per-bubble audio (runtime TTS, disk-cached; silence > robot voice) ----
+    const retryOrClose = () => {
+      if (token !== listenTokenRef.current) return;
+      if (userStopRef.current) {
+        if (best) setInput(best);
+        closeMic();
+        return;
+      }
+      const elapsed = Date.now() - openedAt;
+      if (elapsed < MIN_LISTEN_MS || (!spoke && elapsed < NO_SPEECH_WINDOW_MS)) {
+        void attempt(); // invisible restart — the learner never sees the hiccup
+        return;
+      }
+      if (best) setInput(best);
+      closeMic();
+    };
 
-  const playTurn = useCallback(
-    async (idx: number, text: string) => {
+    watchdogRef.current = setInterval(() => {
+      if (token !== listenTokenRef.current) return;
+      const now = Date.now();
+      if (spoke && best && now - lastChangeAt > SILENCE_AFTER_SPEECH_MS) {
+        recognizer.stop(); // finished speaking → final lands via onFinal
+        return;
+      }
+      if (!spoke && now - openedAt >= NO_SPEECH_WINDOW_MS) {
+        closeMic(); // tapped but said nothing — close without fuss
+        return;
+      }
+      if (now - lastEventAt > DEAD_MIC_MS) {
+        if (userStopRef.current || deadRestarts >= MAX_DEAD_RESTARTS) {
+          closeMic();
+          if (!userStopRef.current) setNotice("The mic wouldn't start — tap it and try again.");
+          return;
+        }
+        deadRestarts += 1;
+        lastEventAt = Date.now();
+        void attempt();
+      }
+    }, 400);
+
+    void attempt();
+  }, [listening, language, stopListening]);
+
+  // ---- per-card audio (runtime TTS, disk-cached; silence > robot voice) ----
+
+  const playSpan = useCallback(
+    async (key: string, text: string) => {
       Haptics.selectionAsync();
-      if (playingIdx === idx) {
+      if (playingKey === key) {
+        playSeqRef.current += 1;
         voiceEngine.stop();
-        setPlayingIdx(null);
+        setPlayingKey(null);
         return;
       }
       stopListening();
       voiceEngine.stop();
-      // Owner rule: never speak English. Play ONLY the «target» spans,
-      // with the voice locked to the learning language.
-      const speakable = targetOnly(text);
+      // Owner rules: never speak English; each card plays ONLY its own
+      // «span» (not the whole turn), at teaching pace — a breath between
+      // words. Native speed lives in conversation mode.
+      const speakable = text.trim();
       if (!speakable) return;
-      setPlayingIdx(idx);
-      const uri = await ttsToFile(speakable, language);
+      const seq = ++playSeqRef.current;
+      setPlayingKey(key);
+      const uri = await ttsToFile(speakable, language, 'teaching');
+      if (seq !== playSeqRef.current) return; // another card was tapped meanwhile
       if (!uri) {
-        setPlayingIdx(null);
+        setPlayingKey(null);
         setNotice('Audio unavailable right now — the text has everything.');
         return;
       }
       await voiceEngine.play({ uri });
-      setPlayingIdx((cur) => (cur === idx ? null : cur));
+      setPlayingKey((cur) => (cur === key ? null : cur));
       void refreshSpend();
     },
-    [playingIdx, stopListening, refreshSpend, language],
+    [playingKey, stopListening, refreshSpend, language],
   );
 
   const restart = useCallback(() => {
@@ -308,33 +443,35 @@ export function TeacherScreen() {
             <Animated.View key={idx} entering={FadeInDown.duration(200)} style={styles.teacherTurn}>
               {(() => {
                 // Punctuation-only leftovers between «marks» ("." after a
-                // wrapped word) would render as orphan dots — drop them.
-                const segments = parseMarked(turn.text).filter(
-                  (seg) => seg.target || !/^[\s\p{P}]*$/u.test(seg.text),
-                );
-                let firstTarget = true;
+                // wrapped word) render as orphan dots — drop them, and strip
+                // stray leading punctuation off the narration that follows
+                // a card ("». So" → "So").
+                const segments = parseMarked(turn.text)
+                  .map((seg) =>
+                    seg.target ? seg : { ...seg, text: seg.text.trim().replace(/^[.,;:]+\s*/, '') },
+                  )
+                  .filter((seg) => seg.target || (seg.text && !/^[\s\p{P}]*$/u.test(seg.text)));
                 return segments.map((seg, si) => {
                   if (!seg.target) {
                     return (
                       <Text key={si} style={styles.ambient}>
-                        {seg.text.trim()}
+                        {seg.text}
                       </Text>
                     );
                   }
-                  const withPlay = firstTarget;
-                  firstTarget = false;
+                  // Every card speaks for itself: its button plays exactly
+                  // the words on the card, never the whole turn.
+                  const key = `${idx}:${si}`;
                   return (
                     <View key={si} style={styles.targetCard}>
                       <Text style={styles.targetText}>{seg.text.trim()}</Text>
-                      {withPlay && (
-                        <Pressable style={styles.playBtn} onPress={() => playTurn(idx, turn.text)} hitSlop={10}>
-                          {playingIdx === idx ? (
-                            <ActivityIndicator size="small" color={p.accent} />
-                          ) : (
-                            <SymbolView name="play.circle.fill" size={30} tintColor={p.accent} />
-                          )}
-                        </Pressable>
-                      )}
+                      <Pressable style={styles.playBtn} onPress={() => playSpan(key, seg.text)} hitSlop={10}>
+                        {playingKey === key ? (
+                          <ActivityIndicator size="small" color={p.accent} />
+                        ) : (
+                          <SymbolView name="play.circle.fill" size={30} tintColor={p.accent} />
+                        )}
+                      </Pressable>
                     </View>
                   );
                 });
