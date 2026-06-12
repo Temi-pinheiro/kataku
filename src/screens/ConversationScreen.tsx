@@ -26,10 +26,28 @@ const DAY_MARK_LEARNER_TURNS = 6;
  * Conversation mode (S1): fully spoken, back and forth — the one place
  * voice-to-voice lives. Partner speaks, the mic opens itself, you answer,
  * it recasts and keeps going. End any time for the spoken debrief.
+ *
+ * PACING CONTRACT (owner, round 8): the partner NEVER jumps the gun.
+ * Nothing may end the listening window before the hard floor — recognizer
+ * hiccups and empty results before it just reopen the mic invisibly. True
+ * silence needs TWO full patience windows before the partner is told.
+ * Once real speech starts, the natural end-of-thought finalize applies.
  */
 
+/** Hard floor: no finalization of any kind before this (owner-specified). */
+const MIN_LISTEN_MS = 5_000;
+/** One patience window of true no-speech before a silent attempt counts. */
+const NO_SPEECH_WINDOW_MS = 12_000;
+/** Quietly reopen after the first silent window; report only after the second. */
+const MAX_SILENT_ATTEMPTS = 2;
+/** After real speech: end-of-thought finalize (unchanged — this felt right). */
 const SILENCE_AFTER_SPEECH_MS = 2_400;
-const LISTEN_CAP_MS = 15_000;
+/** Absolute per-attempt cap, speech included. */
+const LISTEN_CAP_MS = 25_000;
+/** Grace beat between partner audio ending and the mic opening. */
+const MIC_GRACE_MS = 350;
+
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 type Phase =
   | { kind: 'pick' }
@@ -56,6 +74,11 @@ export function ConversationScreen() {
   turnsRef.current = turns;
   const whitelistRef = useRef<string[]>([]);
   const startedAtRef = useRef(new Date().toISOString());
+  // Cancels stale listen attempts/turns when a new one starts or the
+  // conversation ends; bump to invalidate everything in flight.
+  const listenTokenRef = useRef(0);
+  const userEndedTurnRef = useRef(false);
+  const conversationOverRef = useRef(false);
 
   useEffect(() => {
     aliveRef.current = true;
@@ -68,7 +91,7 @@ export function ConversationScreen() {
 
   const partnerTurn = useCallback(
     async (history: ChatTurn[]) => {
-      if (!aliveRef.current) return;
+      if (!aliveRef.current || conversationOverRef.current) return;
       setPhase({ kind: 'partner_thinking' });
       const result = await partnerReply(language, scenario, mood, history, settings.monthlyCapUsd, whitelistRef.current);
       if (!aliveRef.current) return;
@@ -89,9 +112,9 @@ export function ConversationScreen() {
       setPhase({ kind: 'partner_speaking' });
       // Partner speech is wholly target-language; the voice stays locked to it.
       const uri = await ttsToFile(stripMarks(result.text), language);
-      if (!aliveRef.current) return;
+      if (!aliveRef.current || conversationOverRef.current) return;
       if (uri) await voiceEngine.play({ uri });
-      if (!aliveRef.current) return;
+      if (!aliveRef.current || conversationOverRef.current) return;
       openMic(next);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -100,61 +123,117 @@ export function ConversationScreen() {
 
   const openMic = useCallback(
     async (history: ChatTurn[]) => {
-      if (!aliveRef.current) return;
+      if (!aliveRef.current || conversationOverRef.current) return;
+      const token = ++listenTokenRef.current;
+      const live = () => aliveRef.current && !conversationOverRef.current && token === listenTokenRef.current;
+      userEndedTurnRef.current = false;
       setHeard('');
       setPhase({ kind: 'listening' });
+      await sleep(MIC_GRACE_MS); // let the partner's audio tail die first
+      if (!live()) return;
       voiceEngine.tone('open');
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      let lastSpeech: number | null = null;
-      let finished = false;
-      const cap = setTimeout(() => recognizer.stop(), LISTEN_CAP_MS);
-      const silence = setInterval(() => {
-        if (lastSpeech !== null && Date.now() - lastSpeech >= SILENCE_AFTER_SPEECH_MS) {
-          clearInterval(silence);
-          recognizer.stop();
-        }
-      }, 250);
-      const cleanup = () => {
-        clearTimeout(cap);
-        clearInterval(silence);
+
+      let silentAttempts = 0;
+
+      const finishTurn = (text: string) => {
+        if (!live()) return;
+        listenTokenRef.current++; // invalidate anything still in flight
+        voiceEngine.tone('close');
+        const next: ChatTurn[] = [...history, { role: 'learner', text }];
+        setTurns(next);
+        setHeard('');
+        void partnerTurn(next);
       };
-      await recognizer.start(
-        { locale: sttLocaleFor(language), preferOnDevice: true, continuous: true, recordAudio: false },
-        {
-          onVolume: (level) => {
-            volume.value = withSpring(level, { damping: 16, stiffness: 260 });
+
+      // One recognition attempt; restarts itself for hiccups and patience
+      // windows. The learner never sees the restarts — just a mic that waits.
+      const attempt = async (): Promise<void> => {
+        if (!live()) return;
+        const openedAt = Date.now();
+        let spokeAt: number | null = null;
+        let settled = false;
+
+        const watchdog = setInterval(() => {
+          if (settled || !live()) {
+            clearInterval(watchdog);
+            return;
+          }
+          const now = Date.now();
+          // End-of-thought after real speech — but never inside the floor.
+          if (spokeAt !== null && now - spokeAt >= SILENCE_AFTER_SPEECH_MS && now - openedAt >= MIN_LISTEN_MS) {
+            clearInterval(watchdog);
+            recognizer.stop();
+            return;
+          }
+          // A full patience window with no speech, or the absolute cap.
+          if ((spokeAt === null && now - openedAt >= NO_SPEECH_WINDOW_MS) || now - openedAt >= LISTEN_CAP_MS) {
+            clearInterval(watchdog);
+            recognizer.stop();
+          }
+        }, 250);
+
+        const noSpeech = () => {
+          if (settled) return;
+          settled = true;
+          clearInterval(watchdog);
+          if (!live()) return;
+          if (userEndedTurnRef.current) {
+            // The learner tapped "done" without speaking — a deliberate pass.
+            finishTurn('(the learner stayed silent)');
+            return;
+          }
+          if (Date.now() - openedAt < MIN_LISTEN_MS) {
+            // Recognizer hiccup inside the floor — doesn't count, keep listening.
+            void attempt();
+            return;
+          }
+          silentAttempts += 1;
+          if (silentAttempts >= MAX_SILENT_ATTEMPTS) {
+            finishTurn('(the learner stayed silent)');
+          } else {
+            void attempt(); // stay patient: reopen quietly and wait again
+          }
+        };
+
+        await recognizer.start(
+          { locale: sttLocaleFor(language), preferOnDevice: true, continuous: true, recordAudio: false },
+          {
+            onVolume: (level) => {
+              volume.value = withSpring(level, { damping: 16, stiffness: 260 });
+            },
+            onPartial: (t) => {
+              if (t.trim().length >= 2) spokeAt = Date.now(); // ignore one-char noise
+              setHeard(t);
+            },
+            onFinal: (t) => {
+              if (settled) return;
+              const text = t.trim();
+              if (text.length > 0) {
+                settled = true;
+                clearInterval(watchdog);
+                finishTurn(text);
+              } else {
+                noSpeech();
+              }
+            },
+            onEnd: noSpeech,
+            onError: () => {
+              if (settled) return;
+              settled = true;
+              clearInterval(watchdog);
+              if (!live()) return;
+              if (Date.now() - openedAt < MIN_LISTEN_MS) {
+                void attempt(); // transient failure inside the floor — retry quietly
+              } else {
+                setPhase({ kind: 'paused', notice: 'The mic hiccuped. Tap to continue.' });
+              }
+            },
           },
-          onPartial: (t) => {
-            if (t.trim()) lastSpeech = Date.now();
-            setHeard(t);
-          },
-          onFinal: (t) => {
-            if (finished || !aliveRef.current) return;
-            finished = true;
-            cleanup();
-            voiceEngine.tone('close');
-            const text = t.trim() || '(the learner stayed silent)';
-            const next: ChatTurn[] = [...history, { role: 'learner', text }];
-            setTurns(next);
-            setHeard('');
-            void partnerTurn(next);
-          },
-          onEnd: () => {
-            if (finished || !aliveRef.current) return;
-            finished = true;
-            cleanup();
-            const next: ChatTurn[] = [...history, { role: 'learner', text: '(the learner stayed silent)' }];
-            setTurns(next);
-            void partnerTurn(next);
-          },
-          onError: () => {
-            if (finished || !aliveRef.current) return;
-            finished = true;
-            cleanup();
-            setPhase({ kind: 'paused', notice: 'The mic hiccuped. Tap to continue.' });
-          },
-        },
-      );
+        );
+      };
+
+      void attempt();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [language, partnerTurn],
@@ -171,11 +250,14 @@ export function ConversationScreen() {
     // The S1 whitelist: the partner stays inside what you actually own.
     whitelistRef.current = await buildWhitelist(language);
     startedAtRef.current = new Date().toISOString();
+    conversationOverRef.current = false;
     setTurns([]);
     void partnerTurn([]);
   }, [partnerTurn, language]);
 
   const endConversation = useCallback(async () => {
+    conversationOverRef.current = true;
+    listenTokenRef.current++; // kill any in-flight listen attempts
     recognizer.abort();
     voiceEngine.stop();
     setPhase({ kind: 'debrief', text: null });
@@ -305,7 +387,16 @@ export function ConversationScreen() {
         )}
         {phase.kind === 'listening' && (
           <Animated.View entering={FadeIn.duration(200)} style={styles.center}>
-            <MicOrb mode="listen" volume={volume} thinkMs={0} thinkKey={0} onPress={() => recognizer.stop()} />
+            <MicOrb
+              mode="listen"
+              volume={volume}
+              thinkMs={0}
+              thinkKey={0}
+              onPress={() => {
+                userEndedTurnRef.current = true; // deliberate end — bypasses the patience windows
+                recognizer.stop();
+              }}
+            />
             <Text style={styles.heard}>{heard || ' '}</Text>
           </Animated.View>
         )}
