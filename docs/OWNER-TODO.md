@@ -1,11 +1,18 @@
 # Owner TODO — everything that needs *you*
 
-## 0. NOW: put your OpenAI key on the phone (teacher mode needs it)
+## 0. NOW: put your keys on the phone (Settings → Keys)
 
-Rebuild (`npx expo run:ios --device`), then in the app: **Settings →
-Teacher → paste your OpenAI API key** (same key as `.env`, stored in the
-device keychain only). That unlocks the live teacher chat and its voice.
-No key → teacher screen explains itself; nothing crashes.
+Rebuild, then paste into the app (device keychain only):
+
+1. **Anthropic API key** — the teacher's brain (Claude Sonnet 4.6; the
+   conversation partner runs Haiku 4.5). Get one at console.anthropic.com
+   → API keys. Without it, the teacher falls back to OpenAI.
+2. **ElevenLabs API key + voice ID** — the live voice, same voice as your
+   rendered packs (one voice everywhere). From your `.env`. Cost note:
+   live conversations on ElevenLabs run ~$15–25/mo of credits at daily
+   use vs ~$1 on the OpenAI fallback — the meter tracks it; remove the
+   ElevenLabs key from the device to fall back any time.
+3. **OpenAI API key** — fallback brain/voice + the progress digest.
 
 Updated 2026-06-11 after the owner's M0 device run. M0 is done
 (`docs/m0-findings.md`); device-TTS fallback judged unusable as the tutor

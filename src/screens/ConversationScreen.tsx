@@ -15,7 +15,7 @@ import { recognizer, voiceEngine } from '../services/instances';
 import { debrief, partnerReply, SCENARIOS, type Mood, type Scenario } from '../services/conversation';
 import type { ChatTurn } from '../services/teacher';
 import { ttsToFile } from '../services/tts';
-import { getOpenAIKey } from '../services/keys';
+import { getAnthropicKey, getOpenAIKey } from '../services/keys';
 import { stripMarks } from '../lib/teacher-markup';
 import { buildWhitelist, digestProgress, markPracticeSession } from '../services/progress';
 
@@ -161,7 +161,7 @@ export function ConversationScreen() {
   );
 
   const begin = useCallback(async () => {
-    const key = await getOpenAIKey();
+    const key = (await getAnthropicKey()) ?? (await getOpenAIKey());
     if (!key) {
       setPhase({ kind: 'no_key' });
       return;
@@ -253,7 +253,7 @@ export function ConversationScreen() {
     return (
       <View style={[styles.screen, { justifyContent: 'center', padding: space.l }]}>
         <Text style={styles.h1}>One key to turn</Text>
-        <Text style={styles.dimBody}>Conversation mode runs on your OpenAI key — paste it in Settings first.</Text>
+        <Text style={styles.dimBody}>Conversation mode needs a key — paste your Anthropic (or OpenAI) key in Settings first.</Text>
         <BigButton label="Open Settings" onPress={() => setScreen('settings')} />
         <BigButton label="Back" kind="quiet" onPress={() => setScreen('home')} />
       </View>

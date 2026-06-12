@@ -12,20 +12,24 @@ export interface PriceEntry {
 }
 
 export const PRICES: Record<string, PriceEntry> = {
-  // The live MT teacher — gpt-4.1-mini (upgraded for protocol discipline).
+  // The live MT teacher — Claude Sonnet 4.6 preferred (input units are
+  // pre-weighted for prompt caching by the llm layer); gpt-4.1-mini fallback.
+  'anthropic:teacher_input': { unitPrice: 0.003, unit: '1k_tokens' },
+  'anthropic:teacher_output': { unitPrice: 0.015, unit: '1k_tokens' },
   'openai:teacher_input': { unitPrice: 0.0004, unit: '1k_tokens' },
   'openai:teacher_output': { unitPrice: 0.0016, unit: '1k_tokens' },
-  // Runtime TTS for dynamic teacher lines, cached per line on disk.
-  'openai:tts_runtime': { unitPrice: 0.012, unit: '1k_chars' },
-  // Conversation mode (S1) — same model as the teacher.
+  // Conversation partner — Claude Haiku 4.5 preferred (latency-sensitive).
+  'anthropic:conversation_input': { unitPrice: 0.001, unit: '1k_tokens' },
+  'anthropic:conversation_output': { unitPrice: 0.005, unit: '1k_tokens' },
   'openai:conversation_input': { unitPrice: 0.0004, unit: '1k_tokens' },
   'openai:conversation_output': { unitPrice: 0.0016, unit: '1k_tokens' },
+  // Runtime TTS, cached per line on disk. ElevenLabs primary (bake-off
+  // winner; one voice everywhere), OpenAI fallback.
+  'elevenlabs:tts_runtime': { unitPrice: 0.3, unit: '1k_chars' },
+  'openai:tts_runtime': { unitPrice: 0.012, unit: '1k_chars' },
   // Progress digest: extracts taught/solid/shaky vocab from chat transcripts.
   'openai:progress_input': { unitPrice: 0.00015, unit: '1k_tokens' },
   'openai:progress_output': { unitPrice: 0.0006, unit: '1k_tokens' },
-  // LLM coach, Tier 1 (plan §4.3) — small model, a few hundred tokens/call.
-  'anthropic:coach_input': { unitPrice: 0.001, unit: '1k_tokens' },
-  'anthropic:coach_output': { unitPrice: 0.005, unit: '1k_tokens' },
   // Cloud STT fallback (plan §4.2).
   'openai:stt_fallback': { unitPrice: 0.003, unit: 'minute' },
   // One-off runtime TTS for coach replies when device TTS is too rough.

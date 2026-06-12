@@ -8,7 +8,16 @@ import { radii, space, type, type Palette } from '../theme';
 import { useTheme } from '../hooks/useTheme';
 import { exportProgress, getSetting, setSetting, spendEvents } from '../db';
 import { formatUsd, monthToDateUsd } from '../lib/cost/meter';
-import { getOpenAIKey, setOpenAIKey } from '../services/keys';
+import {
+  getAnthropicKey,
+  getElevenLabsKey,
+  getElevenLabsVoice,
+  getOpenAIKey,
+  setAnthropicKey,
+  setElevenLabsKey,
+  setElevenLabsVoice,
+  setOpenAIKey,
+} from '../services/keys';
 
 const THEME_OPTIONS: { value: Settings['theme']; label: string }[] = [
   { value: 'system', label: 'System' },
@@ -21,12 +30,6 @@ export function SettingsScreen() {
   const { p } = useTheme();
   const styles = useMemo(() => makeStyles(p), [p]);
   const [mtd, setMtd] = useState<string>('…');
-  const [keyDraft, setKeyDraft] = useState('');
-  const [keyPresent, setKeyPresent] = useState(false);
-
-  useEffect(() => {
-    getOpenAIKey().then((k) => setKeyPresent(Boolean(k)));
-  }, []);
 
   useEffect(() => {
     const monthStart = new Date();
@@ -79,34 +82,44 @@ export function SettingsScreen() {
         ))}
       </View>
 
-      <Text style={styles.section}>Teacher</Text>
-      <View style={styles.keyCard}>
-        <Text style={styles.label}>OpenAI API key</Text>
-        <Text style={styles.rowValue}>
-          {keyPresent ? 'saved in the device keychain' : 'powers the live teacher and its voice'}
-        </Text>
-        <TextInput
-          style={styles.keyInput}
-          value={keyDraft}
-          onChangeText={setKeyDraft}
-          placeholder={keyPresent ? 'paste to replace…' : 'sk-…'}
-          placeholderTextColor={p.faint}
-          autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry
-        />
-        {keyDraft.trim().length > 0 && (
-          <BigButton
-            label="Save key"
-            small
-            onPress={async () => {
-              await setOpenAIKey(keyDraft);
-              setKeyDraft('');
-              setKeyPresent(true);
-            }}
-          />
-        )}
-      </View>
+      <Text style={styles.section}>Keys (device keychain only)</Text>
+      <KeyField
+        styles={styles}
+        p={p}
+        label="Anthropic API key"
+        hint="the teacher's brain — Claude Sonnet"
+        placeholder="sk-ant-…"
+        get={getAnthropicKey}
+        set={setAnthropicKey}
+      />
+      <KeyField
+        styles={styles}
+        p={p}
+        label="ElevenLabs API key"
+        hint="the live voice — same voice as the packs"
+        placeholder="…"
+        get={getElevenLabsKey}
+        set={setElevenLabsKey}
+      />
+      <KeyField
+        styles={styles}
+        p={p}
+        label="ElevenLabs voice ID"
+        hint="from the voice's page in their library"
+        placeholder="voice id…"
+        secure={false}
+        get={getElevenLabsVoice}
+        set={setElevenLabsVoice}
+      />
+      <KeyField
+        styles={styles}
+        p={p}
+        label="OpenAI API key"
+        hint="fallback brain & voice, progress digest"
+        placeholder="sk-…"
+        get={getOpenAIKey}
+        set={setOpenAIKey}
+      />
 
       <Text style={styles.section}>Lesson</Text>
       <Row styles={styles} label="Think time" value={`${settings.thinkSeconds}s`}>
@@ -170,6 +183,60 @@ export async function loadPersistedSettings(): Promise<typeof DEFAULT_SETTINGS> 
 }
 
 type Styles = ReturnType<typeof makeStyles>;
+
+function KeyField({
+  styles,
+  p,
+  label,
+  hint,
+  placeholder,
+  secure = true,
+  get,
+  set,
+}: {
+  styles: Styles;
+  p: Palette;
+  label: string;
+  hint: string;
+  placeholder: string;
+  secure?: boolean;
+  get: () => Promise<string | null>;
+  set: (v: string) => Promise<void>;
+}) {
+  const [draft, setDraft] = useState('');
+  const [present, setPresent] = useState(false);
+  useEffect(() => {
+    get().then((k) => setPresent(Boolean(k)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return (
+    <View style={styles.keyCard}>
+      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.rowValue}>{present ? 'saved ✓' : hint}</Text>
+      <TextInput
+        style={styles.keyInput}
+        value={draft}
+        onChangeText={setDraft}
+        placeholder={present ? 'paste to replace…' : placeholder}
+        placeholderTextColor={p.faint}
+        autoCapitalize="none"
+        autoCorrect={false}
+        secureTextEntry={secure}
+      />
+      {draft.trim().length > 0 && (
+        <BigButton
+          label="Save"
+          small
+          onPress={async () => {
+            await set(draft);
+            setDraft('');
+            setPresent(true);
+          }}
+        />
+      )}
+    </View>
+  );
+}
 
 function Row({ styles, label, value, children }: { styles: Styles; label: string; value: string; children: React.ReactNode }) {
   return (

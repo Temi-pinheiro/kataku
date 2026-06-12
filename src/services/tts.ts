@@ -1,21 +1,23 @@
 import { Directory, File, Paths } from 'expo-file-system';
 import { spend } from '../lib/cost/meter';
 import { recordSpend } from '../db';
-import { getOpenAIKey } from './keys';
+import { getElevenLabsKey, getElevenLabsVoice, getOpenAIKey } from './keys';
 
 /**
- * Runtime TTS for dynamic teacher lines (owner pivot: NO device-TTS
- * fallback, ever). Each line renders once via OpenAI and is cached on disk
- * keyed by content hash — repeats are free and instant. No key or no
- * network → returns null and the UI stays text-only (degrade gracefully,
- * never block).
+ * Runtime TTS for dynamic teacher lines (owner rules: NO device-TTS
+ * fallback ever; target-language-only input). Each line renders once and
+ * is cached on disk — repeats are free and instant.
  *
- * Static pack clips are untouched: the bake-off ElevenLabs renders stay
- * cached in the bundle; OpenAI only voices what can't be pre-rendered.
+ * Provider order (owner decision 2026-06-12): ElevenLabs first — the
+ * bake-off winner and the SAME voice as the pre-rendered packs, so the
+ * tutor has one voice everywhere — with OpenAI as automatic fallback
+ * (~25× cheaper per char; flip the order in renderLine if cost bites).
+ * No keys / no network → null; the UI stays text-only.
  */
 
 const VOICE = 'coral';
 const MODEL = 'gpt-4o-mini-tts';
+const ELEVEN_MODEL = 'eleven_multilingual_v2';
 
 const LANGUAGE_NAMES: Record<string, string> = {
   id: 'Indonesian',
@@ -55,11 +57,38 @@ export async function ttsToFile(text: string, lang: string): Promise<string | nu
   try {
     const dir = cacheDir();
     if (!dir.exists) dir.create({ intermediates: true });
-    const file = new File(dir, `${hash(`${MODEL}|${VOICE}|${lang}|v2|${trimmed}`)}.mp3`);
-    if (file.exists) return file.uri;
 
+    // ElevenLabs first: same voice as the rendered packs.
+    const elevenKey = await getElevenLabsKey();
+    const elevenVoice = await getElevenLabsVoice();
+    if (elevenKey && elevenVoice) {
+      const file = new File(dir, `${hash(`${ELEVEN_MODEL}|${elevenVoice}|${lang}|${trimmed}`)}.mp3`);
+      if (file.exists) return file.uri;
+      const res = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${elevenVoice}?output_format=mp3_44100_128`,
+        {
+          method: 'POST',
+          headers: { 'xi-api-key': elevenKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: trimmed,
+            model_id: ELEVEN_MODEL,
+            voice_settings: { stability: 0.5, similarity_boost: 0.75 },
+          }),
+        },
+      );
+      if (res.ok) {
+        file.write(new Uint8Array(await res.arrayBuffer()));
+        await recordSpend(spend('elevenlabs:tts_runtime', trimmed.length / 1000, new Date())).catch(() => {});
+        return file.uri;
+      }
+      console.warn('tts: elevenlabs failed, falling back to openai', res.status);
+    }
+
+    // OpenAI fallback (or primary when ElevenLabs isn't configured).
     const key = await getOpenAIKey();
     if (!key) return null;
+    const file = new File(dir, `${hash(`${MODEL}|${VOICE}|${lang}|v2|${trimmed}`)}.mp3`);
+    if (file.exists) return file.uri;
 
     const res = await fetch('https://api.openai.com/v1/audio/speech', {
       method: 'POST',
@@ -76,8 +105,7 @@ export async function ttsToFile(text: string, lang: string): Promise<string | nu
       console.warn('tts: render failed', res.status);
       return null;
     }
-    const bytes = new Uint8Array(await res.arrayBuffer());
-    file.write(bytes);
+    file.write(new Uint8Array(await res.arrayBuffer()));
     // Hard rule #3: every paid call through the meter.
     await recordSpend(spend('openai:tts_runtime', trimmed.length / 1000, new Date())).catch(() => {});
     return file.uri;

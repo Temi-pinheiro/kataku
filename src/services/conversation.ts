@@ -1,7 +1,4 @@
-import { spend, isOverCap } from '../lib/cost/meter';
-import { recordSpend, spendEvents } from '../db';
-import { getOpenAIKey } from './keys';
-import type { ChatTurn } from './teacher';
+import { chatComplete, type ChatTurn, type LlmResult } from './llm';
 import type { InstalledLanguage } from '../packs';
 import { LANGUAGE_NAMES } from '../packs';
 
@@ -14,7 +11,6 @@ import { LANGUAGE_NAMES } from '../packs';
  * whitelist (chat lessons don't feed mastery yet; noted follow-up).
  */
 
-const MODEL = 'gpt-4.1-mini'; // same discipline upgrade as the teacher
 
 export interface Scenario {
   id: string;
@@ -56,59 +52,17 @@ Hard rules:
 - Plain text only — it will be spoken aloud.`;
 }
 
-export type PartnerResult =
-  | { kind: 'ok'; text: string }
-  | { kind: 'no_key' }
-  | { kind: 'capped'; capUsd: number }
-  | { kind: 'error'; message: string };
+export type PartnerResult = LlmResult;
 
-async function callModel(system: string, history: ChatTurn[], capUsd: number, maxTokens: number): Promise<PartnerResult> {
-  const key = await getOpenAIKey();
-  if (!key) return { kind: 'no_key' };
-  try {
-    const monthStart = new Date();
-    monthStart.setUTCDate(1);
-    monthStart.setUTCHours(0, 0, 0, 0);
-    if (isOverCap(await spendEvents(monthStart.toISOString()), capUsd, new Date())) {
-      return { kind: 'capped', capUsd };
-    }
-  } catch {
-    // metering read failure must not block
-  }
-  try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: MODEL,
-        temperature: 0.8,
-        max_tokens: maxTokens,
-        messages: [
-          { role: 'system', content: system },
-          ...history.map((t) => ({
-            role: t.role === 'teacher' ? ('assistant' as const) : ('user' as const),
-            content: t.text,
-          })),
-          ...(history.length === 0 ? [{ role: 'user' as const, content: 'Start the conversation with your opening line.' }] : []),
-        ],
-      }),
-    });
-    if (!res.ok) return { kind: 'error', message: `partner unavailable (${res.status})` };
-    const data = (await res.json()) as {
-      choices: { message: { content: string } }[];
-      usage?: { prompt_tokens: number; completion_tokens: number };
-    };
-    const text = data.choices?.[0]?.message?.content?.trim();
-    if (!text) return { kind: 'error', message: 'empty reply' };
-    if (data.usage) {
-      const now = new Date();
-      await recordSpend(spend('openai:conversation_input', data.usage.prompt_tokens / 1000, now)).catch(() => {});
-      await recordSpend(spend('openai:conversation_output', data.usage.completion_tokens / 1000, now)).catch(() => {});
-    }
-    return { kind: 'ok', text };
-  } catch (e) {
-    return { kind: 'error', message: (e as Error)?.message ?? 'network error' };
-  }
+function callModel(system: string, history: ChatTurn[], capUsd: number, maxTokens: number): Promise<PartnerResult> {
+  return chatComplete({
+    feature: 'conversation',
+    system,
+    turns: history,
+    openingUserMsg: 'Start the conversation with your opening line.',
+    maxTokens,
+    capUsd,
+  });
 }
 
 export function partnerReply(

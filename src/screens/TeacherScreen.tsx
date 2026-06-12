@@ -25,7 +25,7 @@ import { getSetting, setSetting, sttLocaleFor, openDb } from '../db';
 import { recognizer, voiceEngine } from '../services/instances';
 import { teacherReply, monthSpendUsd, type ChatTurn } from '../services/teacher';
 import { ttsToFile } from '../services/tts';
-import { getOpenAIKey } from '../services/keys';
+import { getAnthropicKey, getOpenAIKey } from '../services/keys';
 import { parseMarked, targetOnly } from '../lib/teacher-markup';
 import { digestProgress, markPracticeSession } from '../services/progress';
 
@@ -113,7 +113,7 @@ export function TeacherScreen() {
     let cancelled = false;
     (async () => {
       await openDb();
-      const key = await getOpenAIKey();
+      const key = (await getAnthropicKey()) ?? (await getOpenAIKey());
       if (cancelled) return;
       if (!key) {
         setStatus('no_key');
@@ -275,7 +275,7 @@ export function TeacherScreen() {
       <View style={[styles.screen, { justifyContent: 'center', padding: space.l }]}>
         <Text style={styles.h1}>One key to turn</Text>
         <Text style={styles.dimBody}>
-          The live teacher and its voice run on your OpenAI account. Paste your API key in Settings — it's stored in
+          The live teacher needs a brain: paste your Anthropic key in Settings (or OpenAI as fallback). Keys live in
           the device keychain only.
         </Text>
         <BigButton label="Open Settings" onPress={() => setScreen('settings')} />
