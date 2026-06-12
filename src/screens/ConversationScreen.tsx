@@ -44,8 +44,11 @@ const MAX_SILENT_ATTEMPTS = 2;
 const SILENCE_AFTER_SPEECH_MS = 2_400;
 /** Absolute per-attempt cap, speech included. */
 const LISTEN_CAP_MS = 25_000;
-/** Grace beat between partner audio ending and the mic opening. */
-const MIC_GRACE_MS = 350;
+/** Breathing room between partner audio and the mic opening (owner: ~2s). */
+const MIC_GRACE_MS = 2_000;
+/** Mic liveness: volume ticks ~10Hz when capturing; none by this long = dead mic. */
+const DEAD_MIC_MS = 4_000;
+const MAX_DEAD_RESTARTS = 3;
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
@@ -128,13 +131,16 @@ export function ConversationScreen() {
       const live = () => aliveRef.current && !conversationOverRef.current && token === listenTokenRef.current;
       userEndedTurnRef.current = false;
       setHeard('');
-      setPhase({ kind: 'listening' });
-      await sleep(MIC_GRACE_MS); // let the partner's audio tail die first
+      // Breathing room first; the orb/tone/haptic appear only when the mic
+      // is genuinely about to capture — what you see is what's true.
+      await sleep(MIC_GRACE_MS);
       if (!live()) return;
+      setPhase({ kind: 'listening' });
       voiceEngine.tone('open');
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
       let silentAttempts = 0;
+      let deadRestarts = 0;
 
       const finishTurn = (text: string) => {
         if (!live()) return;
@@ -150,8 +156,14 @@ export function ConversationScreen() {
       // windows. The learner never sees the restarts — just a mic that waits.
       const attempt = async (): Promise<void> => {
         if (!live()) return;
+        // Clean slate: clear any zombie session, give iOS a settle beat —
+        // restarting into a half-torn-down session is how mics play dead.
+        recognizer.abort();
+        await sleep(120);
+        if (!live()) return;
         const openedAt = Date.now();
         let spokeAt: number | null = null;
+        let sawMicEvent = false; // volume/partial/speechstart prove capture
         let settled = false;
 
         const watchdog = setInterval(() => {
@@ -160,6 +172,18 @@ export function ConversationScreen() {
             return;
           }
           const now = Date.now();
+          // Dead mic: listening UI up but no capture events at all — revive.
+          if (!sawMicEvent && now - openedAt >= DEAD_MIC_MS) {
+            settled = true;
+            clearInterval(watchdog);
+            deadRestarts += 1;
+            if (deadRestarts >= MAX_DEAD_RESTARTS) {
+              setPhase({ kind: 'paused', notice: "The mic wouldn't start. Tap to continue." });
+            } else {
+              void attempt();
+            }
+            return;
+          }
           // End-of-thought after real speech — but never inside the floor.
           if (spokeAt !== null && now - spokeAt >= SILENCE_AFTER_SPEECH_MS && now - openedAt >= MIN_LISTEN_MS) {
             clearInterval(watchdog);
@@ -199,10 +223,15 @@ export function ConversationScreen() {
         await recognizer.start(
           { locale: sttLocaleFor(language), preferOnDevice: true, continuous: true, recordAudio: false },
           {
+            onSpeechStart: () => {
+              sawMicEvent = true;
+            },
             onVolume: (level) => {
+              sawMicEvent = true;
               volume.value = withSpring(level, { damping: 16, stiffness: 260 });
             },
             onPartial: (t) => {
+              sawMicEvent = true;
               if (t.trim().length >= 2) spokeAt = Date.now(); // ignore one-char noise
               setHeard(t);
             },
@@ -397,7 +426,7 @@ export function ConversationScreen() {
                 recognizer.stop();
               }}
             />
-            <Text style={styles.heard}>{heard || ' '}</Text>
+            <LiveTranscript text={heard} styles={styles} />
           </Animated.View>
         )}
         {phase.kind === 'paused' && (
@@ -409,6 +438,26 @@ export function ConversationScreen() {
       </View>
 
       <BigButton label="End conversation" kind="ghost" onPress={endConversation} />
+    </View>
+  );
+}
+
+/** Your words, big, each fading in as it's heard — speech made visible. */
+function LiveTranscript({ text, styles }: { text: string; styles: ReturnType<typeof makeStyles> }) {
+  const words = text.trim().split(/\s+/).filter(Boolean);
+  return (
+    <View style={styles.liveWrap}>
+      {words.length === 0 ? (
+        <Text style={styles.liveWord}> </Text>
+      ) : (
+        words.map((word, i) => (
+          // Keyed by position: appended words mount (and fade in); partial
+          // revisions of earlier words swap text without re-animating.
+          <Animated.Text key={i} entering={FadeIn.duration(240)} style={styles.liveWord}>
+            {word}
+          </Animated.Text>
+        ))
+      )}
     </View>
   );
 }
@@ -442,6 +491,16 @@ const makeStyles = (p: Palette) =>
     partnerLine: { color: p.text, fontSize: type.heading, lineHeight: 30, textAlign: 'center' },
     stateHint: { color: p.faint, fontSize: type.caption, marginTop: space.s },
     heard: { color: p.live, fontSize: type.body, fontWeight: '600', minHeight: 24, textAlign: 'center', marginTop: space.s },
+    liveWrap: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      gap: 8,
+      minHeight: 36,
+      marginTop: space.m,
+      paddingHorizontal: space.s,
+    },
+    liveWord: { color: p.live, fontSize: type.title, fontWeight: '700', lineHeight: 34 },
     notice: { color: p.warn, fontSize: type.body, textAlign: 'center', marginBottom: space.s },
 
     debriefText: { color: p.dim, fontSize: type.body, lineHeight: 24 },
