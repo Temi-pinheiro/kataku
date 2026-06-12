@@ -10,7 +10,10 @@ import type { InstalledLanguage } from '../packs';
  * Every call is cost-metered; the soft cap stops calls gracefully.
  */
 
-const MODEL = 'gpt-4o-mini';
+// gpt-4o-mini failed the protocol's discipline on device (false
+// corrections, prompts using untaught words) — the teacher needs the
+// stronger mini. Digest/extraction stays on 4o-mini (easy task).
+const MODEL = 'gpt-4.1-mini';
 const MAX_HISTORY_TURNS = 40; // the spec keeps teacher turns short; this is plenty of context
 
 export interface ChatTurn {

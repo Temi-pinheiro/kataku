@@ -14,7 +14,7 @@ import { LANGUAGE_NAMES } from '../packs';
  * whitelist (chat lessons don't feed mastery yet; noted follow-up).
  */
 
-const MODEL = 'gpt-4o-mini';
+const MODEL = 'gpt-4.1-mini'; // same discipline upgrade as the teacher
 
 export interface Scenario {
   id: string;

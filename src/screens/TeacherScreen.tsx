@@ -307,7 +307,11 @@ export function TeacherScreen() {
             // box — the focal content, with the play control living on it.
             <Animated.View key={idx} entering={FadeInDown.duration(200)} style={styles.teacherTurn}>
               {(() => {
-                const segments = parseMarked(turn.text);
+                // Punctuation-only leftovers between «marks» ("." after a
+                // wrapped word) would render as orphan dots — drop them.
+                const segments = parseMarked(turn.text).filter(
+                  (seg) => seg.target || !/^[\s\p{P}]*$/u.test(seg.text),
+                );
                 let firstTarget = true;
                 return segments.map((seg, si) => {
                   if (!seg.target) {

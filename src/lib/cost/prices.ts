@@ -12,14 +12,14 @@ export interface PriceEntry {
 }
 
 export const PRICES: Record<string, PriceEntry> = {
-  // The live MT teacher (owner pivot 2026-06-11) — gpt-4o-mini class.
-  'openai:teacher_input': { unitPrice: 0.00015, unit: '1k_tokens' },
-  'openai:teacher_output': { unitPrice: 0.0006, unit: '1k_tokens' },
+  // The live MT teacher — gpt-4.1-mini (upgraded for protocol discipline).
+  'openai:teacher_input': { unitPrice: 0.0004, unit: '1k_tokens' },
+  'openai:teacher_output': { unitPrice: 0.0016, unit: '1k_tokens' },
   // Runtime TTS for dynamic teacher lines, cached per line on disk.
   'openai:tts_runtime': { unitPrice: 0.012, unit: '1k_chars' },
-  // Conversation mode (S1) — same model family as the teacher.
-  'openai:conversation_input': { unitPrice: 0.00015, unit: '1k_tokens' },
-  'openai:conversation_output': { unitPrice: 0.0006, unit: '1k_tokens' },
+  // Conversation mode (S1) — same model as the teacher.
+  'openai:conversation_input': { unitPrice: 0.0004, unit: '1k_tokens' },
+  'openai:conversation_output': { unitPrice: 0.0016, unit: '1k_tokens' },
   // Progress digest: extracts taught/solid/shaky vocab from chat transcripts.
   'openai:progress_input': { unitPrice: 0.00015, unit: '1k_tokens' },
   'openai:progress_output': { unitPrice: 0.0006, unit: '1k_tokens' },
