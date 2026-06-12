@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { LANGUAGE_NAMES, PACKS } from '../packs';
+import { LANGUAGE_NAMES, packFor } from '../packs';
 import { useApp } from '../store';
 import { radii, space, type, type Palette } from '../theme';
 import { useTheme } from '../hooks/useTheme';
@@ -29,7 +29,7 @@ export function WeeklyReviewScreen() {
   const { setScreen, language } = useApp();
   const { p } = useTheme();
   const styles = React.useMemo(() => makeStyles(p), [p]);
-  const PACK = PACKS[language];
+  const PACK = packFor(language);
   const [data, setData] = useState<ReviewData | null>(null);
 
   useEffect(() => {
@@ -42,7 +42,8 @@ export function WeeklyReviewScreen() {
 
       const mastery = await getAllMastery();
       const mastered = new Set(masteredItemIds(mastery).filter((id) => isItemOfLanguage(id, language)));
-      const speakable = roundSpeakable(speakableCountForPack(PACK, mastered));
+      // No deck pack yet (it/zh/ja): the headline falls back to owned words.
+      const speakable = PACK ? roundSpeakable(speakableCountForPack(PACK, mastered)) : mastered.size;
 
       const sessionRows = await db.getAllAsync<{ started_at: string; ended_at: string | null }>(
         'SELECT started_at, ended_at FROM session WHERE language = ? AND started_at >= ? AND ended_at IS NOT NULL',
@@ -65,7 +66,7 @@ export function WeeklyReviewScreen() {
         if (a.result === 'miss') s.miss += 1;
         byPrompt.set(a.prompt_id, s);
       }
-      const cueById = new Map(allPrompts(PACK).map((p) => [p.id, p.cue_en]));
+      const cueById = new Map(PACK ? allPrompts(PACK).map((p) => [p.id, p.cue_en]) : []);
       const toughest = [...byPrompt.entries()]
         .filter(([, s]) => s.total >= 2 && s.miss > 0)
         .map(([id, s]) => ({ cue: cueById.get(id) ?? id, missRate: s.miss / s.total }))
@@ -93,9 +94,11 @@ export function WeeklyReviewScreen() {
       <Text style={styles.title}>This week</Text>
 
       <Animated.View entering={FadeInDown.duration(300)} style={styles.hero}>
-        <Text style={styles.heroNumber}>{data ? `~${data.speakable.toLocaleString()}` : '…'}</Text>
-        <Text style={styles.heroCaption}>sentences you can now build</Text>
-        <Text style={styles.heroFine}>an estimate — and the point is how fast it grows</Text>
+        <Text style={styles.heroNumber}>{data ? `${PACK ? '~' : ''}${data.speakable.toLocaleString()}` : '…'}</Text>
+        <Text style={styles.heroCaption}>{PACK ? 'sentences you can now build' : 'words you now own'}</Text>
+        <Text style={styles.heroFine}>
+          {PACK ? 'an estimate — and the point is how fast it grows' : 'the sentence counter arrives with this language’s pack'}
+        </Text>
       </Animated.View>
 
       {data && (

@@ -33,13 +33,29 @@ export function parseMarked(text: string): MarkSegment[] {
   return segments.map((s) => ({ ...s, text: s.text })).filter((s) => s.text.trim().length > 0);
 }
 
+/**
+ * Dual-script spans (Mandarin/Japanese): «你好|nǐ hǎo» — the part before
+ * the | is the native script TTS must SPEAK; the part after is the
+ * romanization the learner SHOWS. Single-script spans return both the same.
+ */
+export function spanParts(span: string): { speak: string; show: string } {
+  const i = span.indexOf('|');
+  if (i === -1) {
+    const t = span.trim();
+    return { speak: t, show: t };
+  }
+  const speak = span.slice(0, i).trim();
+  const show = span.slice(i + 1).trim();
+  return { speak: speak || show, show: show || speak };
+}
+
 /** The speakable text: target segments only, separated by sentence beats. */
 export function targetOnly(text: string): string {
   return parseMarked(text)
     .filter((s) => s.target)
     .map((s) => {
-      const t = s.text.trim();
-      return /[.!?…]$/.test(t) ? t : `${t}.`;
+      const t = spanParts(s.text).speak;
+      return /[.!?…。？]$/.test(t) ? t : `${t}.`;
     })
     .join('\n');
 }

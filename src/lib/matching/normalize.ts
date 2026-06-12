@@ -1,12 +1,13 @@
-export type LanguageCode = 'id' | 'zh' | 'fr' | 'it' | 'es';
+export type LanguageCode = 'id' | 'zh' | 'fr' | 'it' | 'es' | 'ja';
 
-/** Languages whose words are whitespace-delimited; Mandarin compares on hanzi. */
+/** Languages whose words are whitespace-delimited; zh/ja compare on script code points. */
 const SPACE_DELIMITED: Record<LanguageCode, boolean> = {
   id: true,
   zh: false,
   fr: true,
   it: true,
   es: true,
+  ja: false,
 };
 
 /**

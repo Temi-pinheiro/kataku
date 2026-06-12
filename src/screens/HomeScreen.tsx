@@ -3,11 +3,10 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { SymbolView } from 'expo-symbols';
-import { INSTALLED_LANGUAGES, LANGUAGE_NAMES, PACKS } from '../packs';
+import { INSTALLED_LANGUAGES, LANGUAGE_NAMES, packFor } from '../packs';
 import { useApp } from '../store';
 import { radii, space, type, type Palette } from '../theme';
 import { useTheme } from '../hooks/useTheme';
-import { allLessons } from '../lib/content/types';
 import { buildSession } from '../lib/session/builder';
 import { masteredItemIds } from '../lib/scheduler/scheduler';
 import { isItemOfLanguage } from '../lib/progress/chat-items';
@@ -21,6 +20,8 @@ interface HomeData {
   nextNewBlocks: number;
   resumeStep: { lessonRef: string; step: number; total: number } | null;
   speakable: number;
+  /** it/zh/ja have no drill deck yet — the counter falls back to owned words. */
+  hasDeck: boolean;
 }
 
 export function HomeScreen() {
@@ -42,7 +43,8 @@ export function HomeScreen() {
       language,
       today,
     );
-    const plan = buildSession(PACKS[language], chunksDone, mastery, new Date());
+    const pack = packFor(language);
+    const plan = pack ? buildSession(pack, chunksDone, mastery, new Date()) : null;
     const mastered = new Set(masteredItemIds(mastery).filter((id) => isItemOfLanguage(id, language)));
     setData({
       chunksDone,
@@ -50,7 +52,8 @@ export function HomeScreen() {
       nextLessonRef: plan?.lessonRef ?? null,
       nextNewBlocks: plan?.newItemIds.length ?? 0,
       resumeStep: saved ? { lessonRef: saved.lessonRef, step: saved.stepIndex + 1, total: saved.stepKeys.length } : null,
-      speakable: roundSpeakable(speakableCountForPack(PACKS[language], mastered)),
+      speakable: pack ? roundSpeakable(speakableCountForPack(pack, mastered)) : mastered.size,
+      hasDeck: pack != null,
     });
   }, [language]);
 
@@ -58,7 +61,6 @@ export function HomeScreen() {
     refresh();
   }, [refresh]);
 
-  const totalLessons = allLessons(PACKS[language]).length;
   const d = data;
 
   return (
@@ -131,8 +133,10 @@ export function HomeScreen() {
 
       <Animated.View entering={FadeInDown.delay(200).duration(300)} style={styles.secondaryRow}>
         <Pressable style={styles.secondary} onPress={() => setScreen('review')}>
-          <Text style={styles.secondaryValue}>{d ? `~${d.speakable.toLocaleString()}` : '—'}</Text>
-          <Text style={styles.secondaryLabel}>sentences you can say</Text>
+          <Text style={styles.secondaryValue}>
+            {d ? `${d.hasDeck ? '~' : ''}${d.speakable.toLocaleString()}` : '—'}
+          </Text>
+          <Text style={styles.secondaryLabel}>{d?.hasDeck === false ? 'words you own' : 'sentences you can say'}</Text>
           <Text style={styles.secondaryLink}>weekly review →</Text>
         </Pressable>
         <Pressable style={styles.secondary} onPress={() => setScreen('settings')}>
@@ -150,7 +154,7 @@ const makeStyles = (p: Palette) =>
   screen: { flex: 1, backgroundColor: p.bg, paddingHorizontal: space.l, paddingTop: 76, gap: space.m },
   brand: { color: p.faint, fontSize: type.caption, letterSpacing: 3, textTransform: 'uppercase' },
 
-  chips: { flexDirection: 'row', gap: space.s, marginTop: space.m },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: space.s, marginTop: space.m },
   chip: {
     backgroundColor: p.card,
     borderRadius: radii.pill,

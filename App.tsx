@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { INSTALLED_LANGUAGES, PACKS } from './src/packs';
+import { INSTALLED_LANGUAGES, packFor } from './src/packs';
 import { useApp } from './src/store';
 import { useTheme } from './src/hooks/useTheme';
 import { loadPack, openDb } from './src/db';
@@ -25,12 +25,14 @@ export default function App() {
     (async () => {
       const db = await openDb();
       for (const lang of INSTALLED_LANGUAGES) {
+        const pack = packFor(lang);
+        if (!pack) continue; // chat/conversation-only language (no deck pack yet)
         const row = await db.getFirstAsync<{ pack_version: number }>(
           'SELECT pack_version FROM language WHERE code = ?',
           lang,
         );
-        if ((row?.pack_version ?? -1) !== PACKS[lang].version) {
-          await loadPack(PACKS[lang]);
+        if ((row?.pack_version ?? -1) !== pack.version) {
+          await loadPack(pack);
         }
         await voiceEngine.loadPackIndex(lang);
       }

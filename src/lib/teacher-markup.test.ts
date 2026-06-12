@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseMarked, stripMarks, targetOnly, teacherLines } from './teacher-markup';
+import { parseMarked, spanParts, stripMarks, targetOnly, teacherLines } from './teacher-markup';
 
 describe('parseMarked', () => {
   it('splits english narration from target spans in order', () => {
@@ -45,6 +45,32 @@ describe('targetOnly', () => {
 describe('stripMarks', () => {
   it('removes guillemets only', () => {
     expect(stripMarks('Say «saya mau kopi» now.')).toBe('Say saya mau kopi now.');
+  });
+});
+
+describe('spanParts', () => {
+  it('returns the same text for single-script spans', () => {
+    expect(spanParts('saya mau kopi')).toEqual({ speak: 'saya mau kopi', show: 'saya mau kopi' });
+  });
+
+  it('splits dual-script spans into speak (script) and show (romanization)', () => {
+    expect(spanParts('你好|nǐ hǎo')).toEqual({ speak: '你好', show: 'nǐ hǎo' });
+    expect(spanParts('水|mizu')).toEqual({ speak: '水', show: 'mizu' });
+  });
+
+  it('falls back to the present half when one side is empty', () => {
+    expect(spanParts('|nǐ hǎo')).toEqual({ speak: 'nǐ hǎo', show: 'nǐ hǎo' });
+    expect(spanParts('你好|')).toEqual({ speak: '你好', show: '你好' });
+  });
+});
+
+describe('targetOnly with dual-script spans', () => {
+  it('speaks the native script, never the romanization', () => {
+    expect(targetOnly('The word for tea is «茶|chá». Now «我要茶|wǒ yào chá».')).toBe('茶.\n我要茶.');
+  });
+
+  it('keeps CJK terminal punctuation', () => {
+    expect(targetOnly('Ask: «你要茶吗？|nǐ yào chá ma?»')).toBe('你要茶吗？');
   });
 });
 

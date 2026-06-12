@@ -26,7 +26,7 @@ import { recognizer, voiceEngine } from '../services/instances';
 import { teacherReply, monthSpendUsd, type ChatTurn } from '../services/teacher';
 import { ttsToFile } from '../services/tts';
 import { getAnthropicKey, getOpenAIKey } from '../services/keys';
-import { parseMarked, targetOnly, teacherLines } from '../lib/teacher-markup';
+import { parseMarked, spanParts, targetOnly, teacherLines } from '../lib/teacher-markup';
 import { digestProgress, markPracticeSession } from '../services/progress';
 
 /** Digest the transcript window every N learner turns (and on exit/restart). */
@@ -472,12 +472,15 @@ export function TeacherScreen() {
                     );
                   }
                   // Every card speaks for itself: its button plays exactly
-                  // the words on the card, never the whole turn.
+                  // the words on the card, never the whole turn. Dual-script
+                  // spans (zh/ja «script|romanization») show the romanization
+                  // and speak the script.
+                  const parts = spanParts(seg.text);
                   const key = `${idx}:${li}:${si}`;
                   return (
                     <View key={`${li}:${si}`} style={styles.targetCard}>
-                      <Text style={styles.targetText}>{seg.text.trim()}</Text>
-                      <Pressable style={styles.playBtn} onPress={() => playSpan(key, seg.text)} hitSlop={10}>
+                      <Text style={styles.targetText}>{parts.show}</Text>
+                      <Pressable style={styles.playBtn} onPress={() => playSpan(key, parts.speak)} hitSlop={10}>
                         {playingKey === key ? (
                           <ActivityIndicator size="small" color={p.accent} />
                         ) : (

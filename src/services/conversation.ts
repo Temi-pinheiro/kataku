@@ -1,6 +1,6 @@
 import { chatComplete, type ChatTurn, type LlmResult } from './llm';
 import type { InstalledLanguage } from '../packs';
-import { LANGUAGE_NAMES } from '../packs';
+import { LANGUAGE_NAMES_EN } from '../packs';
 
 /**
  * Conversation mode (stretch S1, pulled forward by the owner): free spoken
@@ -31,10 +31,13 @@ const LEVEL: Record<InstalledLanguage, string> = {
   id: 'Assume only early-Foundation Indonesian: saya/kamu/dia, mau/bisa/harus/suka, tidak/belum, common verbs (pergi, makan, minum, beli, lihat, punya, datang, pulang), time words (sudah/akan/sekarang/nanti/besok/kemarin), connectors (dan/tapi/karena/kalau), question words, everyday loanwords (kopi, hotel, taksi, restoran).',
   es: 'Assume only crash-course Spanish: es/está, cognates, quiero/puedo/tengo que/voy a/necesito/me gustaría + infinitives, no/también/pero/porque, question words, time and place anchors (hoy, mañana, ahora, aquí), tengo/hay.',
   fr: "Assume only early-protocol French: c'est/ce n'est pas, cognates, je voudrais/je veux/je peux/je dois/je vais + infinitives, ne…pas, est-ce que + question words, pour moi/avec/mais/parce que, time anchors (maintenant, aujourd'hui), vous forms and politeness.",
+  it: "Assume only crash-course Italian: è/non è, cognates (-zione/-tà), vorrei/voglio/posso/devo + infinitives, e/ma/perché/anche, question words, time anchors (oggi, domani, adesso), c'è, ho/hai.",
+  zh: 'Assume only crash-course Mandarin: wǒ/nǐ/tā, yào/xiǎng/kěyǐ/yǒu/shì, bù/méiyǒu, common verbs (qù, chī, hē, mǎi, kàn), time words (xiànzài, jīntiān, míngtiān, zuótiān), le for completed actions, questions with ma and A-not-A, numbers with ge. Write your replies in ordinary Chinese characters (they are spoken aloud).',
+  ja: 'Assume only crash-course Japanese, polite -masu/desu register ONLY: SOV order, particles wa/o/ni/de/ka, verbs (ikimasu, tabemasu, nomimasu, kaimasu, mimasu, arimasu, wakarimasu), kore/sore, time words (ima, kyō, ashita, kinō), katakana loanwords (kōhī, hoteru, takushī), questions with ka. Write your replies in ordinary Japanese script (they are spoken aloud).',
 };
 
 function systemPrompt(lang: InstalledLanguage, scenario: Scenario, mood: Mood, whitelist: string[]): string {
-  const name = LANGUAGE_NAMES[lang];
+  const name = LANGUAGE_NAMES_EN[lang];
   const vocab =
     whitelist.length >= 15
       ? `The learner's known vocabulary (stay inside it apart from the new-word allowance): ${whitelist.join(', ')}.`
@@ -77,6 +80,6 @@ export function partnerReply(
 }
 
 export function debrief(lang: InstalledLanguage, history: ChatTurn[], capUsd: number): Promise<PartnerResult> {
-  const system = `The conversation below just ended. You are the learner's ${LANGUAGE_NAMES[lang]} teacher. Give the debrief, in English, under 120 words, plain text (it will be spoken aloud): two or three patterns worth tightening, each demonstrated with the corrected ${LANGUAGE_NAMES[lang]} form; then one genuine, specific compliment about something they actually did well — only if earned. No bullet symbols.`;
+  const system = `The conversation below just ended. You are the learner's ${LANGUAGE_NAMES_EN[lang]} teacher. Give the debrief, in English, under 120 words, plain text (it will be spoken aloud): two or three patterns worth tightening, each demonstrated with the corrected ${LANGUAGE_NAMES_EN[lang]} form; then one genuine, specific compliment about something they actually did well — only if earned. No bullet symbols.`;
   return callModel(system, [...history, { role: 'learner', text: '(The conversation has ended. Give my debrief now.)' }], capUsd, 250);
 }

@@ -48,7 +48,7 @@ export async function loadPack(pack: CoursePack): Promise<void> {
 }
 
 export function sttLocaleFor(language: string): string {
-  const locales: Record<string, string> = { id: 'id-ID', zh: 'zh-CN', fr: 'fr-FR', it: 'it-IT', es: 'es-ES' };
+  const locales: Record<string, string> = { id: 'id-ID', zh: 'zh-CN', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', ja: 'ja-JP' };
   return locales[language] ?? 'en-US';
 }
 

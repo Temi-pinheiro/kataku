@@ -3,7 +3,7 @@ import { masteredItemIds, newMastery, recordOutcome } from '../lib/scheduler/sch
 import { isItemOfLanguage, resolveItemId, wordOfItem } from '../lib/progress/chat-items';
 import { spend } from '../lib/cost/meter';
 import { stripMarks } from '../lib/teacher-markup';
-import { PACKS, type InstalledLanguage } from '../packs';
+import { packFor, type InstalledLanguage } from '../packs';
 import { finishSession, getAllMastery, openDb, recordSpend, startSession, upsertMastery } from '../db';
 import { getOpenAIKey } from './keys';
 import type { ChatTurn } from './teacher';
@@ -77,7 +77,8 @@ export async function digestProgress(lang: InstalledLanguage, turns: ChatTurn[])
 }
 
 async function applyDigest(lang: InstalledLanguage, digest: Digest): Promise<void> {
-  const packItems = allItems(PACKS[lang]);
+  const pack = packFor(lang);
+  const packItems = pack ? allItems(pack) : []; // packless: chat:<lang>:<word> ids
   const mastery = new Map((await getAllMastery()).map((m) => [m.itemId, m]));
   const now = new Date();
 
@@ -98,7 +99,8 @@ async function applyDigest(lang: InstalledLanguage, digest: Digest): Promise<voi
 export async function buildWhitelist(lang: InstalledLanguage, max = 90): Promise<string[]> {
   try {
     const mastery = await getAllMastery();
-    const packItems = allItems(PACKS[lang]);
+    const pack = packFor(lang);
+    const packItems = pack ? allItems(pack) : [];
     const ids = masteredItemIds(mastery, 2).filter((id) => isItemOfLanguage(id, lang));
     const words = ids
       .map((id) => wordOfItem(id, packItems))

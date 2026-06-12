@@ -8,7 +8,7 @@ import { FeedbackSheet } from '../components/FeedbackSheet';
 import { MicOrb } from '../components/MicOrb';
 import { SessionProgress } from '../components/SessionProgress';
 import { TutorDots } from '../components/TutorDots';
-import { PACKS, type InstalledLanguage } from '../packs';
+import { LANGUAGE_NAMES, packFor, type InstalledLanguage } from '../packs';
 import { useApp } from '../store';
 import { radii, resultFor, space, type, type Palette } from '../theme';
 import { useTheme } from '../hooks/useTheme';
@@ -103,7 +103,23 @@ export function SessionScreen() {
   const { setScreen, settings, language } = useApp();
   const { p } = useTheme();
   const styles = useMemo(() => makeStyles(p), [p]);
-  const PACK = PACKS[language];
+  // it/zh/ja have no rendered deck yet — the teacher and conversation
+  // modes carry them. language is fixed for this screen's mount (Home
+  // unmounts it to switch), so the early return keeps a stable hook order.
+  const PACK = packFor(language);
+  if (!PACK) {
+    return (
+      <View style={{ flex: 1, backgroundColor: p.bg, justifyContent: 'center', padding: space.l, gap: space.m }}>
+        <Text style={{ color: p.text, fontSize: type.title, fontWeight: '800' }}>No drill deck yet</Text>
+        <Text style={{ color: p.dim, fontSize: type.body, lineHeight: 23 }}>
+          {LANGUAGE_NAMES[language]} lives with the teacher and conversation modes for now — the offline deck
+          arrives with its course pack.
+        </Text>
+        <BigButton label="Back" kind="quiet" onPress={() => setScreen('home')} />
+      </View>
+    );
+  }
+  /* eslint-disable react-hooks/rules-of-hooks -- PACK is constant for this mount; see note above */
   const [stage, setStage] = useState<Stage>({ kind: 'loading' });
   const masteryRef = useRef(new Map<string, MasteryState>());
   const promptsDoneRef = useRef(0);

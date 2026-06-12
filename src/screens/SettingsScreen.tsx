@@ -4,6 +4,7 @@ import * as Haptics from 'expo-haptics';
 import { SymbolView } from 'expo-symbols';
 import { BigButton } from '../components/BigButton';
 import { DEFAULT_SETTINGS, useApp, type Settings } from '../store';
+import { hasPack } from '../packs';
 import { radii, space, type, type Palette } from '../theme';
 import { useTheme } from '../hooks/useTheme';
 import { exportProgress, getSetting, setSetting, spendEvents } from '../db';
@@ -26,7 +27,7 @@ const THEME_OPTIONS: { value: Settings['theme']; label: string }[] = [
 ];
 
 export function SettingsScreen() {
-  const { setScreen, settings, setSettings } = useApp();
+  const { setScreen, settings, setSettings, language } = useApp();
   const { p } = useTheme();
   const styles = useMemo(() => makeStyles(p), [p]);
   const [mtd, setMtd] = useState<string>('…');
@@ -125,19 +126,21 @@ export function SettingsScreen() {
       <Row styles={styles} label="Think time" value={`${settings.thinkSeconds}s`}>
         <Stepper styles={styles} p={p} onMinus={() => bumpThink(-1)} onPlus={() => bumpThink(1)} />
       </Row>
-      <Pressable
-        style={styles.row}
-        onPress={() => {
-          Haptics.selectionAsync();
-          setScreen('session');
-        }}
-      >
-        <View style={{ flex: 1 }}>
-          <Text style={styles.label}>Classic drill deck</Text>
-          <Text style={styles.rowValue}>the structured prompt lessons — fully offline</Text>
-        </View>
-        <SymbolView name="chevron.right" size={14} tintColor={p.faint} />
-      </Pressable>
+      {hasPack(language) && (
+        <Pressable
+          style={styles.row}
+          onPress={() => {
+            Haptics.selectionAsync();
+            setScreen('session');
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <Text style={styles.label}>Classic drill deck</Text>
+            <Text style={styles.rowValue}>the structured prompt lessons — fully offline</Text>
+          </View>
+          <SymbolView name="chevron.right" size={14} tintColor={p.faint} />
+        </Pressable>
+      )}
 
       <Text style={styles.section}>Coach & spend</Text>
       <Row styles={styles} label="AI coach" value="≈$1–2/mo">
