@@ -223,3 +223,25 @@ mirror, not a report card.
 
 Bring me flows before screens, and motion sketches before mockups — this
 app is mostly time, voice, and waiting, and the stills will lie to you.
+
+## 7. Handoff requirements (so the build is lossless)
+
+My developer implements straight from your Figma file through its
+API/MCP server — the file itself is the spec. Five things make that
+faithful instead of approximate:
+
+1. **Variables and styles for everything.** Every color, text size, and
+   spacing value as a Figma variable/style — no detached one-off values.
+   They map 1:1 onto the app's token system, so a value you change is a
+   value that changes in the app.
+2. **Frames named by screen and state** — and the voice states are
+   states: `teacher/idle`, `teacher/listening`, `conversation/partner-
+   speaking`, `conversation/waiting-patiently`. The in-between moments
+   are the product; design them as first-class frames.
+3. **Both themes** (dark and light) for every screen, driven by the same
+   variables.
+4. **iPhone frames** (390×844 reference; check the smaller widths — this
+   is used one-handed).
+5. **Motion as intent notes**, not just prototype wiring: one line per
+   animation saying what state change it expresses. Prototype motion
+   doesn't export; intent does.
