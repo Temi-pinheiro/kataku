@@ -1,0 +1,67 @@
+<!-- @dsCard group="Home" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  body { margin:0; font-family:-apple-system,'SF Pro Text',system-ui,sans-serif; display:flex; gap:24px; padding:24px; background:#1a2230; }
+  .phone { width:390px; border-radius:40px; padding:60px 24px 32px; box-sizing:border-box; display:flex; flex-direction:column; gap:16px; min-height:780px; }
+  .dark { background:#0C1117; color:#F2F6FA;
+    --card:#161D27; --raised:#212B3A; --stroke:#2D3950; --text:#F2F6FA; --dim:#9AA7B9; --faint:#5F6E80;
+    --accent:#45D483; --on-accent:#07130C; --accent-deep:#15301F; --live:#6FD6C3; }
+  .light { background:#F4F7F9; color:#15202B;
+    --card:#FFFFFF; --raised:#E9EFF4; --stroke:#D5DEE7; --text:#15202B; --dim:#56697D; --faint:#8898A9;
+    --accent:#12A35B; --on-accent:#FFFFFF; --accent-deep:#D9F3E4; --live:#0C8B77; }
+  .brand { color:var(--faint); font-size:12px; letter-spacing:3px; text-transform:uppercase; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+  .chip { background:var(--card); border-radius:999px; padding:8px 16px; font-size:14px; font-weight:700; color:var(--dim); }
+  .chip.on { background:var(--accent); color:var(--on-accent); }
+  .hero { font-size:44px; font-weight:800; letter-spacing:-0.5px; margin-top:8px; }
+  .suggest { display:flex; align-items:center; gap:10px; align-self:flex-start; background:var(--accent-deep);
+    border-radius:999px; padding:9px 16px; font-size:14px; font-weight:600; color:var(--text); }
+  .suggest i { width:8px; height:8px; border-radius:50%; background:var(--accent); display:block; }
+  .cta { display:flex; align-items:center; gap:16px; background:var(--accent); border-radius:24px; padding:24px; min-height:110px; box-sizing:border-box; }
+  .cta .t { color:var(--on-accent); font-size:26px; font-weight:800; }
+  .cta .m { color:var(--on-accent); opacity:.75; font-size:14px; margin-top:4px; }
+  .convo { display:flex; align-items:center; gap:16px; background:var(--card); border:1px solid var(--stroke); border-radius:24px; padding:24px; min-height:88px; box-sizing:border-box; }
+  .convo .t { font-size:21px; font-weight:800; }
+  .convo .m { color:var(--dim); font-size:14px; margin-top:4px; }
+  .wave { width:40px; height:40px; border-radius:50%; border:2.5px solid var(--live); flex:none; position:relative; }
+  .wave::after { content:'〜'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--live); font-size:18px; }
+  .row { display:flex; gap:16px; }
+  .sec { flex:1; background:var(--card); border-radius:24px; padding:16px; min-height:116px; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; }
+  .num { color:var(--accent); font-size:26px; font-weight:800; }
+  .lbl { color:var(--dim); font-size:12px; line-height:16px; }
+  .lnk { color:var(--faint); font-size:12px; margin-top:8px; }
+</style></head><body>
+
+<div class="phone dark">
+  <div class="brand">kataku</div>
+  <div class="chips">
+    <span class="chip on">ID</span><span class="chip">ES</span><span class="chip">FR</span>
+    <span class="chip">IT</span><span class="chip">ZH</span><span class="chip">JA</span>
+  </div>
+  <div class="hero">Bahasa Indonesia</div>
+  <div class="suggest"><i></i>Continue week 2 with the teacher · ~15 min</div>
+  <div class="cta"><div style="flex:1"><div class="t">Sit with the teacher</div><div class="m">build sentences out loud, one block at a time</div></div></div>
+  <div class="convo"><div style="flex:1"><div class="t">Have a conversation</div><div class="m">all voice, both ways — it corrects by rephrasing</div></div><div class="wave"></div></div>
+  <div class="row">
+    <div class="sec"><div class="num">~2,400</div><div class="lbl">sentences you can say</div><div class="lnk">weekly review →</div></div>
+    <div class="sec"><div style="font-size:22px">⚙︎</div><div class="lbl">think time · coach · spend</div><div class="lnk">settings →</div></div>
+  </div>
+</div>
+
+<div class="phone light">
+  <div class="brand">kataku</div>
+  <div class="chips">
+    <span class="chip">ID</span><span class="chip">ES</span><span class="chip">FR</span>
+    <span class="chip">IT</span><span class="chip on">ZH</span><span class="chip">JA</span>
+  </div>
+  <div class="hero">中文</div>
+  <div class="suggest"><i></i>Try the introductions conversation</div>
+  <div class="cta"><div style="flex:1"><div class="t">Sit with the teacher</div><div class="m">build sentences out loud, one block at a time</div></div></div>
+  <div class="convo"><div style="flex:1"><div class="t">Have a conversation</div><div class="m">all voice, both ways — it corrects by rephrasing</div></div><div class="wave"></div></div>
+  <div class="row">
+    <div class="sec"><div class="num">38</div><div class="lbl">words you own</div><div class="lnk">weekly review →</div></div>
+    <div class="sec"><div style="font-size:22px">⚙︎</div><div class="lbl">think time · coach · spend</div><div class="lnk">settings →</div></div>
+  </div>
+</div>
+
+</body></html>

@@ -1,0 +1,51 @@
+<!-- @dsCard group="Conversation" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  body { margin:0; font-family:-apple-system,'SF Pro Text',system-ui,sans-serif; display:flex; gap:24px; padding:24px; background:#1a2230; }
+  .phone { width:390px; border-radius:40px; padding:60px 24px 32px; box-sizing:border-box; display:flex; flex-direction:column; gap:14px; min-height:720px;
+    background:#0C1117; color:#F2F6FA;
+    --card:#161D27; --raised:#212B3A; --stroke:#2D3950; --text:#F2F6FA; --dim:#9AA7B9; --faint:#5F6E80;
+    --accent:#45D483; --on-accent:#07130C; --accent-deep:#15301F; --live:#6FD6C3; --warn:#E3A968; }
+  h1 { font-size:26px; font-weight:800; margin:0; }
+  .sub { color:var(--dim); font-size:14px; margin-top:-6px; }
+  .scn { background:var(--card); border:1px solid var(--stroke); border-radius:16px; padding:16px; }
+  .scn.on { border-color:var(--accent); }
+  .scn .t { font-size:17px; font-weight:700; }
+  .scn .g { color:var(--dim); font-size:13px; margin-top:3px; line-height:1.45; }
+  .moods { display:flex; gap:8px; margin-top:4px; }
+  .mood { flex:1; text-align:center; background:var(--raised); border-radius:999px; padding:11px; font-size:14px; font-weight:700; color:var(--dim); }
+  .mood.on { background:var(--accent); color:var(--on-accent); }
+  .start { background:var(--accent); color:var(--on-accent); border-radius:24px; padding:18px; text-align:center; font-size:17px; font-weight:800; margin-top:4px; }
+  .divider { border:none; border-top:1px solid var(--stroke); margin:10px 0; }
+  .dlabel { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--faint); font-weight:700; }
+  .debrief { background:var(--card); border:1px solid var(--stroke); border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:12px; }
+  .turns { font-size:26px; font-weight:800; }
+  .turns small { font-size:14px; font-weight:600; color:var(--dim); }
+  .pat { font-size:14px; color:var(--dim); line-height:1.5; }
+  .pat b { color:var(--text); font-weight:700; font-size:16px; }
+  .compliment { font-size:14px; color:var(--accent); font-weight:600; line-height:1.45; }
+  .replay { align-self:flex-start; display:flex; align-items:center; gap:8px; color:var(--live); font-size:14px; font-weight:600; }
+</style></head><body>
+
+<div class="phone">
+  <h1>Have a conversation</h1>
+  <div class="sub">pick a scene and a mood — then it’s all voice</div>
+  <div class="scn on"><div class="t">Introducing yourself</div><div class="g">meet someone new: names, where you’re from, a little small talk</div></div>
+  <div class="scn"><div class="t">Plans for today</div><div class="g">what you both want and have to do today</div></div>
+  <div class="scn"><div class="t">What you did yesterday</div><div class="g">swap simple stories about yesterday</div></div>
+  <div class="moods"><div class="mood on">gentle — it carries you</div><div class="mood">normal — you build</div></div>
+  <div class="start">Start talking</div>
+</div>
+
+<div class="phone">
+  <div class="dlabel">Debrief — spoken, then this stays</div>
+  <div class="debrief">
+    <div class="turns">11 turns. <small>Yours.</small></div>
+    <div class="pat"><b>ke pasar</b> — “to the market” takes ke; you said it bare twice. It’s queued for tomorrow.</div>
+    <div class="pat"><b>sudah / belum</b> — you answered “already ate” perfectly once, then dropped sudah. One more day of reps.</div>
+    <div class="compliment">You handled “what did you buy?” without a pause — that hesitation is gone now.</div>
+    <div class="replay">▶ hear the recast moments</div>
+  </div>
+</div>
+
+</body></html>

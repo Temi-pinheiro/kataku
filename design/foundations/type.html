@@ -1,0 +1,36 @@
+<!-- @dsCard group="Type" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  body { margin:0; font-family:-apple-system,'SF Pro Text',system-ui,sans-serif; display:flex; }
+  .pane { flex:1; padding:28px; }
+  .dark { background:#0C1117; color:#F2F6FA; }
+  .light { background:#F4F7F9; color:#15202B; }
+  h2 { font-size:14px; letter-spacing:2px; text-transform:uppercase; opacity:.45; margin:0 0 18px; font-weight:700; }
+  .spec { font-size:11px; opacity:.45; font-variant-numeric:tabular-nums; margin-bottom:2px; }
+  .demo { margin-bottom:16px; }
+  .rule { border:none; border-top:1px solid rgba(127,142,160,.25); margin:20px 0; }
+  .note { font-size:12px; opacity:.55; line-height:1.5; max-width:320px; }
+</style></head><body>
+<div class="pane dark">
+  <h2>Scale</h2>
+  <div class="demo"><div class="spec">hero · 44 · 800</div><div style="font-size:44px;font-weight:800;letter-spacing:-0.5px">Bahasa</div></div>
+  <div class="demo"><div class="spec">title · 26 · 800</div><div style="font-size:26px;font-weight:800">This week</div></div>
+  <div class="demo"><div class="spec">heading · 21 · 800</div><div style="font-size:21px;font-weight:800">Have a conversation</div></div>
+  <div class="demo"><div class="spec">body · 17</div><div style="font-size:17px">Saya mau kopi</div></div>
+  <div class="demo"><div class="spec">small · 14</div><div style="font-size:14px;color:#9AA7B9">build sentences out loud</div></div>
+  <div class="demo"><div class="spec">caption · 12</div><div style="font-size:12px;color:#5F6E80">step 3 of 12</div></div>
+</div>
+<div class="pane dark" style="border-left:1px solid #2D3950">
+  <h2>Chat hierarchy (owner-specced)</h2>
+  <div class="demo"><div class="spec">taught · 20 · 800 — the king, always</div><div style="font-size:20px;font-weight:800">tidak bisa minum</div></div>
+  <div class="demo"><div class="spec">cue · 16 · 500 · dim — the second voice</div><div style="font-size:16px;font-weight:500;color:#9AA7B9">Now say: “I want coffee.”</div></div>
+  <div class="demo"><div class="spec">verdict · 15 · 600 · result color</div>
+    <div style="font-size:15px;font-weight:600;color:#45D483">That’s it.</div>
+    <div style="font-size:15px;font-weight:600;color:#E3A968">Almost — one word off.</div>
+    <div style="font-size:15px;font-weight:600;color:#94A3B8">Not quite. Listen:</div>
+  </div>
+  <div class="demo"><div class="spec">ambient · 14 · dim — English narration, never boxed</div><div style="font-size:14px;color:#9AA7B9;line-height:21px">The word for tea is — and notice it never shouts —</div></div>
+  <hr class="rule">
+  <p class="note">Attention order is law: taught target language &gt; the “now say” cue &gt; the learner’s own words &gt; verdicts &gt; ambient English. English narration sits flat on the background; only the target language earns a box.</p>
+</div>
+</body></html>
