@@ -26,7 +26,7 @@ import { recognizer, voiceEngine } from '../services/instances';
 import { teacherReply, monthSpendUsd, type ChatTurn } from '../services/teacher';
 import { ttsToFile } from '../services/tts';
 import { getAnthropicKey, getOpenAIKey } from '../services/keys';
-import { parseMarked, targetOnly } from '../lib/teacher-markup';
+import { parseMarked, targetOnly, teacherLines } from '../lib/teacher-markup';
 import { digestProgress, markPracticeSession } from '../services/progress';
 
 /** Digest the transcript window every N learner turns (and on exit/restart). */
@@ -441,12 +441,24 @@ export function TeacherScreen() {
             // reads English perfectly); only the target language gets a
             // box — the focal content, with the play control living on it.
             <Animated.View key={idx} entering={FadeInDown.duration(200)} style={styles.teacherTurn}>
-              {(() => {
+              {teacherLines(turn.text).flatMap((line, li) => {
+                // The line's role sets the narration style (owner typography
+                // spec): verdicts semibold + result-colored, the "now say"
+                // cue clearly second to the taught text, the rest ambient.
+                const narration =
+                  line.kind === 'verdict'
+                    ? [
+                        styles.verdictText,
+                        { color: line.grade === 'good' ? p.accent : line.grade === 'close' ? p.warn : p.miss },
+                      ]
+                    : line.kind === 'cue'
+                      ? styles.cueText
+                      : styles.ambient;
                 // Punctuation-only leftovers between «marks» ("." after a
                 // wrapped word) render as orphan dots — drop them, and strip
                 // stray leading punctuation off the narration that follows
                 // a card ("». So" → "So").
-                const segments = parseMarked(turn.text)
+                const segments = parseMarked(line.text)
                   .map((seg) =>
                     seg.target ? seg : { ...seg, text: seg.text.trim().replace(/^[.,;:]+\s*/, '') },
                   )
@@ -454,16 +466,16 @@ export function TeacherScreen() {
                 return segments.map((seg, si) => {
                   if (!seg.target) {
                     return (
-                      <Text key={si} style={styles.ambient}>
+                      <Text key={`${li}:${si}`} style={narration}>
                         {seg.text}
                       </Text>
                     );
                   }
                   // Every card speaks for itself: its button plays exactly
                   // the words on the card, never the whole turn.
-                  const key = `${idx}:${si}`;
+                  const key = `${idx}:${li}:${si}`;
                   return (
-                    <View key={si} style={styles.targetCard}>
+                    <View key={`${li}:${si}`} style={styles.targetCard}>
                       <Text style={styles.targetText}>{seg.text.trim()}</Text>
                       <Pressable style={styles.playBtn} onPress={() => playSpan(key, seg.text)} hitSlop={10}>
                         {playingKey === key ? (
@@ -475,7 +487,7 @@ export function TeacherScreen() {
                     </View>
                   );
                 });
-              })()}
+              })}
             </Animated.View>
           ) : (
             <Animated.View key={idx} entering={FadeInDown.duration(200)} style={styles.learnerRow}>
@@ -550,6 +562,8 @@ const makeStyles = (p: Palette) =>
 
     teacherTurn: { gap: space.s, marginBottom: space.s, maxWidth: '94%' },
     ambient: { color: p.dim, fontSize: type.small, lineHeight: 21 },
+    verdictText: { fontSize: type.verdict, fontWeight: '600', lineHeight: 22 },
+    cueText: { color: p.dim, fontSize: type.cue, fontWeight: '500', lineHeight: 24 },
     targetCard: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -562,7 +576,7 @@ const makeStyles = (p: Palette) =>
       paddingVertical: space.m,
       paddingHorizontal: space.m,
     },
-    targetText: { color: p.text, fontSize: type.heading, fontWeight: '800', flexShrink: 1, lineHeight: 28 },
+    targetText: { color: p.text, fontSize: type.taught, fontWeight: '800', flexShrink: 1, lineHeight: 27 },
     playBtn: { marginLeft: 'auto' },
 
     learnerRow: { flexDirection: 'row', justifyContent: 'flex-end' },

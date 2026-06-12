@@ -82,6 +82,13 @@ export const type = {
   body: 17,
   small: 14,
   caption: 12,
+
+  // Teacher-chat hierarchy (owner spec, 2026-06-12): taught text is always
+  // the largest thing in the chat; the "now say" cue is the clear second;
+  // the verdict sits one px above ambient narration, semibold + colored.
+  taught: 20,
+  cue: 16,
+  verdict: 15,
 };
 
 export const space = {

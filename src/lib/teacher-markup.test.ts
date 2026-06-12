@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseMarked, stripMarks, targetOnly } from './teacher-markup';
+import { parseMarked, stripMarks, targetOnly, teacherLines } from './teacher-markup';
 
 describe('parseMarked', () => {
   it('splits english narration from target spans in order', () => {
@@ -45,5 +45,40 @@ describe('targetOnly', () => {
 describe('stripMarks', () => {
   it('removes guillemets only', () => {
     expect(stripMarks('Say «saya mau kopi» now.')).toBe('Say saya mau kopi now.');
+  });
+});
+
+describe('teacherLines', () => {
+  it('classifies verdict, plain, and cue lines and strips the markers', () => {
+    const lines = teacherLines(
+      '+ That\'s it.\nThe word for tea is «teh».\n> Now say: "I want tea."',
+    );
+    expect(lines).toEqual([
+      { kind: 'verdict', grade: 'good', text: "That's it." },
+      { kind: 'plain', text: 'The word for tea is «teh».' },
+      { kind: 'cue', text: 'Now say: "I want tea."' },
+    ]);
+  });
+
+  it('maps ~ to close and -/– to miss', () => {
+    expect(teacherLines('~ Almost — one word off.')[0]).toEqual({
+      kind: 'verdict',
+      grade: 'close',
+      text: 'Almost — one word off.',
+    });
+    expect(teacherLines('- Not quite.')[0]).toMatchObject({ kind: 'verdict', grade: 'miss' });
+    expect(teacherLines('– Not quite.')[0]).toMatchObject({ kind: 'verdict', grade: 'miss' });
+  });
+
+  it('treats untagged text (old transcripts) as plain lines, skipping blanks', () => {
+    expect(teacherLines('Good. Now say it.\n\nThe word is «mau».')).toEqual([
+      { kind: 'plain', text: 'Good. Now say it.' },
+      { kind: 'plain', text: 'The word is «mau».' },
+    ]);
+  });
+
+  it('does not mistake hyphenated prose or bare symbols for verdicts', () => {
+    expect(teacherLines('-makan is the verb')[0].kind).toBe('plain');
+    expect(teacherLines('>')).toEqual([{ kind: 'plain', text: '>' }]);
   });
 });

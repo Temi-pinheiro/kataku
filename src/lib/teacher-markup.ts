@@ -48,3 +48,44 @@ export function targetOnly(text: string): string {
 export function stripMarks(text: string): string {
   return text.replace(/[«»]/g, '');
 }
+
+/**
+ * Line roles (owner typography spec, 2026-06-12): the teacher prefixes its
+ * verdict line with +/~/- (how the attempt went) and its closing "now say"
+ * cue line with >. The app strips the symbols and styles by role — verdicts
+ * get semibold + result color, cues get the second-largest size. Untagged
+ * lines (and whole pre-spec transcripts) render plain, unchanged.
+ */
+export type TeacherGrade = 'good' | 'close' | 'miss';
+
+export type TeacherLine =
+  | { kind: 'verdict'; grade: TeacherGrade; text: string }
+  | { kind: 'cue'; text: string }
+  | { kind: 'plain'; text: string };
+
+const GRADE_BY_MARK: Record<string, TeacherGrade> = {
+  '+': 'good',
+  '~': 'close',
+  '-': 'miss',
+  '–': 'miss',
+};
+
+export function teacherLines(text: string): TeacherLine[] {
+  const lines: TeacherLine[] = [];
+  for (const raw of text.split('\n')) {
+    const line = raw.trim();
+    if (!line) continue;
+    const verdict = line.match(/^([+~\-–])\s+(.+)$/);
+    if (verdict && GRADE_BY_MARK[verdict[1]]) {
+      lines.push({ kind: 'verdict', grade: GRADE_BY_MARK[verdict[1]], text: verdict[2] });
+      continue;
+    }
+    const cue = line.match(/^>\s+(.+)$/);
+    if (cue) {
+      lines.push({ kind: 'cue', text: cue[1] });
+      continue;
+    }
+    lines.push({ kind: 'plain', text: line });
+  }
+  return lines;
+}
