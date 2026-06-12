@@ -25,10 +25,15 @@ device TTS ever (missing audio = silence + text); no spoken English ever;
 «guillemet» markup is the one bridge between text and speech; ONE
 app-life audio-session config (see `src/services/voice-engine.ts`).
 
-**Sequencing:** nothing in this spec may delay the pre-build roadmap
-(conversation mode sign-off → 6-month protocols promoted → it/zh/ja added →
-archive → commit → push → first TestFlight build). F0–F5 are the build
-queue **after** the first build is on the owner's phone.
+**Sequencing (owner resequenced 2026-06-12):** the whole app is built and
+tested **locally first** — roadmap (conversation mode ✓ signed off →
+6-month protocols ✓ promoted → it/zh/ja added → archive → commit → push)
+**then F0–F5**, all over local device builds — and TestFlight happens
+ONCE at the end, in one swoop. On-the-go testing before then uses a local
+release build (`npx expo run:ios --configuration Release --device` —
+free, no dev server, signed ~1 year on the paid Apple account). Cloud
+builds are only ever needed for the final upload; JS changes never
+require a rebuild of any kind.
 
 ---
 
@@ -351,9 +356,11 @@ recognition-only inside protocols), languages beyond the six.
 The meter, not this table, is the truth. Pack renders and protocol
 authoring stay one-time, front-loaded costs per the owner's plan.
 
-## Build order (after the first TestFlight build)
+## Build order (owner resequenced 2026-06-12: all local, pre-TestFlight)
 
-F0 completions → F3 capture (smallest, daily value, exercises the spine) →
-F4 voices → F1 lab (gates on Mandarin arriving + calibration spike) →
-F2 stories → F5 map. Each lands as its own reviewed commit; each is
+Roadmap first: it/zh/ja wiring + packs → archive unused → push to GitHub.
+Then F0 completions → F3 capture (smallest, daily value, exercises the
+spine) → F4 voices → F1 lab (gates on Mandarin arriving + calibration
+spike) → F2 stories → F5 map → full local test pass → **one TestFlight
+swoop**. Each feature lands as its own reviewed commit; each is
 individually shippable; none may regress the voice-runtime architecture.
