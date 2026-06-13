@@ -74,9 +74,11 @@ export function TeacherScreen() {
   const [turns, setTurns] = useState<ChatTurn[]>([]);
   const turnsRef = useRef<ChatTurn[]>([]);
   turnsRef.current = turns;
+  const inputRef = useRef(''); // latest draft, for save-on-leave (R4: leaving is safe)
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [input, setInput] = useState('');
+  inputRef.current = input;
   const [micState, setMicState] = useState<MicState>('idle');
   const listening = micState !== 'idle';
   const micLevel = useSharedValue(0); // real input level → the live bars
@@ -161,6 +163,8 @@ export function TeacherScreen() {
         }
       }
       setTurns(history);
+      const draft = await getSetting(`${storageKey}.draft`, '');
+      if (!cancelled && draft) setInput(draft); // restore a half-typed/spoken answer
       const digested = parseInt(await getSetting(`${storageKey}.digested`, '0'), 10);
       digestedUpToRef.current = Number.isFinite(digested) ? Math.min(digested, history.length) : 0;
       sittingStartRef.current = new Date().toISOString();
@@ -188,6 +192,7 @@ export function TeacherScreen() {
         void digestProgress(language, window);
         void setSetting(`${storageKey}.digested`, String(all.length));
       }
+      void setSetting(`${storageKey}.draft`, inputRef.current); // leaving is safe
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
@@ -203,6 +208,7 @@ export function TeacherScreen() {
     Haptics.selectionAsync();
     stopListening();
     setInput('');
+    void setSetting(`${storageKey}.draft`, ''); // sent → draft cleared
     const next: ChatTurn[] = [...turns, { role: 'learner', text }];
     setTurns(next);
     persist(next);

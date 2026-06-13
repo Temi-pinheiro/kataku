@@ -436,6 +436,9 @@ export function ConversationScreen() {
               }}
             />
             <LiveTranscript text={heard} styles={styles} />
+            {/* R4: the learner ends the utterance — one calm labelled tap,
+                no countdown, no auto-cutoff. */}
+            <Text style={styles.tapHint}>take your time — tap when you're done</Text>
           </Animated.View>
         )}
         {phase.kind === 'paused' && (
@@ -499,6 +502,7 @@ const makeStyles = (p: Palette) =>
     stage: { flex: 1, justifyContent: 'center', gap: space.l },
     partnerLine: { color: p.text, fontSize: type.heading, lineHeight: 30, textAlign: 'center' },
     stateHint: { color: p.faint, fontSize: type.caption, marginTop: space.s },
+    tapHint: { color: p.faint, fontSize: type.small, marginTop: space.l, textAlign: 'center' },
     heard: { color: p.live, fontSize: type.body, fontWeight: '600', minHeight: 24, textAlign: 'center', marginTop: space.s },
     liveWrap: {
       flexDirection: 'row',
