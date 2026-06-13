@@ -11,7 +11,15 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  FadeInDown,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+  type SharedValue,
+} from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { SymbolView } from 'expo-symbols';
 import { BigButton } from '../components/BigButton';
@@ -54,6 +62,9 @@ const MAX_DEAD_RESTARTS = 3;
 
 type Status = 'checking' | 'no_key' | 'ready';
 
+/** Honest mic (handoff Refinement 3): the visible state is always the true one. */
+type MicState = 'idle' | 'warming' | 'live';
+
 export function TeacherScreen() {
   const { setScreen, language, settings } = useApp();
   const { p } = useTheme();
@@ -66,7 +77,9 @@ export function TeacherScreen() {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [input, setInput] = useState('');
-  const [listening, setListening] = useState(false);
+  const [micState, setMicState] = useState<MicState>('idle');
+  const listening = micState !== 'idle';
+  const micLevel = useSharedValue(0); // real input level → the live bars
   const [playingKey, setPlayingKey] = useState<string | null>(null);
   const [spendLabel, setSpendLabel] = useState('');
   const scrollRef = useRef<ScrollView>(null);
@@ -217,8 +230,9 @@ export function TeacherScreen() {
       watchdogRef.current = null;
     }
     recognizer.abort();
-    setListening(false);
-  }, []);
+    setMicState('idle');
+    micLevel.value = 0;
+  }, [micLevel]);
 
   const toggleMic = useCallback(async () => {
     if (listening) {
@@ -229,17 +243,28 @@ export function TeacherScreen() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     voiceEngine.stop(); // never listen while the teacher is speaking
     setPlayingKey(null);
-    setListening(true);
-    voiceEngine.tone('open');
+    setMicState('warming'); // warming: ring breathes, NOT teal, nothing captured yet
 
     const token = ++listenTokenRef.current;
     userStopRef.current = false;
     const openedAt = Date.now();
     let spoke = false;
+    let live = false;
     let best = '';
     let lastChangeAt = Date.now();
     let lastEventAt = Date.now();
     let deadRestarts = 0;
+
+    // Flip to "live" — teal, open-tone, level bars — only when the recognizer
+    // is genuinely capturing (Refinement 3: never a live affordance over a
+    // dead mic). The open-tone moves here from tap-time.
+    const goLive = () => {
+      if (token !== listenTokenRef.current || live) return;
+      live = true;
+      voiceEngine.tone('open');
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      setMicState('live');
+    };
 
     // Bias recognition toward what the teacher has actually taught — short
     // words ("teh") get swallowed without hints. Safe here: the LLM judges
@@ -274,16 +299,20 @@ export function TeacherScreen() {
           contextualStrings: hints,
         },
         {
-          onVolume: () => {
+          onVolume: (level) => {
             lastEventAt = Date.now();
+            goLive();
+            micLevel.value = withTiming(level, { duration: 90 });
           },
           onSpeechStart: () => {
             spoke = true;
+            goLive();
             lastChangeAt = Date.now();
           },
           onPartial: (t) => {
             if (token !== listenTokenRef.current) return;
             lastEventAt = Date.now();
+            goLive();
             if (t.trim()) {
               spoke = true;
               best = t;
@@ -351,7 +380,7 @@ export function TeacherScreen() {
     }, 400);
 
     void attempt();
-  }, [listening, language, stopListening]);
+  }, [micState, language, stopListening, micLevel]);
 
   // ---- per-card audio (runtime TTS, disk-cached; silence > robot voice) ----
 
@@ -405,6 +434,13 @@ export function TeacherScreen() {
     ]);
   }, [persist, askTeacher]);
 
+  // Refinement 5: only the latest teacher turn is focal; earlier ones recede.
+  const lastTeacherIdx = useMemo(() => {
+    for (let i = turns.length - 1; i >= 0; i--) if (turns[i].role === 'teacher') return i;
+    return -1;
+  }, [turns]);
+  const sendReady = !listening && input.trim().length > 0;
+
   if (status === 'no_key') {
     return (
       <View style={[styles.screen, { justifyContent: 'center', padding: space.l }]}>
@@ -440,7 +476,12 @@ export function TeacherScreen() {
             // English narration sits flat on the background (the learner
             // reads English perfectly); only the target language gets a
             // box — the focal content, with the play control living on it.
-            <Animated.View key={idx} entering={FadeInDown.duration(200)} style={styles.teacherTurn}>
+            // Past turns recede (Refinement 5: one focal element).
+            <Animated.View
+              key={idx}
+              entering={FadeInDown.duration(200)}
+              style={[styles.teacherTurn, idx !== lastTeacherIdx && styles.receded]}
+            >
               {teacherLines(turn.text).flatMap((line, li) => {
                 // The line's role sets the narration style (owner typography
                 // spec): verdicts semibold + result-colored, the "now say"
@@ -471,23 +512,29 @@ export function TeacherScreen() {
                       </Text>
                     );
                   }
-                  // Every card speaks for itself: its button plays exactly
-                  // the words on the card, never the whole turn. Dual-script
-                  // spans (zh/ja «script|romanization») show the romanization
-                  // and speak the script.
+                  // Every card speaks for itself: the WHOLE card is the play
+                  // target (Refinement 1), and it plays exactly its own «span»,
+                  // never the whole turn. Dual-script (zh/ja) shows the
+                  // romanization, speaks the script. Focal turn's card lifts
+                  // with the only lit play; receded turns' plays are unlit.
                   const parts = spanParts(seg.text);
                   const key = `${idx}:${li}:${si}`;
+                  const focal = idx === lastTeacherIdx;
                   return (
-                    <View key={`${li}:${si}`} style={styles.targetCard}>
+                    <Pressable
+                      key={`${li}:${si}`}
+                      onPress={() => playSpan(key, parts.speak)}
+                      style={[styles.targetCard, focal && styles.targetCardFocal]}
+                    >
                       <Text style={styles.targetText}>{parts.show}</Text>
-                      <Pressable style={styles.playBtn} onPress={() => playSpan(key, parts.speak)} hitSlop={10}>
+                      <View style={styles.playBtn}>
                         {playingKey === key ? (
                           <ActivityIndicator size="small" color={p.accent} />
                         ) : (
-                          <SymbolView name="play.circle.fill" size={30} tintColor={p.accent} />
+                          <SymbolView name="play.circle.fill" size={30} tintColor={focal ? p.accent : p.stroke} />
                         )}
-                      </Pressable>
-                    </View>
+                      </View>
+                    </Pressable>
                   );
                 });
               })}
@@ -516,33 +563,84 @@ export function TeacherScreen() {
       </ScrollView>
 
       <View style={styles.inputBar}>
-        <Pressable
-          onPress={toggleMic}
-          style={[styles.micBtn, listening && { backgroundColor: p.accent, borderColor: p.accent }]}
-          hitSlop={8}
-        >
-          <SymbolView name={listening ? 'waveform' : 'mic.fill'} size={22} tintColor={listening ? p.onAccent : p.accent} />
-        </Pressable>
         <TextInput
           style={styles.input}
           value={input}
           onChangeText={setInput}
-          placeholder={listening ? 'listening…' : 'speak or type your answer'}
+          placeholder={micState === 'warming' ? 'opening…' : micState === 'live' ? 'listening…' : 'speak or type your answer'}
           placeholderTextColor={p.faint}
           multiline
           editable={!busy}
         />
+        {/* One primary action, bottom-right in the thumb arc (Refinement 1):
+            mic when empty, Send once words exist, finish when live. */}
         <Pressable
-          onPress={send}
-          style={[styles.sendBtn, (!input.trim() || busy) && { opacity: 0.35 }]}
-          disabled={!input.trim() || busy}
-          hitSlop={8}
+          onPress={() => (sendReady ? send() : toggleMic())}
+          disabled={busy}
+          style={[
+            styles.primaryBtn,
+            micState === 'live' && styles.primaryLive,
+            busy && { opacity: 0.4 },
+          ]}
+          hitSlop={6}
         >
-          <SymbolView name="arrow.up.circle.fill" size={32} tintColor={p.accent} />
+          {micState === 'warming' && <WarmRing color={p.accent} />}
+          {micState === 'live' ? (
+            <MicLevelBars level={micLevel} color={p.onAccent} />
+          ) : (
+            <SymbolView
+              name={micState === 'warming' ? 'mic.fill' : sendReady ? 'arrow.up' : 'mic.fill'}
+              size={sendReady ? 26 : 24}
+              tintColor={p.onAccent}
+            />
+          )}
         </Pressable>
       </View>
     </KeyboardAvoidingView>
   );
+}
+
+/** Warming: a ring breathes outward — the mic is opening, nothing captured yet. */
+function WarmRing({ color }: { color: string }) {
+  const t = useSharedValue(0);
+  useEffect(() => {
+    t.value = withRepeat(withTiming(1, { duration: 1200, easing: Easing.out(Easing.ease) }), -1, false);
+  }, [t]);
+  const style = useAnimatedStyle(() => ({
+    transform: [{ scale: 0.7 + t.value * 0.85 }],
+    opacity: 0.8 * (1 - t.value),
+  }));
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={[{ position: 'absolute', width: 60, height: 60, borderRadius: 30, borderWidth: 2, borderColor: color }, style]}
+    />
+  );
+}
+
+/** Live: five bars that bob gently and jump with the real mic level. */
+function MicLevelBars({ level, color }: { level: SharedValue<number>; color: string }) {
+  const factors = [0.55, 0.8, 1, 0.8, 0.55];
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3, height: 26 }}>
+      {factors.map((f, i) => (
+        <LevelBar key={i} level={level} factor={f} color={color} />
+      ))}
+    </View>
+  );
+}
+
+function LevelBar({ level, factor, color }: { level: SharedValue<number>; factor: number; color: string }) {
+  const bob = useSharedValue(0);
+  useEffect(() => {
+    bob.value = withRepeat(withTiming(1, { duration: 460 + factor * 220, easing: Easing.inOut(Easing.ease) }), -1, true);
+  }, [bob, factor]);
+  const style = useAnimatedStyle(() => {
+    const idle = 0.22 + 0.18 * bob.value; // alive even in silence
+    const h = Math.min(1, idle + level.value * factor * 1.5);
+    return { height: 6 + h * 20 };
+  });
+  return <Animated.View style={[{ width: 3, borderRadius: 2, backgroundColor: color }, style]} />;
 }
 
 const makeStyles = (p: Palette) =>
@@ -564,6 +662,7 @@ const makeStyles = (p: Palette) =>
     chatContent: { padding: space.m, gap: space.s, paddingBottom: space.l },
 
     teacherTurn: { gap: space.s, marginBottom: space.s, maxWidth: '94%' },
+    receded: { opacity: 0.4 }, // past turns step back (Refinement 5)
     ambient: { color: p.dim, fontSize: type.small, lineHeight: 21 },
     verdictText: { fontSize: type.verdict, fontWeight: '600', lineHeight: 22 },
     cueText: { color: p.dim, fontSize: type.cue, fontWeight: '500', lineHeight: 24 },
@@ -578,6 +677,17 @@ const makeStyles = (p: Palette) =>
       borderColor: p.stroke,
       paddingVertical: space.m,
       paddingHorizontal: space.m,
+    },
+    // The current taught card lifts: raised, accent-bordered, soft accent glow.
+    targetCardFocal: {
+      backgroundColor: p.raised,
+      borderColor: p.accent,
+      transform: [{ scale: 1.015 }],
+      shadowColor: p.accent,
+      shadowOpacity: 0.25,
+      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 2 },
+      elevation: 4,
     },
     targetText: { color: p.text, fontSize: type.taught, fontWeight: '800', flexShrink: 1, lineHeight: 27 },
     playBtn: { marginLeft: 'auto' },
@@ -606,28 +716,37 @@ const makeStyles = (p: Palette) =>
       borderTopWidth: 1,
       borderTopColor: p.stroke,
     },
-    micBtn: {
-      width: 44,
-      height: 44,
-      borderRadius: 22,
-      borderWidth: 1.5,
-      borderColor: p.stroke,
-      backgroundColor: p.raised,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
     input: {
       flex: 1,
-      minHeight: 44,
+      minHeight: 52,
       maxHeight: 120,
       backgroundColor: p.raised,
       borderRadius: radii.m,
       paddingHorizontal: space.m,
-      paddingVertical: 11,
+      paddingVertical: 14,
       color: p.text,
-      fontSize: type.body,
+      fontSize: type.cue, // 16 — long answers wrap less (Refinement 3)
     },
-    sendBtn: { paddingBottom: 4 },
+    // The one primary control, bottom-right in the thumb arc (Refinement 1).
+    primaryBtn: {
+      width: 60,
+      height: 60,
+      borderRadius: 30,
+      backgroundColor: p.accent,
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: p.accent,
+      shadowOpacity: 0.4,
+      shadowRadius: 22,
+      shadowOffset: { width: 0, height: 6 },
+      elevation: 6,
+    },
+    primaryLive: {
+      backgroundColor: p.live,
+      shadowColor: p.live,
+      shadowOpacity: 0.5,
+      shadowRadius: 26,
+    },
 
     h1: { color: p.text, fontSize: type.title, fontWeight: '800', marginBottom: space.s },
     dimBody: { color: p.dim, fontSize: type.body, lineHeight: 23, marginBottom: space.l },
