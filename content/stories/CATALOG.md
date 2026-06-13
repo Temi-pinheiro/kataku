@@ -37,18 +37,25 @@ Indonesian: a warung family in Denpasar (Bu Sari, her son Wayan, a
 regular customer). Continuity gives a reason to come back and makes new
 episodes cheaper to follow. Each language gets its own localized cast.
 
-## What ships now (samples) vs. planned
+## What ships now (all scripted) + the listening ladder
 
-- **Samples this phase:** archetypes **1 & 2** (the two arrival/market
-  Beginner scenes) for **every language** → **12 sample episodes**.
-  Scripts written, UI wired, gradient-placeholder art; **render + embed
-  is a manual step** (owner reviews script → manual ElevenLabs render →
-  manual embed), so no surprise spend.
-- **Planned next (the big authoring push):** the remaining scripts to
-  complete all **36**. Each script = an ordered list of utterances
-  `{ target (marked), english_gloss }`, a `summary_so_far`, ≤ 3 new
-  words, level, and cast notes — validated against the protocol
-  vocabulary before it's eligible to render.
+**24 stories, every one scripted and playable** (src/content/stories.ts) —
+no locked placeholders. Audio is still **rendered + embedded manually**
+(owner reviews script → manual ElevenLabs render → manual embed); until a
+produced track exists, the player speaks each line with the runtime voice.
+
+- **Per non-Indonesian language (es/fr/it/zh/ja): 3** — arrival (Beg),
+  market (Int), a small problem (Adv).
+- **Indonesian: 9**, including a **listening ladder** (owner request,
+  2026-06-13) — progressively longer episodes to harden the ear:
+  - *Pagi yang Cerah* (Beginner, ~10 lines)
+  - *Naik Ojek* (Beginner, ~10 lines)
+  - *Hari di Pasar* (Intermediate, ~14 lines)
+  - *Cerita dari Desa* (Advanced, ~18 lines — the lengthiest listen)
+
+- **Optional later expansion:** extend each non-Indonesian language from 3
+  toward the full 6-archetype set (café, directions, shared meal), and add
+  listening ladders in the other languages if wanted.
 
 ## Production pipeline (manual render/embed by owner choice)
 
