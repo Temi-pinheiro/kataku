@@ -1,4 +1,5 @@
 import type { InstalledLanguage } from '../packs';
+import { LADDER_STORIES } from './story-ladders';
 
 /**
  * Stories (handoff F2): produced audio episodes with a synced read-along
@@ -56,31 +57,6 @@ const STORY_LIST: Story[] = [
     { target: 'Boleh, dua belas ribu untuk Anda.', en: 'Okay, twelve thousand for you.' },
     { target: 'Baik, saya mau dua kilo.', en: 'Good, I want two kilos.' },
   ]),
-  // — listening ladder: Beginner, lengthy —
-  S('id', 'morning', 'Pagi yang Cerah', 'Beginner', 'A longer listen — a bright morning by the sea', '#E0A064', [
-    { target: 'Selamat pagi! Hari ini cuacanya cerah.', en: 'Good morning! Today the weather is bright.' },
-    { target: 'Saya bangun jam tujuh pagi.', en: 'I woke up at seven in the morning.' },
-    { target: 'Saya mau minum kopi dulu.', en: 'I want to drink coffee first.' },
-    { target: 'Setelah itu, saya mau jalan-jalan.', en: 'After that, I want to take a walk.' },
-    { target: 'Pantai tidak jauh dari rumah saya.', en: 'The beach is not far from my house.' },
-    { target: 'Di pantai, banyak orang berolahraga.', en: 'At the beach, many people are exercising.' },
-    { target: 'Ada yang berlari, ada yang berenang.', en: 'Some are running, some are swimming.' },
-    { target: 'Saya suka duduk dan melihat laut.', en: 'I like to sit and look at the sea.' },
-    { target: 'Udara pagi sangat segar.', en: 'The morning air is very fresh.' },
-    { target: 'Hari ini akan menjadi hari yang baik.', en: 'Today is going to be a good day.' },
-  ]),
-  S('id', 'ojek', 'Naik Ojek', 'Beginner', 'A longer listen — a ride across town', '#DD9450', [
-    { target: 'Halo, Pak. Bisa antar saya ke pasar?', en: 'Hello, sir. Can you take me to the market?' },
-    { target: 'Bisa. Pasar yang mana?', en: 'I can. Which market?' },
-    { target: 'Pasar yang dekat stasiun.', en: 'The market near the station.' },
-    { target: 'Oh, saya tahu. Ayo naik.', en: 'Oh, I know it. Come on, get on.' },
-    { target: 'Berapa lama ke sana?', en: 'How long to get there?' },
-    { target: 'Kira-kira sepuluh menit.', en: 'About ten minutes.' },
-    { target: 'Hati-hati, jalannya ramai.', en: 'Be careful, the road is busy.' },
-    { target: 'Iya, sekarang jam sibuk.', en: "Yes, it's rush hour now." },
-    { target: 'Kita sudah sampai. Ini pasarnya.', en: "We've arrived. This is the market." },
-    { target: 'Terima kasih, Pak. Ini uangnya.', en: "Thank you, sir. Here's the money." },
-  ]),
   S('id', 'directions', 'Mencari Alamat', 'Intermediate', 'Asking the way across town', '#BFA98E', [
     { target: 'Permisi, saya mau ke Jalan Melati.', en: 'Excuse me, I want to go to Jalan Melati.' },
     { target: 'Oh, itu tidak jauh dari sini.', en: "Oh, that's not far from here." },
@@ -88,23 +64,6 @@ const STORY_LIST: Story[] = [
     { target: 'Setelah pasar, belok kanan.', en: 'After the market, turn right.' },
     { target: 'Rumahnya yang warna biru.', en: 'The house is the blue one.' },
     { target: 'Terima kasih banyak, Pak!', en: 'Thank you very much, sir!' },
-  ]),
-  // — listening ladder: Intermediate, lengthier —
-  S('id', 'marketday', 'Hari di Pasar', 'Intermediate', 'A longer listen — a full morning of bargaining', '#C98A5E', [
-    { target: 'Selamat pagi, Bu. Saya mau beli buah.', en: 'Good morning, ma’am. I want to buy fruit.' },
-    { target: 'Silakan, Mas. Buahnya masih segar semua.', en: 'Go ahead, sir. The fruit is all still fresh.' },
-    { target: 'Mangga ini manis tidak?', en: 'Are these mangoes sweet?' },
-    { target: 'Manis sekali, baru datang pagi tadi.', en: 'Very sweet, they just arrived this morning.' },
-    { target: 'Kalau begitu, saya mau satu kilo.', en: 'In that case, I want one kilo.' },
-    { target: 'Ada yang lain? Jeruknya juga bagus.', en: 'Anything else? The oranges are good too.' },
-    { target: 'Boleh, tambah setengah kilo jeruk.', en: 'Okay, add half a kilo of oranges.' },
-    { target: 'Semuanya jadi tiga puluh ribu.', en: "Altogether it's thirty thousand." },
-    { target: 'Wah, bisa kurang sedikit, Bu?', en: 'Oh, can it be a little less, ma’am?' },
-    { target: 'Untuk Anda, dua puluh delapan ribu.', en: 'For you, twenty-eight thousand.' },
-    { target: 'Baik, saya setuju. Ini uangnya.', en: "Good, I agree. Here's the money." },
-    { target: 'Terima kasih. Mau dimasukkan tas?', en: 'Thank you. Want it put in a bag?' },
-    { target: 'Iya, tolong. Terima kasih banyak.', en: 'Yes, please. Thank you very much.' },
-    { target: 'Sama-sama. Hati-hati di jalan!', en: "You're welcome. Be careful on the way!" },
   ]),
   S('id', 'dinner', 'Makan Malam Bersama', 'Intermediate', 'A shared meal with new friends', '#C98A5E', [
     { target: 'Selamat malam! Silakan masuk.', en: 'Good evening! Please come in.' },
@@ -122,27 +81,6 @@ const STORY_LIST: Story[] = [
     { target: 'Ayo kita ke sana dan tanya.', en: "Let's go there and ask." },
     { target: 'Permisi, apakah ada yang menemukan kunci?', en: 'Excuse me, did anyone find a key?' },
     { target: 'Oh, ini dia! Untung tidak hilang.', en: "Oh, here it is! Lucky it wasn't lost." },
-  ]),
-  // — listening ladder: Advanced, lengthiest —
-  S('id', 'village', 'Cerita dari Desa', 'Advanced', 'The lengthiest listen — a neighbour’s story of the old village', '#A88463', [
-    { target: 'Dulu, waktu saya masih kecil, desa ini sangat sepi.', en: 'Long ago, when I was small, this village was very quiet.' },
-    { target: 'Belum ada banyak turis seperti sekarang.', en: "There weren't many tourists like now." },
-    { target: 'Setiap pagi, ayah saya pergi ke sawah.', en: 'Every morning, my father went to the rice field.' },
-    { target: 'Saya sering ikut membantu beliau.', en: 'I often went along to help him.' },
-    { target: 'Kami menanam padi bersama-sama.', en: 'We planted rice together.' },
-    { target: 'Waktu itu, hidup memang sederhana.', en: 'Back then, life was indeed simple.' },
-    { target: 'Tapi semua orang saling mengenal.', en: 'But everyone knew one another.' },
-    { target: 'Kalau ada yang kesusahan, kami membantu.', en: 'If someone was in trouble, we helped.' },
-    { target: 'Sekarang, desa sudah banyak berubah.', en: 'Now, the village has changed a lot.' },
-    { target: 'Banyak rumah baru dan jalan besar.', en: 'Many new houses and big roads.' },
-    { target: 'Anak-anak muda pergi bekerja ke kota.', en: 'Young people go to work in the city.' },
-    { target: 'Kadang saya rindu suasana yang dulu.', en: 'Sometimes I miss the old atmosphere.' },
-    { target: 'Tapi saya senang desa kami maju.', en: "But I'm glad our village is moving forward." },
-    { target: 'Yang penting, kita tidak lupa asal kita.', en: "The important thing is we don't forget where we come from." },
-    { target: 'Setiap sore, saya masih duduk di sini.', en: 'Every afternoon, I still sit here.' },
-    { target: 'Saya melihat matahari terbenam di sawah.', en: 'I watch the sun set over the rice fields.' },
-    { target: 'Dan saya bersyukur atas hidup ini.', en: "And I'm grateful for this life." },
-    { target: 'Itulah cerita saya, Nak.', en: "That's my story, child." },
   ]),
 
   // ============================ Spanish ============================
@@ -269,6 +207,9 @@ const STORY_LIST: Story[] = [
     { target: 'すみません、鍵を見つけましたか？', roman: 'sumimasen, kagi o mitsukemashita ka?', en: 'Excuse me, did you find a key?' },
     { target: 'ありました！よかった。', roman: 'arimashita! yokatta.', en: 'Found it! What a relief.' },
   ]),
+
+  // ===== Listening ladders (2/4/6/8 min × 6 languages) — src/content/story-ladders.ts =====
+  ...LADDER_STORIES,
 ];
 
 export function storiesFor(language: InstalledLanguage): Story[] {
