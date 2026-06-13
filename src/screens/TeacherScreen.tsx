@@ -408,7 +408,7 @@ export function TeacherScreen() {
       if (!speakable) return;
       const seq = ++playSeqRef.current;
       setPlayingKey(key);
-      const uri = await ttsToFile(speakable, language, 'teaching');
+      const uri = await ttsToFile(speakable, language, settings.speakingPace);
       if (seq !== playSeqRef.current) return; // another card was tapped meanwhile
       if (!uri) {
         setPlayingKey(null);
@@ -419,7 +419,7 @@ export function TeacherScreen() {
       setPlayingKey((cur) => (cur === key ? null : cur));
       void refreshSpend();
     },
-    [playingKey, stopListening, refreshSpend, language],
+    [playingKey, stopListening, refreshSpend, language, settings.speakingPace],
   );
 
   const restart = useCallback(() => {
@@ -469,7 +469,7 @@ export function TeacherScreen() {
         </Pressable>
         <Text style={styles.topTitle}>{LANGUAGE_NAMES[language]}</Text>
         <View style={styles.topRight}>
-          <Text style={styles.spend}>{spendLabel}</Text>
+          {settings.showSpendInLessons && <Text style={styles.spend}>{spendLabel}</Text>}
           <Pressable onPress={restart} hitSlop={12}>
             <SymbolView name="arrow.counterclockwise" size={16} tintColor={p.faint} />
           </Pressable>

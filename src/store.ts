@@ -1,13 +1,26 @@
 import { create } from 'zustand';
 import type { InstalledLanguage } from './packs';
 
-export type Screen = 'home' | 'teacher' | 'conversation' | 'session' | 'review' | 'settings' | 'm0spike';
+export type Screen =
+  | 'home'
+  | 'teacher'
+  | 'conversation'
+  | 'session'
+  | 'review'
+  | 'map'
+  | 'stories'
+  | 'story'
+  | 'settings'
+  | 'm0spike';
 
 export interface Settings {
-  thinkSeconds: number; // 2–10, default 4 (plan §3.1)
+  thinkSeconds: number; // 2–10; set via Think time (Generous 8 / Normal 4 / Brisk 2)
   coachEnabled: boolean; // Tier 1, on by default (plan §11)
   monthlyCapUsd: number;
-  theme: 'system' | 'dark' | 'light';
+  theme: 'system' | 'dark' | 'light'; // 'system' surfaces as "Auto" (follows iOS)
+  defaultMood: 'gentle' | 'normal'; // conversation opening mood (switchable per scene)
+  speakingPace: 'slow' | 'teaching' | 'natural'; // teacher playback pace
+  showSpendInLessons: boolean; // the quiet spend figure in the teacher chat
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -15,6 +28,9 @@ export const DEFAULT_SETTINGS: Settings = {
   coachEnabled: true,
   monthlyCapUsd: 10,
   theme: 'system',
+  defaultMood: 'gentle',
+  speakingPace: 'teaching',
+  showSpendInLessons: true,
 };
 
 interface AppState {

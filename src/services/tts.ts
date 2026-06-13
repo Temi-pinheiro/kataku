@@ -34,13 +34,23 @@ const LANGUAGE_NAMES: Record<string, string> = {
  * naturally, separated by a real pause (NOT slowed playback, which the
  * bake-off proved sounds fake). Native flow is conversation mode's job.
  */
-export type TtsPace = 'natural' | 'teaching';
+export type TtsPace = 'natural' | 'teaching' | 'slow';
 
-/** Multi-word phrases get an audible breath between words. */
-function withBreaths(text: string): string {
+/** Per-pace breath between words (seconds); 0 = native flow, no break tags. */
+function breathSecs(pace: TtsPace): number {
+  return pace === 'slow' ? 0.6 : pace === 'teaching' ? 0.4 : 0;
+}
+
+/** ElevenLabs playback speed; undefined = the voice's natural rate. */
+function paceSpeed(pace: TtsPace): number | undefined {
+  return pace === 'slow' ? 0.8 : pace === 'teaching' ? 0.9 : undefined;
+}
+
+/** Multi-word phrases get an audible breath between words at teaching/slow pace. */
+function withBreaths(text: string, secs: number): string {
   const words = text.split(/\s+/).filter(Boolean);
-  if (words.length < 2) return text;
-  return words.join(' <break time="0.4s" /> ');
+  if (secs <= 0 || words.length < 2) return text;
+  return words.join(` <break time="${secs}s" /> `);
 }
 
 /**
@@ -51,9 +61,11 @@ function withBreaths(text: string): string {
 function instructionsFor(lang: string, pace: TtsPace): string {
   const name = LANGUAGE_NAMES[lang] ?? 'the target language';
   const pacing =
-    pace === 'teaching'
-      ? `Speak for a beginner: each word pronounced naturally but with a clear breath pause between every word. `
-      : `Speak at a natural conversational pace. `;
+    pace === 'slow'
+      ? `Speak slowly and deliberately for a beginner, with a clear breath between every word. `
+      : pace === 'teaching'
+        ? `Speak for a beginner: each word pronounced naturally but with a clear breath pause between every word. `
+        : `Speak at a natural conversational pace. `;
   return (
     `You are a native ${name} speaker and language teacher. The text is ${name} only — ` +
     `speak it with fully authentic native ${name} pronunciation, rhythm, and intonation. ` +
@@ -76,7 +88,7 @@ function hash(s: string): string {
 export async function ttsToFile(text: string, lang: string, pace: TtsPace = 'natural'): Promise<string | null> {
   const trimmed = text.trim();
   if (!trimmed) return null;
-  const paceKey = pace === 'teaching' ? 'teach|' : '';
+  const paceKey = pace === 'natural' ? '' : `${pace}|`;
   try {
     const dir = cacheDir();
     if (!dir.exists) dir.create({ intermediates: true });
@@ -87,7 +99,8 @@ export async function ttsToFile(text: string, lang: string, pace: TtsPace = 'nat
     if (elevenKey && elevenVoice) {
       const file = new File(dir, `${hash(`${ELEVEN_MODEL}|${elevenVoice}|${lang}|${paceKey}${trimmed}`)}.mp3`);
       if (file.exists) return file.uri;
-      const payload = pace === 'teaching' ? withBreaths(trimmed) : trimmed;
+      const payload = withBreaths(trimmed, breathSecs(pace));
+      const speed = paceSpeed(pace);
       const res = await fetch(
         `https://api.elevenlabs.io/v1/text-to-speech/${elevenVoice}?output_format=mp3_44100_128`,
         {
@@ -96,10 +109,7 @@ export async function ttsToFile(text: string, lang: string, pace: TtsPace = 'nat
           body: JSON.stringify({
             text: payload,
             model_id: ELEVEN_MODEL,
-            voice_settings:
-              pace === 'teaching'
-                ? { stability: 0.5, similarity_boost: 0.75, speed: 0.9 }
-                : { stability: 0.5, similarity_boost: 0.75 },
+            voice_settings: { stability: 0.5, similarity_boost: 0.75, ...(speed ? { speed } : {}) },
           }),
         },
       );

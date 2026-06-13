@@ -68,7 +68,7 @@ export function ConversationScreen() {
 
   const [phase, setPhase] = useState<Phase>({ kind: 'pick' });
   const [scenario, setScenario] = useState<Scenario>(SCENARIOS[0]);
-  const [mood, setMood] = useState<Mood>('gentle');
+  const [mood, setMood] = useState<Mood>(settings.defaultMood === 'normal' ? 'normal' : 'gentle');
   const [turns, setTurns] = useState<ChatTurn[]>([]);
   const [heard, setHeard] = useState('');
   const volume = useSharedValue(0);
