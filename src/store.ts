@@ -37,16 +37,20 @@ interface AppState {
   screen: Screen;
   language: InstalledLanguage;
   settings: Settings;
+  storyId: string | null; // the story open in the player
   setScreen: (s: Screen) => void;
   setLanguage: (l: InstalledLanguage) => void;
   setSettings: (s: Partial<Settings>) => void;
+  openStory: (id: string) => void;
 }
 
 export const useApp = create<AppState>((set) => ({
   screen: 'home',
   language: 'id',
   settings: DEFAULT_SETTINGS,
+  storyId: null,
   setScreen: (screen) => set({ screen }),
   setLanguage: (language) => set({ language }),
   setSettings: (patch) => set((s) => ({ settings: { ...s.settings, ...patch } })),
+  openStory: (storyId) => set({ storyId, screen: 'story' }),
 }));

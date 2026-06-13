@@ -124,8 +124,12 @@ export const storyPalettes: Record<'dark' | 'light', StoryPalette> = {
   },
 };
 
-/** The one place the app leaves SF Pro: Stories titles (bundle Newsreader). */
-export const SERIF = 'Newsreader';
+/**
+ * The one place the app leaves SF Pro: Stories titles. Newsreader (handoff)
+ * isn't bundled yet, so we use the built-in iOS serif for the editorial look
+ * now; swap to 'Newsreader' once the font asset ships.
+ */
+export const SERIF = 'Georgia';
 
 export const type = {
   hero: 44,

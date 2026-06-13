@@ -66,7 +66,19 @@ export function HomeScreen() {
   return (
     <View style={styles.screen}>
       <Animated.View entering={FadeInDown.duration(300)}>
-        <Text style={styles.brand}>kataku</Text>
+        <View style={styles.headerRow}>
+          <Text style={styles.brand}>kataku</Text>
+          <Pressable
+            onPress={() => {
+              Haptics.selectionAsync();
+              setScreen('stories');
+            }}
+            style={styles.bookBtn}
+            hitSlop={8}
+          >
+            <SymbolView name="book.fill" size={18} tintColor={p.dim} />
+          </Pressable>
+        </View>
         <View style={styles.chips}>
           {INSTALLED_LANGUAGES.map((l) => (
             <Pressable
@@ -165,6 +177,17 @@ const makeStyles = (p: Palette) =>
   screen: { flex: 1, backgroundColor: p.bg, paddingHorizontal: space.l, paddingTop: 76, gap: space.m },
   brand: { color: p.faint, fontSize: type.caption, letterSpacing: 3, textTransform: 'uppercase' },
 
+  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  bookBtn: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: p.card,
+    borderWidth: 1,
+    borderColor: p.stroke,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: space.s, marginTop: space.m },
   chip: {
     backgroundColor: p.card,
