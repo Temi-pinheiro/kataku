@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { SymbolView } from 'expo-symbols';
@@ -61,7 +61,7 @@ function StoryCard({
         onOpen();
       }}
     >
-      <Thumb tint={story.tint} locked={locked} styles={styles} />
+      <Thumb tint={story.tint} image={story.thumb} locked={locked} styles={styles} />
       <View style={{ flex: 1 }}>
         <View style={styles.badgeRow}>
           <View style={styles.badge}>
@@ -81,8 +81,19 @@ function StoryCard({
   );
 }
 
-/** Warm placeholder art — a tinted block with a soft sun, until illustrations land. */
-function Thumb({ tint, locked, styles }: { tint: string; locked: boolean; styles: ReturnType<typeof makeStyles> }) {
+/** Commissioned illustration when present; warm tinted placeholder until then. */
+function Thumb({
+  tint,
+  image,
+  locked,
+  styles,
+}: {
+  tint: string;
+  image?: number;
+  locked: boolean;
+  styles: ReturnType<typeof makeStyles>;
+}) {
+  if (image) return <Image source={image} style={[styles.thumb, locked && { opacity: 0.5 }]} />;
   return (
     <View style={[styles.thumb, { backgroundColor: tint }, locked && { opacity: 0.5 }]}>
       <View style={styles.thumbSun} />

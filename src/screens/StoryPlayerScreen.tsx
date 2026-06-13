@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { SymbolView } from 'expo-symbols';
 import { storyById } from '../content/stories';
@@ -116,10 +116,14 @@ export function StoryPlayerScreen() {
         <Text style={styles.title}>{story.title}</Text>
       </View>
 
-      {/* Wide hero — warm placeholder until the commissioned illustration lands. */}
-      <View style={[styles.hero, { backgroundColor: story.tint }]}>
-        <View style={styles.heroSun} />
-      </View>
+      {/* Commissioned hero illustration when present; warm placeholder until then. */}
+      {story.hero ? (
+        <Image source={story.hero} style={styles.hero} />
+      ) : (
+        <View style={[styles.hero, { backgroundColor: story.tint }]}>
+          <View style={styles.heroSun} />
+        </View>
+      )}
 
       {/* Transport */}
       <View style={styles.transport}>

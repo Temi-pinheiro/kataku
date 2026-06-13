@@ -27,6 +27,8 @@ export interface Story {
   level: StoryLevel;
   description: string;
   tint: string; // placeholder-art base hue until illustrations are commissioned
+  thumb?: number; // commissioned square illustration (require(...)); gradient until then
+  hero?: number; // commissioned wide illustration (require(...)); gradient until then
   lines?: StoryLine[]; // present = playable; absent = level-gated (locked)
   audioBase?: string | null; // produced-track key once rendered (manual step)
 }
