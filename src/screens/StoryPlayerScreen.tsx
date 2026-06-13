@@ -27,6 +27,8 @@ export function StoryPlayerScreen() {
   const [active, setActive] = useState(0);
   const [playing, setPlaying] = useState(false);
   const tokenRef = useRef(0);
+  const scrollRef = useRef<ScrollView>(null);
+  const lineYRef = useRef<number[]>([]);
 
   const stop = useCallback(() => {
     tokenRef.current += 1;
@@ -36,18 +38,27 @@ export function StoryPlayerScreen() {
 
   useEffect(() => () => stop(), [stop]);
 
+  // Keep the spoken line in view — ladder stories run 100+ lines.
+  useEffect(() => {
+    const y = lineYRef.current[active];
+    if (y != null) scrollRef.current?.scrollTo({ y: Math.max(0, y - 24), animated: true });
+  }, [active]);
+
   const playFrom = useCallback(
     async (start: number) => {
       const lines = story?.lines;
       if (!lines || lines.length === 0) return;
       const token = ++tokenRef.current;
       setPlaying(true);
+      // Native pace for stories (immersion); target line only, never English.
+      // Prefetch the next line while the current one plays → gapless listening.
+      let nextUri = ttsToFile(lines[start].target, story.language, 'natural');
       for (let i = start; i < lines.length; i++) {
         if (token !== tokenRef.current) return;
-        setActive(i);
-        // Native pace for stories (immersion); target line only, never English.
-        const uri = await ttsToFile(lines[i].target, story.language, 'natural');
+        const uri = await nextUri;
         if (token !== tokenRef.current) return;
+        if (i + 1 < lines.length) nextUri = ttsToFile(lines[i + 1].target, story.language, 'natural');
+        setActive(i);
         if (uri) await voiceEngine.play({ uri });
         if (token !== tokenRef.current) return;
       }
@@ -90,7 +101,7 @@ export function StoryPlayerScreen() {
   const progress = lines.length > 1 ? active / (lines.length - 1) : 0;
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={{ padding: space.l, paddingTop: 64, paddingBottom: 64 }}>
+    <View style={styles.screen}>
       <View style={styles.header}>
         <Pressable
           onPress={() => {
@@ -123,7 +134,7 @@ export function StoryPlayerScreen() {
         </Pressable>
       </View>
 
-      {/* Scrubber — line-based until a produced track gives real timings */}
+      {/* Scrubber — line position (real audio timings arrive with a produced track) */}
       <View style={styles.scrubTrack}>
         <View style={[styles.scrubFill, { width: `${Math.max(4, progress * 100)}%` }]} />
       </View>
@@ -132,23 +143,30 @@ export function StoryPlayerScreen() {
         <Text style={styles.timestamp}>of {lines.length}</Text>
       </View>
 
-      {/* Transcript — the current line glows teal and advances with playback */}
-      <View style={styles.transcript}>
+      {/* Transcript — its own scroll region; follows the spoken line (teal) */}
+      <ScrollView ref={scrollRef} style={styles.transcriptScroll} contentContainerStyle={styles.transcriptContent}>
         {lines.map((line, i) => (
-          <Pressable key={i} onPress={() => tapLine(i)} style={styles.lineRow}>
+          <Pressable
+            key={i}
+            onPress={() => tapLine(i)}
+            style={styles.lineRow}
+            onLayout={(e) => {
+              lineYRef.current[i] = e.nativeEvent.layout.y;
+            }}
+          >
             <Text style={[styles.target, i === active && styles.targetActive]}>{line.target}</Text>
             {line.roman ? <Text style={[styles.roman, i === active && styles.romanActive]}>{line.roman}</Text> : null}
             <Text style={styles.gloss}>{line.en}</Text>
           </Pressable>
         ))}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const makeStyles = (sp: StoryPalette) =>
   StyleSheet.create({
-    screen: { flex: 1, backgroundColor: sp.paper },
+    screen: { flex: 1, backgroundColor: sp.paper, paddingHorizontal: space.l, paddingTop: 64 },
     header: { flexDirection: 'row', alignItems: 'center', gap: space.m, marginBottom: space.m },
     backBtn: {
       width: 44,
@@ -162,7 +180,7 @@ const makeStyles = (sp: StoryPalette) =>
     },
     backText: { color: sp.sub, fontSize: type.small },
     title: { color: sp.ink, fontSize: 24, fontFamily: SERIF, fontWeight: '600', flexShrink: 1 },
-    hero: { height: 188, borderRadius: 20, overflow: 'hidden', justifyContent: 'center', alignItems: 'center' },
+    hero: { height: 150, borderRadius: 20, overflow: 'hidden', justifyContent: 'center', alignItems: 'center' },
     heroSun: { width: 90, height: 90, borderRadius: 45, backgroundColor: 'rgba(255,255,255,0.45)' },
     transport: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: space.xl, marginTop: space.l },
     skip: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
@@ -183,15 +201,15 @@ const makeStyles = (sp: StoryPalette) =>
     scrubFill: { height: 4, borderRadius: 2, backgroundColor: sp.teal },
     scrubRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: space.s },
     timestamp: { color: sp.sub, fontSize: type.caption, fontVariant: ['tabular-nums'] },
-    transcript: {
+    transcriptScroll: {
+      flex: 1,
       backgroundColor: sp.card,
       borderRadius: 20,
       borderWidth: 1,
       borderColor: sp.hair,
-      padding: space.m,
       marginTop: space.l,
-      gap: space.m,
     },
+    transcriptContent: { padding: space.m, gap: space.m, paddingBottom: 40 },
     lineRow: { gap: 2 },
     target: { color: sp.ink, fontSize: 18, fontWeight: '700', lineHeight: 26 },
     targetActive: { color: sp.teal },
