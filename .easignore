@@ -1,0 +1,53 @@
+# EAS upload ignore. When this file exists, EAS CLI uses it INSTEAD of
+# .gitignore to decide what to upload to the cloud builder. It mirrors
+# .gitignore with ONE difference: it does NOT exclude content/*/audio/, so
+# the rendered pack audio (gitignored as a regenerable build artifact) is
+# uploaded and bundles via src/generated/audio-map.*.ts. The audio must
+# exist locally at build time — re-render with `npm run render-audio` if not.
+#
+# .env* stays excluded here — never upload API keys to the builder.
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# typescript
+*.tsbuildinfo
+
+# generated native folders (EAS prebuilds these)
+/ios
+/android
+
+# API keys / secrets — NEVER upload
+.env*
+
+# Bake-off audition files (not needed in the build)
+content/bakeoff*/
+
+# NOTE: content/*/audio/ is deliberately NOT listed — it must reach the builder.

@@ -14,7 +14,8 @@
           "audio"
         ],
         "NSSpeechRecognitionUsageDescription": "Kataku uses speech recognition to check what you said in the language you are learning.",
-        "NSMicrophoneUsageDescription": "Kataku uses the microphone to hear you speak your answers."
+        "NSMicrophoneUsageDescription": "Kataku uses the microphone to hear you speak your answers.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
