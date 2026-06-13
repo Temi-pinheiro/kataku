@@ -15,6 +15,7 @@
         ],
         "NSSpeechRecognitionUsageDescription": "Kataku uses speech recognition to check what you said in the language you are learning.",
         "NSMicrophoneUsageDescription": "Kataku uses the microphone to hear you speak your answers.",
+        "NSPhotoLibraryUsageDescription": "Kataku does not use your photo library; this notice is required by a system component the app links.",
         "ITSAppUsesNonExemptEncryption": false
       }
     },
