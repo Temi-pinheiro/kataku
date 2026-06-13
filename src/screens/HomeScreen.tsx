@@ -131,6 +131,17 @@ export function HomeScreen() {
         </Pressable>
       </Animated.View>
 
+      <Pressable
+        onPress={() => {
+          Haptics.selectionAsync();
+          setScreen('map');
+        }}
+        style={styles.mapLink}
+        hitSlop={8}
+      >
+        <Text style={styles.mapLinkText}>your map — all lessons →</Text>
+      </Pressable>
+
       <Animated.View entering={FadeInDown.delay(200).duration(300)} style={styles.secondaryRow}>
         <Pressable style={styles.secondary} onPress={() => setScreen('review')}>
           <Text style={styles.secondaryValue}>
@@ -207,6 +218,8 @@ const makeStyles = (p: Palette) =>
   ctaMeta: { color: p.onAccent, opacity: 0.75, fontSize: type.small, marginTop: 4 },
   ctaDone: { color: p.onAccent, opacity: 0.6, fontSize: type.caption, marginTop: 6 },
 
+  mapLink: { alignSelf: 'center', paddingVertical: space.xs },
+  mapLinkText: { color: p.dim, fontSize: type.small, fontWeight: '600' },
   secondaryRow: { flexDirection: 'row', gap: space.m },
   secondary: {
     flex: 1,

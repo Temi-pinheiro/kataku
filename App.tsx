@@ -12,6 +12,7 @@ import { SessionScreen } from './src/screens/SessionScreen';
 import { TeacherScreen } from './src/screens/TeacherScreen';
 import { ConversationScreen } from './src/screens/ConversationScreen';
 import { WeeklyReviewScreen } from './src/screens/WeeklyReviewScreen';
+import { MapScreen } from './src/screens/MapScreen';
 import { SettingsScreen, loadPersistedSettings } from './src/screens/SettingsScreen';
 import { M0SpikeScreen } from './src/screens/M0SpikeScreen';
 
@@ -74,6 +75,7 @@ export default function App() {
         </LessonBoundary>
       )}
       {screen === 'review' && <WeeklyReviewScreen />}
+      {screen === 'map' && <MapScreen />}
       {screen === 'settings' && <SettingsScreen />}
       {screen === 'm0spike' && <M0SpikeScreen />}
     </View>
