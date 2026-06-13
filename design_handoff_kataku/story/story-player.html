@@ -1,0 +1,112 @@
+<!-- @dsCard group="Story" name="Story player" subtitle="Audio story + synced bilingual transcript" -->
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; font-family:-apple-system,'SF Pro Text',system-ui,sans-serif; display:flex; gap:24px; padding:24px; background:#11161f; align-items:flex-start; }
+  .phone { width:390px; border-radius:40px; padding:54px 20px 0; box-sizing:border-box; display:flex; flex-direction:column; gap:18px; height:860px; overflow:hidden; }
+  .light { background:#F4F0E8; color:#2A2620;
+    --paper:#F4F0E8; --card:#FFFFFF; --ink:#2A2620; --sub:#8B867C; --hair:#E7E1D5; --teal:#15B49A;
+    --track:rgba(40,30,15,.12); --ctrl:#2A2620; --on-teal:#FFFFFF; }
+  .dark { background:#0C1117; color:#F2F6FA;
+    --paper:#0C1117; --card:#161D27; --ink:#F2F6FA; --sub:#9AA7B9; --hair:#222C3B; --teal:#34CDB2;
+    --track:rgba(255,255,255,.12); --ctrl:#F2F6FA; --on-teal:#06231D; }
+
+  .topbar { display:flex; align-items:center; gap:14px; }
+  .iconcirc { width:42px; height:42px; border-radius:50%; background:var(--card); display:flex; align-items:center; justify-content:center; flex:none;
+    box-shadow:0 1px 3px rgba(40,30,15,.06); text-decoration:none; }
+  .dark .iconcirc { box-shadow:none; border:1px solid var(--hair); }
+  .iconcirc svg { width:20px; height:20px; stroke:var(--ink); }
+  .htitle { font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:22px; letter-spacing:.2px; }
+
+  .hero { height:188px; border-radius:20px; position:relative; overflow:hidden;
+    background:linear-gradient(170deg,#F6C667 0%,#EE9B4A 38%,#D4602F 70%,#9C3C28 100%); }
+  .hero .glow { position:absolute; width:120px; height:120px; border-radius:50%; left:50%; top:30%; transform:translate(-50%,-30%);
+    background:radial-gradient(circle,rgba(255,243,214,.9),rgba(255,243,214,0) 65%); }
+  .hero .hill { position:absolute; left:0; right:0; bottom:0; height:46%;
+    background:radial-gradient(120% 100% at 50% 100%, rgba(70,30,22,.55), rgba(70,30,22,0) 70%); }
+
+  .controls { display:flex; align-items:center; justify-content:center; gap:36px; }
+  .cbtn { background:none; border:none; cursor:pointer; padding:0; display:flex; }
+  .cbtn svg { width:30px; height:30px; stroke:var(--ctrl); fill:none; }
+  .play { width:72px; height:72px; border-radius:50%; background:var(--teal); display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 22px rgba(21,180,154,.4); }
+  .play svg { width:28px; height:28px; stroke:none; fill:var(--on-teal); }
+
+  .scrub { display:flex; flex-direction:column; gap:8px; }
+  .bar { height:4px; border-radius:2px; background:var(--track); overflow:hidden; }
+  .bar .fill { height:100%; width:11%; background:var(--teal); border-radius:2px; }
+  .times { display:flex; justify-content:space-between; font-size:12px; color:var(--sub); font-variant-numeric:tabular-nums; }
+
+  .scriptwrap { position:relative; flex:1; min-height:0; }
+  .script { background:var(--card); border-radius:20px 20px 0 0; padding:22px 20px 40px; display:flex; flex-direction:column; gap:18px; height:100%; box-sizing:border-box;
+    box-shadow:0 -1px 0 var(--hair) inset; -webkit-mask-image:linear-gradient(180deg,#000 72%,transparent 100%); mask-image:linear-gradient(180deg,#000 72%,transparent 100%); }
+  .dark .script { border:1px solid var(--hair); border-bottom:none; }
+  .ln .id { font-size:18px; font-weight:700; line-height:1.32; color:var(--ink); }
+  .ln .en { font-size:14px; color:var(--sub); line-height:1.35; margin-top:5px; }
+  .ln.active .id { color:var(--teal); }
+</style></head><body>
+
+<!-- LIGHT — matches reference -->
+<div class="phone light">
+  <div class="topbar">
+    <a class="iconcirc" href="stories.html"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <div class="htitle">Di Pasar Tradisional</div>
+  </div>
+
+  <div class="hero"><div class="glow"></div><div class="hill"></div></div>
+
+  <div class="controls">
+    <button class="cbtn" aria-label="Back 10s"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4 7 8l4 4"/><path d="M7 8h7a5 5 0 1 1 0 10H9"/></svg></button>
+    <button class="play" aria-label="Pause"><svg viewBox="0 0 24 24"><rect x="6.5" y="5" width="3.6" height="14" rx="1.2"/><rect x="13.9" y="5" width="3.6" height="14" rx="1.2"/></svg></button>
+    <button class="cbtn" aria-label="Next line"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5l9 7-9 7z" fill="var(--ctrl)" stroke="none"/><rect x="16.5" y="5" width="2.4" height="14" rx="1" fill="var(--ctrl)" stroke="none"/></svg></button>
+  </div>
+
+  <div class="scrub">
+    <div class="bar"><div class="fill"></div></div>
+    <div class="times"><span>0:12</span><span>1:45</span></div>
+  </div>
+
+  <div class="scriptwrap">
+    <div class="script">
+      <div class="ln active"><div class="id">Selamat pagi, Pak. Berapa harga mangga ini?</div><div class="en">Good morning, Sir. How much are these mangoes?</div></div>
+      <div class="ln"><div class="id">Satu kilo dua puluh ribu rupiah saja, Bu.</div><div class="en">One kilo is just twenty thousand rupiah, Ma’am.</div></div>
+      <div class="ln"><div class="id">Boleh kurang sedikit? Lima belas ribu ya?</div><div class="en">Can it be a little less? Fifteen thousand, okay?</div></div>
+      <div class="ln"><div class="id">Waduh, belum bisa. Delapan belas ribu paling murah.</div><div class="en">Oh, not yet possible. Eighteen thousand is the cheapest.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- DARK -->
+<div class="phone dark">
+  <div class="topbar">
+    <a class="iconcirc" href="stories.html"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <div class="htitle">Di Pasar Tradisional</div>
+  </div>
+
+  <div class="hero"><div class="glow"></div><div class="hill"></div></div>
+
+  <div class="controls">
+    <button class="cbtn" aria-label="Back 10s"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4 7 8l4 4"/><path d="M7 8h7a5 5 0 1 1 0 10H9"/></svg></button>
+    <button class="play" aria-label="Pause"><svg viewBox="0 0 24 24"><rect x="6.5" y="5" width="3.6" height="14" rx="1.2"/><rect x="13.9" y="5" width="3.6" height="14" rx="1.2"/></svg></button>
+    <button class="cbtn" aria-label="Next line"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5l9 7-9 7z" fill="var(--ctrl)" stroke="none"/><rect x="16.5" y="5" width="2.4" height="14" rx="1" fill="var(--ctrl)" stroke="none"/></svg></button>
+  </div>
+
+  <div class="scrub">
+    <div class="bar"><div class="fill"></div></div>
+    <div class="times"><span>0:12</span><span>1:45</span></div>
+  </div>
+
+  <div class="scriptwrap">
+    <div class="script">
+      <div class="ln active"><div class="id">Selamat pagi, Pak. Berapa harga mangga ini?</div><div class="en">Good morning, Sir. How much are these mangoes?</div></div>
+      <div class="ln"><div class="id">Satu kilo dua puluh ribu rupiah saja, Bu.</div><div class="en">One kilo is just twenty thousand rupiah, Ma’am.</div></div>
+      <div class="ln"><div class="id">Boleh kurang sedikit? Lima belas ribu ya?</div><div class="en">Can it be a little less? Fifteen thousand, okay?</div></div>
+      <div class="ln"><div class="id">Waduh, belum bisa. Delapan belas ribu paling murah.</div><div class="en">Oh, not yet possible. Eighteen thousand is the cheapest.</div></div>
+    </div>
+  </div>
+</div>
+
+</body></html>

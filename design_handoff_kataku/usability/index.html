@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kataku — Usability passes</title>
+<style>
+  :root{ --bg:#0C1117; --card:#161D27; --raised:#212B3A; --stroke:#2D3950; --text:#F2F6FA; --dim:#9AA7B9; --faint:#5F6E80; --accent:#45D483; --on:#07130C; --live:#6FD6C3; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,'SF Pro Text',system-ui,sans-serif;background:var(--bg);color:var(--text);
+    padding:72px 28px 80px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:880px;margin:0 auto;}
+  .brand{color:var(--faint);font-size:12px;letter-spacing:4px;text-transform:uppercase;}
+  h1{font-size:40px;font-weight:800;letter-spacing:-.6px;margin:14px 0 8px;}
+  .lede{color:var(--dim);font-size:16px;line-height:25px;max-width:620px;margin:0 0 8px;}
+  .lede b{color:var(--text);font-weight:600;}
+  .meta{color:var(--faint);font-size:13px;margin:18px 0 40px;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  a.tile{display:flex;flex-direction:column;gap:10px;text-decoration:none;background:var(--card);border:1px solid var(--stroke);
+    border-radius:20px;padding:24px;color:inherit;transition:border-color .15s ease, transform .15s ease;}
+  a.tile:hover{border-color:rgba(111,214,195,.5);transform:translateY(-2px);}
+  .n{display:flex;align-items:center;gap:12px;}
+  .num{width:30px;height:30px;border-radius:8px;background:var(--accent-deep,#15301F);color:var(--live);
+    display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex:none;}
+  .h{font-size:20px;font-weight:800;}
+  .principle{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  .d{color:var(--dim);font-size:13.5px;line-height:20px;}
+  .go{color:var(--live);font-size:13px;font-weight:700;margin-top:2px;}
+  .foot{color:var(--faint);font-size:13px;line-height:21px;margin-top:36px;border-top:1px solid var(--stroke);padding-top:22px;}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="brand">kataku · design</div>
+  <h1>Usability passes</h1>
+  <p class="lede">Five reworks, each tied to a line in the brief and the one specific user: <b>one-handed, walking Bali streets in hard sun, interrupted every ten minutes, with an ear for what a real teacher sounds like.</b></p>
+  <p class="meta">Each opens as a before → after on iPhone frames, dark + light, on the existing token set. They also appear together under <b>Usability</b> in the Design System tab.</p>
+
+  <div class="grid">
+    <a class="tile" href="reach.html">
+      <div class="n"><div class="num">1</div><div class="h">One-handed reach</div></div>
+      <div class="principle">Everything reachable by thumb</div>
+      <div class="d">The most-tapped control — the mic — moves from stranded bottom-left into the thumb arc as a 60px primary. ✕ stays top-left, safe to miss. The whole taught card becomes the play target.</div>
+      <div class="go">Open →</div>
+    </a>
+    <a class="tile" href="daylight.html">
+      <div class="n"><div class="num">2</div><div class="h">Daylight survival</div></div>
+      <div class="principle">Light theme must beat the sun</div>
+      <div class="d">Under a simulated glare wash, faint grey narration vanishes. New contrast tokens (narration ink at ~9:1, deeper go-green) hold up; theme auto-follows ambient light.</div>
+      <div class="go">Open →</div>
+    </a>
+    <a class="tile" href="live-mic.html">
+      <div class="n"><div class="num">3</div><div class="h">Honest live mic</div></div>
+      <div class="principle">Never speak into a void · animated</div>
+      <div class="d">The chat gets the orb's honesty: warming (ring breathes, no capture) → live (teal, level-driven bars, verbatim words) → done (editable, nothing auto-fired). The contradiction in the current design, fixed.</div>
+      <div class="go">Open →</div>
+    </a>
+    <a class="tile" href="resume.html">
+      <div class="n"><div class="num">4</div><div class="h">Leaving is safe</div></div>
+      <div class="principle">I end the utterance, not the OS</div>
+      <div class="d">A half-spoken sentence survives a phone call and resumes in one tap, with no “welcome back.” In conversation, a labelled end-turn affordance replaces every countdown and auto-cutoff.</div>
+      <div class="go">Open →</div>
+    </a>
+    <a class="tile" href="calm.html">
+      <div class="n"><div class="num">5</div><div class="h">One focal element</div></div>
+      <div class="principle">The screen is a remote, not a document</div>
+      <div class="d">History recedes to 40% with unlit play buttons; the current card lifts and owns the only glow. The spend figure goes inert — slate, no arrow, never pulsing.</div>
+      <div class="go">Open →</div>
+    </a>
+    <a class="tile" href="../foundations/colors.html" style="background:transparent;border-style:dashed;">
+      <div class="n"><div class="num" style="background:#212B3A;color:var(--dim)">★</div><div class="h" style="color:var(--dim)">Foundations</div></div>
+      <div class="d">The token set these passes build on — colours and the owner-specced chat hierarchy.</div>
+      <div class="go" style="color:var(--dim)">Open →</div>
+    </a>
+  </div>
+
+  <p class="foot">No red anywhere. No streaks, timers, or grades introduced. Every change is calm, warm, and unhurried — the burden stays on the teacher, never handed back to the learner.</p>
+</div>
+</body></html>

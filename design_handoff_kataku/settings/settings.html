@@ -1,0 +1,85 @@
+<!-- @dsCard group="Settings" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  body { margin:0; font-family:-apple-system,'SF Pro Text',system-ui,sans-serif; display:flex; gap:24px; padding:24px; background:#1a2230; }
+  .phone { width:390px; border-radius:40px; padding:60px 24px 32px; box-sizing:border-box; display:flex; flex-direction:column; gap:18px; min-height:860px;
+    background:#0C1117; color:#F2F6FA;
+    --card:#161D27; --raised:#212B3A; --stroke:#2D3950; --text:#F2F6FA; --dim:#9AA7B9; --faint:#5F6E80;
+    --accent:#45D483; --on-accent:#07130C; --accent-deep:#15301F; --live:#6FD6C3; --warn:#E3A968; }
+  .back { color:var(--faint); font-size:14px; }
+  h1 { font-size:26px; font-weight:800; margin:-8px 0 0; }
+
+  .group { display:flex; flex-direction:column; gap:8px; }
+  .glabel { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--faint); font-weight:700; }
+  .card { background:var(--card); border:1px solid var(--stroke); border-radius:18px; padding:16px; }
+  .desc { color:var(--dim); font-size:13px; line-height:1.45; margin-top:10px; }
+  .desc b { color:var(--text); font-weight:700; }
+
+  /* segmented control */
+  .seg { display:flex; gap:6px; background:var(--raised); border-radius:14px; padding:5px; }
+  .seg .opt { flex:1; text-align:center; padding:9px 6px; border-radius:10px; font-size:13.5px; font-weight:700; color:var(--dim); }
+  .seg .opt.on { background:var(--accent); color:var(--on-accent); }
+
+  /* toggle row */
+  .togrow { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .togrow + .togrow { margin-top:14px; padding-top:14px; border-top:1px solid var(--stroke); }
+  .tt { font-size:15px; font-weight:600; }
+  .ts { color:var(--dim); font-size:12.5px; margin-top:2px; line-height:1.4; }
+  .sw { width:46px; height:28px; border-radius:14px; flex:none; position:relative; background:var(--raised); }
+  .sw.on { background:var(--accent); }
+  .sw .knob { position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:#fff; transition:left .15s; }
+  .sw.on .knob { left:21px; }
+
+  /* spend meter */
+  .spendtop { display:flex; align-items:baseline; justify-content:space-between; }
+  .spendn { font-size:24px; font-weight:800; }
+  .spendcap { color:var(--faint); font-size:13px; }
+  .meter { height:8px; border-radius:4px; background:var(--raised); margin:12px 0 0; overflow:hidden; }
+  .meter .fill { height:100%; width:37%; background:var(--accent); border-radius:4px; }
+
+  .fine { color:var(--faint); font-size:12px; line-height:1.5; text-align:center; margin-top:auto; }
+</style></head><body>
+
+<div class="phone">
+  <div class="back">‹ home</div>
+  <h1>Settings</h1>
+
+  <div class="group">
+    <div class="glabel">Think time</div>
+    <div class="card">
+      <div class="seg"><div class="opt">Generous</div><div class="opt on">Normal</div><div class="opt">Brisk</div></div>
+      <div class="desc">How long the teacher waits in silence before offering a nudge. <b>Pauses are never penalised</b> — this only sets when a gentle hand arrives.</div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="glabel">Coach</div>
+    <div class="card">
+      <div class="togrow"><div><div class="tt">Default mood</div><div class="ts">how conversations start — you can still switch per scene</div></div></div>
+      <div class="seg" style="margin-top:10px"><div class="opt on">Gentle</div><div class="opt">Normal</div></div>
+      <div class="togrow" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--stroke)"><div><div class="tt">Speaking pace</div><div class="ts">a beat of air between taught words</div></div></div>
+      <div class="seg" style="margin-top:10px"><div class="opt">Slow</div><div class="opt on">Teaching</div><div class="opt">Natural</div></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="glabel">Spend</div>
+    <div class="card">
+      <div class="spendtop"><div class="spendn">$1.84</div><div class="spendcap">of $10 soft cap</div></div>
+      <div class="meter"><div class="fill"></div></div>
+      <div class="togrow" style="margin-top:14px"><div><div class="tt">Show running cost in lessons</div><div class="ts">the quiet figure top-right</div></div><div class="sw on"><div class="knob"></div></div></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="glabel">Appearance</div>
+    <div class="card">
+      <div class="seg"><div class="opt on">Auto</div><div class="opt">Dark</div><div class="opt">Light</div></div>
+      <div class="desc"><b>Auto</b> follows the daylight around you — the sun-readable theme switches on outdoors by itself. Your manual choice always wins.</div>
+    </div>
+  </div>
+
+  <div class="fine">private · just you and the teacher · no account, no sync</div>
+</div>
+
+</body></html>

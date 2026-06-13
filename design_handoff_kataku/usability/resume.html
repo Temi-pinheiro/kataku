@@ -1,0 +1,72 @@
+<!-- @dsCard group="Usability" name="Leaving is safe" subtitle="Interruption-proof · I end the utterance" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  body { margin:0; font-family:-apple-system,'SF Pro Text',system-ui,sans-serif; display:flex; gap:30px; padding:30px; background:#1a2230; align-items:flex-start; flex-wrap:wrap; }
+  .col { display:flex; flex-direction:column; gap:14px; width:340px; }
+  .tag { font-size:11px; letter-spacing:2px; text-transform:uppercase; font-weight:700; color:#7c8ba0; }
+  .tag b { color:#cdd7e2; }
+  .note { color:#9fb0c4; font-size:12.5px; line-height:1.6; }
+  .note b { color:#d7e0ea; font-weight:600; }
+  .phone { width:340px; border-radius:38px; padding:46px 20px 24px; box-sizing:border-box; display:flex; flex-direction:column; gap:14px; min-height:520px;
+    background:#0C1117; color:#F2F6FA;
+    --card:#161D27; --raised:#212B3A; --stroke:#2D3950; --dim:#9AA7B9; --faint:#5F6E80; --accent:#45D483; --on-accent:#07130C; --accent-deep:#15301F; --live:#6FD6C3; }
+  .brand { color:var(--faint); font-size:11px; letter-spacing:3px; text-transform:uppercase; }
+  .hero { font-size:38px; font-weight:800; letter-spacing:-0.5px; }
+
+  /* resume card — distinct from the suggestion chip: it's a continuation, not an assignment */
+  .resume { background:var(--accent-deep); border:1px solid rgba(111,214,195,.4); border-radius:22px; padding:18px; display:flex; gap:14px; align-items:center; }
+  .resume .icon { width:44px; height:44px; border-radius:22px; border:2px solid var(--live); flex:none; display:flex; align-items:center; justify-content:center; color:var(--live); font-size:18px; }
+  .resume .rt { font-size:16px; font-weight:700; color:var(--text); }
+  .resume .rs { font-size:13px; color:var(--dim); margin-top:3px; }
+  .resume .frag { color:var(--live); font-weight:600; }
+  .suggest { display:inline-flex; align-items:center; gap:9px; align-self:flex-start; background:var(--card); border-radius:999px; padding:9px 15px; font-size:13px; font-weight:500; color:var(--dim); }
+  .suggest i { width:7px; height:7px; border-radius:50%; background:var(--accent); display:block; }
+  .cta { background:var(--card); border:1px solid var(--stroke); border-radius:22px; padding:18px; }
+  .cta .t { font-size:18px; font-weight:800; } .cta .m { color:var(--dim); font-size:13px; margin-top:3px; }
+  .footnote { color:var(--faint); font-size:12px; line-height:18px; }
+
+  /* end-turn / no-cutoff frame */
+  .stage { align-items:center; text-align:center; justify-content:flex-start; }
+  .orbwrap { width:140px; height:140px; display:flex; align-items:center; justify-content:center; position:relative; margin:18px auto 4px; }
+  .orb { width:104px; height:104px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #212B3A, #161D27 75%); border:1.5px solid var(--stroke); position:relative; }
+  .breath { position:absolute; inset:-10px; border-radius:50%; border:1.5px solid rgba(154,167,185,.3); animation:breath 3.4s ease-in-out infinite; }
+  @keyframes breath { 0%,100%{transform:scale(.92);opacity:.5} 50%{transform:scale(1.06);opacity:.15} }
+  .endlbl { font-size:13px; color:var(--dim); }
+  .endbtn { align-self:stretch; background:var(--raised); border:1.5px solid var(--stroke); border-radius:18px; padding:16px; font-size:16px; font-weight:700; color:var(--text); text-align:center; margin-top:6px; }
+  .nocut { display:inline-flex; gap:6px; align-items:center; font-size:11px; font-weight:700; letter-spacing:.5px; color:var(--faint); margin-top:10px; }
+  .nocut s { color:#6b7686; }
+  @media (prefers-reduced-motion: reduce){ .breath{animation:none} }
+</style></head><body>
+
+<div class="col">
+  <div class="tag">Home · <b>resume without comment</b></div>
+  <div class="phone">
+    <div class="brand">kataku</div>
+    <div class="hero">Bahasa Indonesia</div>
+    <div class="resume">
+      <div class="icon">↻</div>
+      <div style="flex:1">
+        <div class="rt">Pick up where you stopped</div>
+        <div class="rs">mid-sentence · <span class="frag">“Dia tidak bisa mi…”</span> still here</div>
+      </div>
+    </div>
+    <div class="suggest"><i></i>Or: continue week 2 with the teacher · ~15 min</div>
+    <div class="cta"><div class="t">Sit with the teacher</div><div class="m">build sentences out loud, one block at a time</div></div>
+    <div class="footnote">No streak. No “welcome back.” No overdue badge. If yesterday was empty, Home greets you exactly the same.</div>
+  </div>
+  <div class="note">A phone call mid-utterance loses nothing: the <b>half-spoken field and scroll position persist</b>. Resume is <b>one tap</b> back to the exact spot — distinct from the suggestion, which stays a quiet shortcut you can ignore for free.</div>
+</div>
+
+<div class="col">
+  <div class="tag">Conversation · <b>I end the utterance, not the OS</b></div>
+  <div class="phone stage">
+    <div class="brand">warung order · gentle</div>
+    <div class="orbwrap"><div class="breath"></div><div class="orb"></div></div>
+    <div class="endlbl">Your turn — take all the time you need.</div>
+    <div class="endbtn">Tap when you’re done</div>
+    <div class="nocut">⃠ NO COUNTDOWN · <s>auto-cutoff</s> · pauses are construction</div>
+  </div>
+  <div class="note">A <b>hard floor</b> before anything can end the turn; long silences tolerated without comment. The turn ends only when <b>you finish your thought or tap</b> — the affordance is large, labelled, and unmistakable. Closing mid-sentence never prompts “are you sure?”.</div>
+</div>
+
+</body></html>

@@ -1,0 +1,142 @@
+<!-- @dsCard group="Usability" name="Honest live mic" subtitle="The chat shows what's true — warming, live, done" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  body { margin:0; font-family:-apple-system,'SF Pro Text',system-ui,sans-serif; display:flex; gap:24px; padding:30px; background:#1a2230; align-items:flex-start; flex-wrap:wrap; }
+  .col { display:flex; flex-direction:column; gap:12px; width:300px; }
+  .tag { font-size:11px; letter-spacing:2px; text-transform:uppercase; font-weight:700; color:#7c8ba0; }
+  .tag b { color:#cdd7e2; }
+  .note { color:#9fb0c4; font-size:12px; line-height:1.55; }
+  .note b { color:#d7e0ea; font-weight:600; }
+  .phone { width:300px; border-radius:34px; padding:18px 14px 14px; box-sizing:border-box; display:flex; flex-direction:column; min-height:430px;
+    background:#0C1117; color:#F2F6FA;
+    --card:#161D27; --raised:#212B3A; --stroke:#2D3950; --dim:#9AA7B9; --faint:#5F6E80; --accent:#45D483; --on-accent:#07130C; --accent-deep:#15301F; --live:#6FD6C3; }
+  .top { display:flex; align-items:center; justify-content:space-between; padding:6px 4px 12px; }
+  .x { color:var(--faint); font-size:15px; } .title { font-size:15px; font-weight:700; } .spend { font-size:11px; color:var(--faint); }
+  .chat { flex:1; display:flex; flex-direction:column; gap:9px; padding:0 2px; }
+  .cue { color:var(--dim); font-size:var(--cue-size,15px); font-weight:500; line-height:1.45; }
+  .target { display:inline-flex; align-items:center; gap:12px; align-self:flex-start; background:var(--card); border:1px solid var(--stroke); border-radius:14px; padding:13px; }
+  .target b { font-size:18px; font-weight:800; }
+  .play { width:26px; height:26px; border-radius:50%; background:var(--accent); position:relative; flex:none; }
+  .play::after { content:''; position:absolute; left:10px; top:7px; border-left:8px solid var(--on-accent); border-top:6px solid transparent; border-bottom:6px solid transparent; }
+
+  /* the input bar in three honest states */
+  .bar { display:flex; align-items:center; gap:10px; border-top:1px solid var(--stroke); padding:12px 4px 4px; margin-top:8px; min-height:60px; box-sizing:border-box; }
+  .field { flex:1; font-size:15px; }
+  .place { color:var(--faint); }
+  .miclive { width:var(--mic-d,48px); height:var(--mic-d,48px); border-radius:50%; flex:none; position:relative; display:flex; align-items:center; justify-content:center; }
+
+  /* IDLE */
+  .mic-idle { border:1.5px solid var(--stroke); background:var(--raised); color:var(--accent); font-size:19px; }
+
+  /* WARMING — ring expands outward, mic dim until truly capturing */
+  .mic-warm { background:var(--raised); color:var(--live); font-size:19px; }
+  .mic-warm .pulse { position:absolute; inset:0; border-radius:50%; border:1.5px solid var(--live); animation:warm 1.2s ease-out infinite; }
+  @keyframes warm { 0%{transform:scale(.7);opacity:.8} 100%{transform:scale(1.55);opacity:0} }
+
+  /* LIVE — teal glow + level bars that move; words land in field */
+  .mic-on { background:var(--live); box-shadow:0 0 26px rgba(111,214,195,.5); }
+  .bars { display:flex; align-items:center; gap:3px; height:22px; }
+  .bars i { width:3.5px; border-radius:2px; background:var(--on-accent); height:30%; transform-origin:center;
+    animation:bob .9s ease-in-out infinite; }
+  .bars i:nth-child(1){animation-delay:0s} .bars i:nth-child(2){animation-delay:.18s} .bars i:nth-child(3){animation-delay:.36s}
+  .bars i:nth-child(4){animation-delay:.12s} .bars i:nth-child(5){animation-delay:.42s}
+  @keyframes bob { 0%,100%{height:22%} 50%{height:100%} }
+  .word { color:var(--live); font-size:var(--ans-size,16px); font-weight:700; line-height:1.35; }
+  .word.faded { opacity:.4; } .word.dim2 { opacity:.7; }
+  .live-tail { display:inline-block; width:9px; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+  /* DONE — soft settle, closing tone, words editable */
+  .mic-done { border:1.5px solid var(--accent); background:var(--accent-deep); color:var(--accent); font-size:18px; }
+  .editable { color:var(--live); font-size:var(--ans-size,16px); font-weight:700; line-height:1.35; border-bottom:1.5px dashed rgba(111,214,195,.5); }
+  .send { width:30px; height:30px; border-radius:50%; background:var(--accent); flex:none; position:relative; }
+  .send::after { content:'↑'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--on-accent); font-weight:800; font-size:16px; }
+  @media (prefers-reduced-motion: reduce){ .pulse,.bars i{animation:none} }
+  /* tweak defaults applied up-front so the card reads tuned even before the panel mounts */
+  :root{ --ans-size:16px; --cue-size:15px; --mic-d:48px; }
+</style></head><body>
+
+<div class="col">
+  <div class="tag">1 · <b>warming</b></div>
+  <div class="phone">
+    <div class="top"><span class="x">✕</span><span class="title">Bahasa Indonesia</span><span class="spend">$0.51</span></div>
+    <div class="chat">
+      <div class="target"><b>tidak bisa</b><div class="play"></div></div>
+      <div class="cue">Now say: “She can’t drink.”</div>
+    </div>
+    <div class="bar"><div class="field place">opening…</div><div class="miclive mic-warm"><div class="pulse"></div>🎤</div></div>
+  </div>
+  <div class="note"><b>Before the mic is truly live</b>, the ring breathes outward and the field says <i>opening…</i> — the soft tone hasn't played yet. No glow means no capture.</div>
+</div>
+
+<div class="col">
+  <div class="tag">2 · <b>live · moving with you</b></div>
+  <div class="phone">
+    <div class="top"><span class="x">✕</span><span class="title">Bahasa Indonesia</span><span class="spend">$0.51</span></div>
+    <div class="chat">
+      <div class="target"><b>tidak bisa</b><div class="play"></div></div>
+      <div class="cue">Now say: “She can’t drink.”</div>
+    </div>
+    <div class="bar">
+      <div class="field"><span class="word">Dia</span> <span class="word">tidak</span> <span class="word dim2">bisa</span> <span class="word faded">mi…</span></div>
+      <div class="miclive mic-on"><div class="bars"><i></i><i></i><i></i><i></i><i></i></div></div>
+    </div>
+  </div>
+  <div class="note">Tone played, haptic tapped. The button is teal and <b>the bars move with your actual level</b> — proof it hears you. Words <b>land verbatim as you say them</b>, never paraphrased.</div>
+</div>
+
+<div class="col">
+  <div class="tag">3 · <b>done · yours to fix</b></div>
+  <div class="phone">
+    <div class="top"><span class="x">✕</span><span class="title">Bahasa Indonesia</span><span class="spend">$0.51</span></div>
+    <div class="chat">
+      <div class="target"><b>tidak bisa</b><div class="play"></div></div>
+      <div class="cue">Now say: “She can’t drink.”</div>
+    </div>
+    <div class="bar">
+      <div class="field"><span class="editable">Dia tidak bisa minum</span></div>
+      <div class="miclive mic-done">🎤</div>
+      <div class="send"></div>
+    </div>
+  </div>
+  <div class="note">Closing tone, glow gone. The captured line is <b>editable — mine to correct</b> (tap any word) before it sends. Nothing auto-fired; the send sits ready, not pushed.</div>
+</div>
+<div id="tweak-root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="./tweaks-panel.jsx"></script>
+<script type="text/babel">
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "ansSize": 16,
+    "cueSize": 15,
+    "micD": 48
+  }/*EDITMODE-END*/;
+
+  function App() {
+    const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+    React.useEffect(() => {
+      const r = document.documentElement.style;
+      r.setProperty('--ans-size', t.ansSize + 'px');
+      r.setProperty('--cue-size', t.cueSize + 'px');
+      r.setProperty('--mic-d', t.micD + 'px');
+    }, [t.ansSize, t.cueSize, t.micD]);
+
+    return (
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Captured answer" />
+        <TweakSlider label="Text size" value={t.ansSize} min={13} max={20} step={1} unit="px"
+                     onChange={(v) => setTweak('ansSize', v)} />
+        <TweakSlider label="Cue size" value={t.cueSize} min={13} max={17} step={1} unit="px"
+                     onChange={(v) => setTweak('cueSize', v)} />
+        <TweakSection label="Mic button" />
+        <TweakSlider label="Diameter" value={t.micD} min={40} max={56} step={1} unit="px"
+                     onChange={(v) => setTweak('micD', v)} />
+      </TweaksPanel>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('tweak-root')).render(<App />);
+</script>
+
+</body></html>

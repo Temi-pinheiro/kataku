@@ -1,0 +1,78 @@
+<!-- @dsCard group="Usability" name="Daylight survival" subtitle="Light theme that holds in direct sun" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  body { margin:0; font-family:-apple-system,'SF Pro Text',system-ui,sans-serif; display:flex; gap:30px; padding:30px; background:#1a2230; align-items:flex-start; flex-wrap:wrap; }
+  .col { display:flex; flex-direction:column; gap:14px; width:360px; }
+  .tag { font-size:11px; letter-spacing:2px; text-transform:uppercase; font-weight:700; color:#7c8ba0; }
+  .tag b { color:#cdd7e2; }
+  .note { color:#9fb0c4; font-size:12.5px; line-height:1.6; }
+  .note b { color:#d7e0ea; font-weight:600; }
+  .phone { position:relative; width:360px; border-radius:36px; padding:20px 16px; box-sizing:border-box; min-height:430px; overflow:hidden; background:#F4F7F9; color:#15202B; }
+  /* glare veil simulating hard tropical sun on the panel */
+  .sun::after { content:''; position:absolute; inset:0; pointer-events:none; border-radius:36px;
+    background:linear-gradient(120deg, rgba(255,255,255,.62), rgba(255,255,255,.34) 55%, rgba(255,255,255,.5)); mix-blend-mode:screen; }
+  .glarelbl { position:absolute; top:12px; right:16px; z-index:2; font-size:10px; font-weight:700; letter-spacing:1px; color:#9aa7b3; }
+  .top { display:flex; align-items:center; justify-content:space-between; padding:6px 4px 16px; }
+  .title { font-size:17px; font-weight:700; }
+
+  /* BEFORE tokens */
+  .b-dim { color:#56697D; } .b-faint { color:#8898A9; }
+  /* AFTER tokens — darker dim/faint, dedicated narration ink */
+  .a-dim { color:#3C4F63; } .a-faint { color:#5A6E82; } .a-narr { color:#2C3E52; }
+
+  .ambient { font-size:14.5px; line-height:22px; max-width:94%; margin-bottom:14px; }
+  .cue { font-size:16px; font-weight:500; line-height:24px; margin-bottom:14px; }
+  .target { display:inline-flex; align-items:center; gap:14px; background:#FFFFFF; border:1px solid #D5DEE7; border-radius:16px; padding:14px; margin-bottom:14px; }
+  .target b { font-size:20px; font-weight:800; }
+  .play { width:30px; height:30px; border-radius:50%; background:#12A35B; }
+  .verdict { font-size:15px; font-weight:600; margin-bottom:10px; }
+  .b-good { color:#12A35B; } .a-good { color:#0B7C45; }
+  .spend { font-size:12px; }
+  .meta { font-size:12px; display:flex; gap:8px; align-items:center; margin-top:6px; }
+  .swatchrow { display:flex; gap:8px; margin-top:4px; }
+  .chip { font-size:11px; font-weight:600; padding:4px 9px; border-radius:8px; color:#fff; font-variant-numeric:tabular-nums; }
+</style></head><body>
+
+<div class="col">
+  <div class="tag">Before · <b>faint grey vanishes</b></div>
+  <div class="phone sun">
+    <span class="glarelbl">◑ direct sun</span>
+    <div class="top"><span class="title">Bahasa Indonesia</span><span class="spend b-faint">$0.51</span></div>
+    <div class="ambient b-dim">The word for tea is — and notice it never shouts —</div>
+    <div class="target"><b>teh</b><div class="play"></div></div>
+    <div class="cue b-dim">Now say: “He doesn’t want tea.”</div>
+    <div class="verdict b-good">Good.</div>
+    <div class="meta b-faint">step 6 of 12 · think time normal</div>
+  </div>
+  <div class="note">Under glare, <b>faint #8898A9</b> and even <b>dim #56697D</b> drop below readable. The narration — the teacher's voice in the margins — is the first thing to disappear exactly when you're walking.</div>
+</div>
+
+<div class="col">
+  <div class="tag">After · <b>same glare, still legible</b></div>
+  <div class="phone sun">
+    <span class="glarelbl">◑ direct sun</span>
+    <div class="top"><span class="title">Bahasa Indonesia</span><span class="spend a-faint">$0.51</span></div>
+    <div class="ambient a-narr">The word for tea is — and notice it never shouts —</div>
+    <div class="target"><b>teh</b><div class="play"></div></div>
+    <div class="cue a-dim">Now say: “He doesn’t want tea.”</div>
+    <div class="verdict a-good">Good.</div>
+    <div class="meta a-faint">step 6 of 12 · think time normal</div>
+  </div>
+  <div class="note">
+    Narration gets its own darker ink (<b>narration&nbsp;#2C3E52</b>, ~9:1); <b>dim→#3C4F63</b>, <b>faint→#5A6E82</b>, reserved for the spend figure only. Pass-green deepens to <b>#0B7C45</b> so result colour survives the wash.
+    <div class="swatchrow">
+      <span class="chip" style="background:#8898A9">old 2.6:1</span>
+      <span class="chip" style="background:#2C3E52">new 9:1</span>
+      <span class="chip" style="background:#0B7C45">go 5.4:1</span>
+    </div>
+  </div>
+</div>
+
+<div class="col" style="width:280px">
+  <div class="tag">+ <b>auto theme</b></div>
+  <div class="note" style="background:#0C1117;border:1px solid #2D3950;border-radius:20px;padding:18px;color:#9AA7B9">
+    Theme follows the <b style="color:#F2F6FA">ambient-light sensor</b> (falls back to local sunrise/sunset), so the sun-readable palette is simply <b style="color:#F2F6FA">on outdoors</b> — no settings trip mid-walk. Manual override always wins and persists.
+  </div>
+</div>
+
+</body></html>

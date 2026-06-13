@@ -1,0 +1,157 @@
+<!-- @dsCard group="Home" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  body { margin:0; font-family:-apple-system,'SF Pro Text',system-ui,sans-serif; display:flex; gap:24px; padding:24px; background:#1a2230; align-items:flex-start; }
+  .phone { width:390px; border-radius:40px; padding:52px 22px 30px; box-sizing:border-box; display:flex; flex-direction:column; gap:16px; min-height:820px; position:relative; }
+  .dark { background:#0C1117; color:#F2F6FA;
+    --card:#161D27; --raised:#212B3A; --stroke:#2D3950; --text:#F2F6FA; --dim:#9AA7B9; --faint:#5F6E80;
+    --accent:#45D483; --on-accent:#07130C; --accent-deep:#15301F; --live:#6FD6C3; }
+  .light { background:#F4F7F9; color:#15202B;
+    --card:#FFFFFF; --raised:#E9EFF4; --stroke:#D5DEE7; --text:#15202B; --dim:#3C4F63; --faint:#5A6E82;
+    --accent:#12A35B; --on-accent:#FFFFFF; --accent-deep:#D9F3E4; --live:#0C8B77; }
+
+  /* header: brand left, [stories book] + language bubble right */
+  .head { display:flex; align-items:center; justify-content:space-between; }
+  .brand { color:var(--faint); font-size:12px; letter-spacing:3px; text-transform:uppercase; }
+  .headright { display:flex; align-items:center; gap:10px; }
+  .iconbtn { width:42px; height:42px; border-radius:50%; background:var(--card); border:1px solid var(--stroke);
+    display:flex; align-items:center; justify-content:center; color:var(--dim); text-decoration:none; flex:none; }
+  .iconbtn svg { width:21px; height:21px; }
+  .langzone { position:relative; }
+  .langtoggle { position:absolute; opacity:0; pointer-events:none; }
+  .bubble { display:flex; align-items:center; gap:6px; height:42px; padding:0 6px 0 14px; border-radius:21px;
+    background:var(--card); border:1px solid var(--stroke); cursor:pointer; user-select:none; }
+  .bubble .code { font-size:15px; font-weight:800; letter-spacing:.5px; }
+  .bubble .car { width:18px; height:18px; border-radius:50%; background:var(--raised); display:flex; align-items:center;
+    justify-content:center; font-size:10px; color:var(--dim); transition:transform .2s ease; }
+  .langtoggle:checked ~ .bubble { border-color:var(--accent); }
+  .langtoggle:checked ~ .bubble .car { transform:rotate(180deg); }
+
+  .picker { position:absolute; top:50px; right:0; width:244px; z-index:5; background:var(--card);
+    border:1px solid var(--stroke); border-radius:20px; padding:8px; box-shadow:0 18px 44px rgba(0,0,0,.5);
+    display:none; }
+  .langtoggle:checked ~ .picker { display:block; }
+  .pickhd { font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--faint); font-weight:700; padding:8px 10px 6px; }
+  .opt { display:flex; align-items:center; gap:12px; padding:9px 10px; border-radius:13px; }
+  .opt .code { width:36px; height:30px; border-radius:8px; background:var(--raised); display:flex; align-items:center;
+    justify-content:center; font-size:13px; font-weight:800; flex:none; }
+  .opt .nm { font-size:15px; font-weight:600; }
+  .opt .sub { font-size:12px; color:var(--dim); margin-top:1px; }
+  .opt.cur { background:var(--accent-deep); }
+  .opt.cur .code { background:var(--accent); color:var(--on-accent); }
+
+  .hero { font-size:42px; font-weight:800; letter-spacing:-0.5px; margin-top:2px; }
+  .suggest { display:flex; align-items:center; gap:10px; align-self:flex-start; background:var(--accent-deep);
+    border-radius:999px; padding:9px 16px; font-size:14px; font-weight:600; color:var(--text); }
+  .suggest i { width:8px; height:8px; border-radius:50%; background:var(--accent); display:block; }
+  .cta { display:flex; align-items:center; gap:16px; background:var(--accent); border-radius:24px; padding:22px; min-height:104px; box-sizing:border-box; }
+  .cta .t { color:var(--on-accent); font-size:25px; font-weight:800; }
+  .cta .m { color:var(--on-accent); opacity:.78; font-size:14px; margin-top:4px; }
+  .convo { display:flex; align-items:center; gap:16px; background:var(--card); border:1px solid var(--stroke); border-radius:24px; padding:20px; min-height:84px; box-sizing:border-box; }
+  .convo .t { font-size:20px; font-weight:800; }
+  .convo .m { color:var(--dim); font-size:14px; margin-top:4px; }
+  .wave { width:40px; height:40px; border-radius:50%; border:2.5px solid var(--live); flex:none; position:relative; }
+  .wave::after { content:'〜'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--live); font-size:18px; }
+
+  /* earlier lessons */
+  .seclabel { display:flex; align-items:center; justify-content:space-between; margin-top:4px; }
+  .seclabel .l { font-size:13px; font-weight:700; color:var(--dim); letter-spacing:.3px; }
+  .seclabel .a { font-size:12px; color:var(--faint); font-weight:600; }
+  .strip { display:flex; gap:10px; overflow-x:auto; margin:0 -22px; padding:2px 22px 4px; scrollbar-width:none; }
+  .strip::-webkit-scrollbar { display:none; }
+  .lesson { min-width:150px; background:var(--card); border:1px solid var(--stroke); border-radius:18px; padding:14px;
+    display:flex; flex-direction:column; gap:5px; box-sizing:border-box; }
+  .lesson .wk { font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--faint); font-weight:700; }
+  .lesson .topic { font-size:16px; font-weight:800; line-height:21px; }
+  .lesson .ex { font-size:12.5px; color:var(--dim); line-height:17px; }
+  .lesson .ret { margin-top:8px; display:flex; align-items:center; gap:6px; color:var(--live); font-size:12px; font-weight:700; }
+
+  .row { display:flex; gap:14px; }
+  .sec { flex:1; background:var(--card); border-radius:22px; padding:16px; min-height:112px; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; }
+  .num { color:var(--accent); font-size:26px; font-weight:800; }
+  .lbl { color:var(--dim); font-size:12px; line-height:16px; }
+  .lnk { color:var(--faint); font-size:12px; margin-top:8px; }
+</style></head><body>
+
+<!-- DARK · picker closed -->
+<div class="phone dark">
+  <div class="head">
+    <div class="brand">kataku</div>
+    <div class="headright">
+    <a class="iconbtn" href="../story/stories.html" title="Stories" aria-label="Stories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.6C10.4 5.4 8.4 4.9 5.8 5.1c-.9.07-1.5.18-1.8.27v12.9c.3-.09.9-.2 1.8-.27 2.6-.2 4.6.3 6.2 1.5 1.6-1.2 3.6-1.7 6.2-1.5.9.07 1.5.18 1.8.27V5.37c-.3-.09-.9-.2-1.8-.27-2.6-.2-4.6.3-6.2 1.5z"/><path d="M12 6.6V19"/></svg></a>
+    <div class="langzone">
+      <input type="checkbox" id="lang-d" class="langtoggle">
+      <label class="bubble" for="lang-d"><span class="code">ID</span><span class="car">▾</span></label>
+      <div class="picker">
+        <div class="pickhd">Learning</div>
+        <div class="opt cur"><div class="code">ID</div><div><div class="nm">Indonesian</div><div class="sub">Month 1 · Week 2</div></div></div>
+        <div class="opt"><div class="code">ES</div><div><div class="nm">Spanish</div><div class="sub">conversational</div></div></div>
+        <div class="opt"><div class="code">FR</div><div><div class="nm">French</div><div class="sub">resting</div></div></div>
+        <div class="opt"><div class="code">IT</div><div><div class="nm">Italian</div><div class="sub">resting</div></div></div>
+        <div class="opt"><div class="code">ZH</div><div><div class="nm">中文</div><div class="sub">Month 1 · Week 1</div></div></div>
+        <div class="opt"><div class="code">JA</div><div><div class="nm">日本語</div><div class="sub">resting</div></div></div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="hero">Bahasa Indonesia</div>
+  <div class="suggest"><i></i>Continue week 2 with the teacher · ~15 min</div>
+  <div class="cta"><div style="flex:1"><div class="t">Sit with the teacher</div><div class="m">build sentences out loud, one block at a time</div></div></div>
+  <div class="convo"><div style="flex:1"><div class="t">Have a conversation</div><div class="m">all voice, both ways — it corrects by rephrasing</div></div><div class="wave"></div></div>
+
+  <div class="seclabel"><div class="l">Earlier lessons</div><div class="a">all lessons →</div></div>
+  <div class="strip">
+    <div class="lesson"><div class="wk">Wk 2 · Lesson 4</div><div class="topic">Can’t</div><div class="ex">tidak bisa · negating ability</div><div class="ret">↻ revisit</div></div>
+    <div class="lesson"><div class="wk">Wk 2 · Lesson 3</div><div class="topic">Want</div><div class="ex">mau · I / you / he wants</div><div class="ret">↻ revisit</div></div>
+    <div class="lesson"><div class="wk">Wk 1 · Lesson 2</div><div class="topic">This & that</div><div class="ex">ini · itu</div><div class="ret">↻ revisit</div></div>
+    <div class="lesson"><div class="wk">Wk 1 · Lesson 1</div><div class="topic">Hello</div><div class="ex">first words</div><div class="ret">↻ revisit</div></div>
+  </div>
+
+  <div class="row">
+    <div class="sec"><div class="num">~2,400</div><div class="lbl">sentences you can say</div><div class="lnk">weekly review →</div></div>
+    <div class="sec"><div style="font-size:22px">⚙︎</div><div class="lbl">think time · coach · spend</div><div class="lnk">settings →</div></div>
+  </div>
+</div>
+
+<!-- LIGHT · picker popped open -->
+<div class="phone light">
+  <div class="head">
+    <div class="brand">kataku</div>
+    <div class="headright">
+    <a class="iconbtn" href="../story/stories.html" title="Stories" aria-label="Stories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.6C10.4 5.4 8.4 4.9 5.8 5.1c-.9.07-1.5.18-1.8.27v12.9c.3-.09.9-.2 1.8-.27 2.6-.2 4.6.3 6.2 1.5 1.6-1.2 3.6-1.7 6.2-1.5.9.07 1.5.18 1.8.27V5.37c-.3-.09-.9-.2-1.8-.27-2.6-.2-4.6.3-6.2 1.5z"/><path d="M12 6.6V19"/></svg></a>
+    <div class="langzone">
+      <input type="checkbox" id="lang-l" class="langtoggle" checked>
+      <label class="bubble" for="lang-l"><span class="code">ZH</span><span class="car">▾</span></label>
+      <div class="picker">
+        <div class="pickhd">Learning</div>
+        <div class="opt"><div class="code">ID</div><div><div class="nm">Indonesian</div><div class="sub">Month 1 · Week 2</div></div></div>
+        <div class="opt"><div class="code">ES</div><div><div class="nm">Spanish</div><div class="sub">conversational</div></div></div>
+        <div class="opt"><div class="code">FR</div><div><div class="nm">French</div><div class="sub">resting</div></div></div>
+        <div class="opt"><div class="code">IT</div><div><div class="nm">Italian</div><div class="sub">resting</div></div></div>
+        <div class="opt cur"><div class="code">ZH</div><div><div class="nm">中文</div><div class="sub">Month 1 · Week 1</div></div></div>
+        <div class="opt"><div class="code">JA</div><div><div class="nm">日本語</div><div class="sub">resting</div></div></div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="hero">中文</div>
+  <div class="suggest"><i></i>Try the introductions conversation</div>
+  <div class="cta"><div style="flex:1"><div class="t">Sit with the teacher</div><div class="m">build sentences out loud, one block at a time</div></div></div>
+  <div class="convo"><div style="flex:1"><div class="t">Have a conversation</div><div class="m">all voice, both ways — it corrects by rephrasing</div></div><div class="wave"></div></div>
+
+  <div class="seclabel"><div class="l">Earlier lessons</div><div class="a">all lessons →</div></div>
+  <div class="strip">
+    <div class="lesson"><div class="wk">Wk 1 · Lesson 3</div><div class="topic">Numbers</div><div class="ex">一 二 三 · yī èr sān</div><div class="ret">↻ revisit</div></div>
+    <div class="lesson"><div class="wk">Wk 1 · Lesson 2</div><div class="topic">I am</div><div class="ex">我是 · wǒ shì</div><div class="ret">↻ revisit</div></div>
+    <div class="lesson"><div class="wk">Wk 1 · Lesson 1</div><div class="topic">Hello</div><div class="ex">你好 · nǐ hǎo</div><div class="ret">↻ revisit</div></div>
+  </div>
+
+  <div class="row">
+    <div class="sec"><div class="num">38</div><div class="lbl">words you own</div><div class="lnk">weekly review →</div></div>
+    <div class="sec"><div style="font-size:22px">⚙︎</div><div class="lbl">think time · coach · spend</div><div class="lnk">settings →</div></div>
+  </div>
+</div>
+
+</body></html>

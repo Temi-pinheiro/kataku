@@ -1,0 +1,74 @@
+<!-- @dsCard group="Lessons" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  body { margin:0; font-family:-apple-system,'SF Pro Text',system-ui,sans-serif; display:flex; gap:24px; padding:24px; background:#1a2230; }
+  .phone { width:390px; border-radius:40px; padding:60px 24px 32px; box-sizing:border-box; display:flex; flex-direction:column; gap:14px; min-height:860px;
+    background:#0C1117; color:#F2F6FA;
+    --card:#161D27; --raised:#212B3A; --stroke:#2D3950; --text:#F2F6FA; --dim:#9AA7B9; --faint:#5F6E80;
+    --accent:#45D483; --on-accent:#07130C; --accent-deep:#15301F; --live:#6FD6C3; --warn:#E3A968; --miss:#94A3B8; }
+  .back { color:var(--faint); font-size:14px; }
+  .eyebrow { color:var(--dim); font-size:14px; }
+  h1 { font-size:26px; font-weight:800; margin:0; }
+  .summ { color:var(--faint); font-size:13px; margin-top:-4px; }
+  .summ b { color:var(--dim); font-weight:700; }
+
+  .month { margin-top:10px; }
+  .mlabel { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--faint); font-weight:700; margin-bottom:6px; }
+  .mlabel.ahead { color:var(--stroke); }
+
+  /* vertical spine of nodes */
+  .map { position:relative; padding-left:6px; }
+  .wk { font-size:12px; font-weight:700; color:var(--dim); margin:12px 0 8px 34px; }
+  .node { position:relative; display:flex; gap:14px; padding:0 0 14px 0; }
+  .node::before { content:''; position:absolute; left:11px; top:22px; bottom:-2px; width:2px; background:var(--stroke); }
+  .node:last-child::before { display:none; }
+  .dot { width:24px; height:24px; border-radius:50%; flex:none; position:relative; z-index:1; box-sizing:border-box; }
+  .dot.done { background:var(--accent); }
+  .dot.done::after { content:''; position:absolute; left:8px; top:5px; width:5px; height:9px; border:2px solid var(--on-accent); border-top:0; border-left:0; transform:rotate(42deg); }
+  .dot.here { background:var(--accent-deep); border:2px solid var(--accent); box-shadow:0 0 0 4px rgba(69,212,131,.16); }
+  .dot.here::after { content:''; position:absolute; inset:5px; border-radius:50%; background:var(--accent); }
+  .dot.ahead { background:transparent; border:2px solid var(--stroke); }
+
+  .body { flex:1; display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+  .topic { font-size:16px; font-weight:800; line-height:20px; }
+  .words { font-size:12.5px; color:var(--dim); margin-top:2px; }
+  .ahead .topic { color:var(--faint); font-weight:700; }
+  .ahead .words { color:var(--stroke); }
+  .revisit { display:flex; align-items:center; gap:5px; color:var(--live); font-size:12px; font-weight:700; flex:none; padding-top:2px; }
+  .herechip { font-size:11px; font-weight:800; color:var(--accent); letter-spacing:.3px; flex:none; padding-top:3px; }
+  .fine { color:var(--faint); font-size:12px; text-align:center; margin-top:6px; }
+</style></head><body>
+
+<div class="phone">
+  <div class="back">‹ home</div>
+  <div class="eyebrow">Bahasa Indonesia</div>
+  <h1>Your map</h1>
+  <div class="summ"><b>23 blocks</b> are yours so far · revisit any, any time</div>
+
+  <div class="month">
+    <div class="mlabel">Month 1 — Foundations</div>
+    <div class="map">
+      <div class="wk">Week 1</div>
+      <div class="node"><div class="dot done"></div><div class="body"><div><div class="topic">Hello</div><div class="words">selamat · apa kabar · first words</div></div><div class="revisit">↻ revisit</div></div></div>
+      <div class="node"><div class="dot done"></div><div class="body"><div><div class="topic">This &amp; that</div><div class="words">ini · itu</div></div><div class="revisit">↻ revisit</div></div></div>
+      <div class="node"><div class="dot done"></div><div class="body"><div><div class="topic">Numbers</div><div class="words">satu · dua · tiga</div></div><div class="revisit">↻ revisit</div></div></div>
+
+      <div class="wk">Week 2</div>
+      <div class="node"><div class="dot done"></div><div class="body"><div><div class="topic">Want</div><div class="words">mau · I / you / he wants</div></div><div class="revisit">↻ revisit</div></div></div>
+      <div class="node"><div class="dot here"></div><div class="body"><div><div class="topic">Can’t</div><div class="words">tidak bisa · negating ability</div></div><div class="herechip">you’re here</div></div></div>
+      <div class="node"><div class="dot ahead"></div><div class="body ahead"><div><div class="topic">Have to</div><div class="words">harus</div></div></div></div>
+    </div>
+  </div>
+
+  <div class="month">
+    <div class="mlabel ahead">Month 2 — Putting it together · ahead</div>
+    <div class="map">
+      <div class="node"><div class="dot ahead"></div><div class="body ahead"><div><div class="topic">Yesterday &amp; tomorrow</div><div class="words">kemarin · besok</div></div></div></div>
+      <div class="node"><div class="dot ahead"></div><div class="body ahead"><div><div class="topic">Already / not yet</div><div class="words">sudah · belum</div></div></div></div>
+    </div>
+  </div>
+
+  <div class="fine">nothing locked — wander ahead or back whenever you like</div>
+</div>
+
+</body></html>

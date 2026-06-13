@@ -1,0 +1,49 @@
+<!-- @dsCard group="Conversation" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  body { margin:0; font-family:-apple-system,'SF Pro Text',system-ui,sans-serif; background:#0C1117; color:#F2F6FA;
+    display:flex; gap:8px; padding:32px 16px; }
+  .state { flex:1; display:flex; flex-direction:column; align-items:center; gap:18px; padding-top:12px; }
+  .label { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#5F6E80; font-weight:700; }
+  .orbwrap { width:150px; height:150px; display:flex; align-items:center; justify-content:center; position:relative; }
+  .orb { border-radius:50%; }
+  .partner { width:104px; height:104px; background:radial-gradient(circle at 35% 30%, #45D483, #15301F 75%); box-shadow:0 0 56px rgba(69,212,131,.35); }
+  .waiting { width:96px; height:96px; background:radial-gradient(circle at 35% 30%, #212B3A, #161D27 75%); border:1.5px solid #2D3950; }
+  .hearing { width:118px; height:118px; background:radial-gradient(circle at 35% 30%, #6FD6C3, #0C8B77 80%); box-shadow:0 0 72px rgba(111,214,195,.45); }
+  .ring { position:absolute; inset:6px; border-radius:50%; border:1.5px solid rgba(111,214,195,.35); }
+  .thinking { width:96px; height:96px; background:radial-gradient(circle at 35% 30%, #212B3A, #161D27 75%); border:1.5px solid #2D3950; opacity:.8; }
+  .dots { position:absolute; display:flex; gap:6px; }
+  .dots i { width:7px; height:7px; border-radius:50%; background:#9AA7B9; display:block; }
+  .dots i:nth-child(2) { opacity:.6 } .dots i:nth-child(3) { opacity:.3 }
+  .caption { font-size:13px; color:#9AA7B9; text-align:center; line-height:1.5; max-width:170px; }
+  .live { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; max-width:180px; }
+  .live span { color:#6FD6C3; font-size:22px; font-weight:700; line-height:30px; }
+  .live span:nth-child(4) { opacity:.55 } .live span:nth-child(5) { opacity:.25 }
+</style></head><body>
+
+<div class="state">
+  <div class="label">Partner speaking</div>
+  <div class="orbwrap"><div class="orb partner"></div></div>
+  <div class="caption">Alive, breathing with the voice. Tap = “let me speak” — never punished.</div>
+</div>
+
+<div class="state">
+  <div class="label">Waiting · patient</div>
+  <div class="orbwrap"><div class="orb waiting"></div></div>
+  <div class="caption">Your turn, no rush. It holds this calmly for 12 patient seconds — attention without pressure.</div>
+</div>
+
+<div class="state">
+  <div class="label">Hearing you</div>
+  <div class="orbwrap"><div class="ring"></div><div class="orb hearing"></div></div>
+  <div class="caption">Teal is the learner’s own voice. The orb swells with your level — proof it hears you.</div>
+  <div class="live"><span>saya</span><span>mau</span><span>pergi</span><span>ke</span><span>pa…</span></div>
+</div>
+
+<div class="state">
+  <div class="label">Thinking</div>
+  <div class="orbwrap"><div class="orb thinking"></div><div class="dots"><i></i><i></i><i></i></div></div>
+  <div class="caption">Brief, honest, never dead air for long — a filler line plays if it thinks too slowly.</div>
+</div>
+
+</body></html>

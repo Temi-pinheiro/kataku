@@ -1,0 +1,76 @@
+<!-- @dsCard group="Usability" name="One focal element" subtitle="The current card is king; history recedes" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  body { margin:0; font-family:-apple-system,'SF Pro Text',system-ui,sans-serif; display:flex; gap:30px; padding:30px; background:#1a2230; align-items:flex-start; flex-wrap:wrap; }
+  .col { display:flex; flex-direction:column; gap:14px; width:360px; }
+  .tag { font-size:11px; letter-spacing:2px; text-transform:uppercase; font-weight:700; color:#7c8ba0; }
+  .tag b { color:#cdd7e2; }
+  .note { color:#9fb0c4; font-size:12.5px; line-height:1.6; }
+  .note b { color:#d7e0ea; font-weight:600; }
+  .phone { width:360px; border-radius:36px; padding:18px 16px 16px; box-sizing:border-box; display:flex; flex-direction:column; min-height:540px;
+    background:#0C1117; color:#F2F6FA;
+    --card:#161D27; --raised:#212B3A; --stroke:#2D3950; --dim:#9AA7B9; --faint:#5F6E80; --accent:#45D483; --on-accent:#07130C; --accent-deep:#15301F; --live:#6FD6C3; --warn:#E3A968; --miss:#94A3B8; }
+  .top { display:flex; align-items:center; justify-content:space-between; padding:6px 4px 14px; }
+  .x { color:var(--faint); font-size:16px; } .title { font-size:16px; font-weight:700; } .spend { font-size:12px; color:var(--faint); }
+  .chat { flex:1; display:flex; flex-direction:column; gap:9px; padding:0 4px; }
+  .ambient { color:var(--dim); font-size:14px; line-height:21px; }
+  .cue { color:var(--dim); font-size:15px; font-weight:500; line-height:22px; }
+  .verdict { font-size:14px; font-weight:600; } .good { color:var(--accent); } .close { color:var(--warn); }
+  .learner { align-self:flex-end; background:var(--accent-deep); border-radius:22px 22px 9px 22px; padding:13px 15px; font-size:16px; }
+  .target { display:inline-flex; align-items:center; gap:14px; align-self:flex-start; background:var(--card); border:1px solid var(--stroke); border-radius:15px; padding:14px; }
+  .target b { font-size:20px; font-weight:800; }
+  .play { width:28px; height:28px; border-radius:50%; background:var(--accent); position:relative; flex:none; }
+  .play::after { content:''; position:absolute; left:10px; top:7px; border-left:9px solid var(--on-accent); border-top:6px solid transparent; border-bottom:6px solid transparent; }
+
+  /* BEFORE: every past card as loud as the current one */
+  .flat .target { opacity:1; }
+  .flat .target.king { box-shadow:none; }
+
+  /* AFTER: history recedes, current card lifts and is the only lit play */
+  .past { opacity:.4; }
+  .past .play { background:var(--stroke); }
+  .past .play::after { border-left-color:var(--faint); }
+  .king { background:linear-gradient(180deg,#1b2533,#161D27); border-color:rgba(69,212,131,.45); box-shadow:0 8px 30px rgba(0,0,0,.45), 0 0 0 1px rgba(69,212,131,.12); transform:scale(1.02); transform-origin:left; }
+  .king b { font-size:22px; }
+  .king .play { box-shadow:0 0 20px rgba(69,212,131,.45); }
+  .spendq { color:var(--faint); font-weight:500; }
+</style></head><body>
+
+<div class="col">
+  <div class="tag">Before · <b>three kings shouting</b></div>
+  <div class="phone flat">
+    <div class="top"><span class="x">✕</span><span class="title">Bahasa Indonesia</span><span class="spend" style="color:var(--accent);font-weight:700">$0.51 ▲</span></div>
+    <div class="chat">
+      <div class="target king"><b>tidak bisa</b><div class="play"></div></div>
+      <div class="learner">Dia tidak bisa minum</div>
+      <div class="verdict good">That’s it.</div>
+      <div class="target king"><b>Dia tidak bisa minum</b><div class="play"></div></div>
+      <div class="learner">Dia mau teh</div>
+      <div class="verdict close">Almost — one word.</div>
+      <div class="target king"><b>teh</b><div class="play"></div></div>
+      <div class="cue">Now say: “He wants tea.”</div>
+    </div>
+  </div>
+  <div class="note">Three equally-bold cards, three lit play buttons — <b>nothing tells the eye where “now” is</b>. The spend figure even pulses for attention. The screen reads as a document to scan.</div>
+</div>
+
+<div class="col">
+  <div class="tag">After · <b>one focal element</b></div>
+  <div class="phone">
+    <div class="top"><span class="x">✕</span><span class="title">Bahasa Indonesia</span><span class="spend spendq">$0.51</span></div>
+    <div class="chat">
+      <div class="target past"><b>tidak bisa</b><div class="play"></div></div>
+      <div class="verdict good" style="opacity:.45">That’s it.</div>
+      <div class="target past"><b>Dia tidak bisa minum</b><div class="play"></div></div>
+      <div class="verdict close" style="opacity:.5">Almost — one word.</div>
+      <div class="ambient" style="opacity:.55">The word for tea is —</div>
+      <div class="target king"><b>teh</b><div class="play"></div></div>
+      <div class="cue">Now say: “He wants tea.”</div>
+    </div>
+  </div>
+  <div class="note">
+    History dims to <b>40%</b> with unlit play buttons — present for context, never competing. The <b>current card lifts, brightens, scales 1.02</b>, and owns the only glowing play. The spend figure goes <b>inert</b>: slate, no arrow, never pulsing. One thing to look at, always.
+  </div>
+</div>
+
+</body></html>

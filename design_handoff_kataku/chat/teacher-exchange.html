@@ -1,0 +1,69 @@
+<!-- @dsCard group="Teacher chat" -->
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  body { margin:0; font-family:-apple-system,'SF Pro Text',system-ui,sans-serif; display:flex; gap:24px; padding:24px; background:#1a2230; }
+  .phone { width:390px; border-radius:40px; padding:24px 16px 18px; box-sizing:border-box; display:flex; flex-direction:column; min-height:760px; }
+  .dark { background:#0C1117; color:#F2F6FA;
+    --card:#161D27; --raised:#212B3A; --stroke:#2D3950; --text:#F2F6FA; --dim:#9AA7B9; --faint:#5F6E80;
+    --accent:#45D483; --on-accent:#07130C; --accent-deep:#15301F; --warn:#E3A968; --miss:#94A3B8; --bg:#0C1117; }
+  .light { background:#F4F7F9; color:#15202B;
+    --card:#FFFFFF; --raised:#E9EFF4; --stroke:#D5DEE7; --text:#15202B; --dim:#56697D; --faint:#8898A9;
+    --accent:#12A35B; --on-accent:#FFFFFF; --accent-deep:#D9F3E4; --warn:#B0741B; --miss:#5D7187; --bg:#F4F7F9; }
+  .top { display:flex; align-items:center; justify-content:space-between; padding:8px 8px 14px; }
+  .x { color:var(--dim); font-size:17px; }
+  .title { font-size:17px; font-weight:700; }
+  .spend { font-size:12px; color:var(--faint); }
+  .chat { flex:1; display:flex; flex-direction:column; gap:8px; padding:0 4px; }
+  .ambient { color:var(--dim); font-size:14px; line-height:21px; max-width:94%; }
+  .cue { color:var(--dim); font-size:16px; font-weight:500; line-height:24px; max-width:94%; }
+  .verdict { font-size:15px; font-weight:600; line-height:22px; }
+  .good { color:var(--accent); } .close { color:var(--warn); } .missv { color:var(--miss); }
+  .target { display:flex; align-items:center; gap:16px; align-self:flex-start; background:var(--card);
+    border:1px solid var(--stroke); border-radius:16px; padding:16px; }
+  .target b { font-size:20px; font-weight:800; line-height:27px; }
+  .play { width:30px; height:30px; border-radius:50%; background:var(--accent); position:relative; flex:none; }
+  .play::after { content:''; position:absolute; left:11px; top:8px; border-left:10px solid var(--on-accent);
+    border-top:7px solid transparent; border-bottom:7px solid transparent; }
+  .learner { align-self:flex-end; background:var(--accent-deep); border-radius:24px 24px 10px 24px; padding:16px; max-width:82%; }
+  .learner span { font-size:17px; line-height:24px; color:var(--text); }
+  .bar { display:flex; align-items:flex-end; gap:8px; border-top:1px solid var(--stroke); padding:10px 4px 4px; margin-top:10px; }
+  .mic { width:44px; height:44px; border-radius:22px; border:1.5px solid var(--stroke); background:var(--raised);
+    display:flex; align-items:center; justify-content:center; color:var(--accent); font-size:18px; flex:none; }
+  .input { flex:1; min-height:44px; background:var(--raised); border-radius:16px; display:flex; align-items:center;
+    padding:0 16px; color:var(--faint); font-size:17px; }
+  .send { width:32px; height:32px; border-radius:50%; background:var(--accent); margin-bottom:6px; position:relative; flex:none; }
+  .send::after { content:'↑'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    color:var(--on-accent); font-weight:800; font-size:18px; }
+</style></head><body>
+
+<div class="phone dark">
+  <div class="top"><span class="x">✕</span><span class="title">Bahasa Indonesia</span><span class="spend">$0.51</span></div>
+  <div class="chat">
+    <div class="ambient">Good. You already own “can” — and “not” simply sits in front of it.</div>
+    <div class="target"><b>tidak bisa</b><div class="play"></div></div>
+    <div class="cue">Now say: “She can’t drink.”</div>
+    <div class="learner"><span>Dia tidak bisa minum</span></div>
+    <div class="verdict good">That’s it.</div>
+    <div class="ambient">Notice the order never changed — Indonesian never makes you rearrange.</div>
+    <div class="target"><b>Dia tidak bisa minum</b><div class="play"></div></div>
+    <div class="cue">Now say: “I can’t drink coffee.”</div>
+  </div>
+  <div class="bar"><div class="mic">🎤</div><div class="input">speak or type your answer</div><div class="send"></div></div>
+</div>
+
+<div class="phone light">
+  <div class="top"><span class="x">✕</span><span class="title">Bahasa Indonesia</span><span class="spend">$0.51</span></div>
+  <div class="chat">
+    <div class="cue">Now say: “He wants tea.”</div>
+    <div class="learner"><span>Dia mau the</span></div>
+    <div class="verdict close">Almost — just the spelling of one word. Listen:</div>
+    <div class="target"><b>teh</b><div class="play"></div></div>
+    <div class="cue">Once more: “He wants tea.”</div>
+    <div class="learner"><span>Dia mau teh</span></div>
+    <div class="verdict good">Good.</div>
+    <div class="cue">Now say: “He doesn’t want tea.”</div>
+  </div>
+  <div class="bar"><div class="mic">🎤</div><div class="input">listening…</div><div class="send"></div></div>
+</div>
+
+</body></html>
