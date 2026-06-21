@@ -29,13 +29,23 @@ import { useApp } from '../store';
 import { radii, space, type, type Palette } from '../theme';
 import { useTheme } from '../hooks/useTheme';
 import { formatUsd } from '../lib/cost/meter';
-import { getSetting, setSetting, sttLocaleFor, openDb } from '../db';
+import {
+  getSetting,
+  setSetting,
+  sttLocaleFor,
+  openDb,
+  getCompletedModuleIds,
+  markModuleComplete,
+  getCurrentModuleId as dbGetCurrentModule,
+  setCurrentModuleId as dbSetCurrentModule,
+} from '../db';
 import { recognizer, voiceEngine } from '../services/instances';
-import { teacherReply, monthSpendUsd, type ChatTurn } from '../services/teacher';
+import { teacherReply, monthSpendUsd, type ChatTurn, type TeacherModuleContext } from '../services/teacher';
 import { ttsToFile } from '../services/tts';
 import { getAnthropicKey, getOpenAIKey } from '../services/keys';
-import { parseMarked, spanParts, targetOnly, teacherLines } from '../lib/teacher-markup';
+import { moduleComplete, parseMarked, targetOnly, teacherLines } from '../lib/teacher-markup';
 import { digestProgress, markPracticeSession } from '../services/progress';
+import { modulesFor, firstIncompleteId, nextModule, knownWordsBefore } from '../lib/modules/manifest';
 
 /** Digest the transcript window every N learner turns (and on exit/restart). */
 const DIGEST_EVERY_LEARNER_TURNS = 8;
@@ -89,7 +99,21 @@ export function TeacherScreen() {
   const watchdogRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const userStopRef = useRef(false);
   const playSeqRef = useRef(0);
-  const storageKey = `teacher_chat.${language}`;
+  // The fixed module spine: every chat is scoped to one module of the course
+  // (owner decision 2026-06-21). The current pointer + transcript are
+  // per-module; moduleIdRef keeps callbacks/cleanup off stale closures.
+  const [currentModuleId, setCurrentModuleId] = useState<string | null>(null);
+  const moduleIdRef = useRef<string | null>(null);
+  moduleIdRef.current = currentModuleId;
+  const modules = useMemo(() => modulesFor(language), [language]);
+  const activeModule = useMemo(
+    () => modules.find((m) => m.id === currentModuleId) ?? null,
+    [modules, currentModuleId],
+  );
+  const chatKeyFor = useCallback(
+    (moduleId: string | null) => `teacher_chat.${language}.${moduleId ?? 'pending'}`,
+    [language],
+  );
   const digestedUpToRef = useRef(0);
   const sittingStartRef = useRef(new Date().toISOString());
   const sittingTurnsRef = useRef(0);
@@ -100,28 +124,35 @@ export function TeacherScreen() {
       const window = allTurns.slice(digestedUpToRef.current);
       if (window.filter((t) => t.role === 'learner').length === 0) return;
       digestedUpToRef.current = allTurns.length;
-      void setSetting(`${storageKey}.digested`, String(digestedUpToRef.current));
+      void setSetting(`${chatKeyFor(moduleIdRef.current)}.digested`, String(digestedUpToRef.current));
       void digestProgress(language, window);
     },
-    [language, storageKey],
+    [language, chatKeyFor],
   );
 
   const persist = useCallback(
     (next: ChatTurn[]) => {
-      void setSetting(storageKey, JSON.stringify(next));
+      void setSetting(chatKeyFor(moduleIdRef.current), JSON.stringify(next));
     },
-    [storageKey],
+    [chatKeyFor],
   );
 
   const refreshSpend = useCallback(async () => {
     setSpendLabel(formatUsd(await monthSpendUsd()));
   }, []);
 
+  /** The module the teacher should run right now — topic, focus, prior vocab. */
+  const moduleContext = useCallback((): TeacherModuleContext | undefined => {
+    const m = modules.find((x) => x.id === moduleIdRef.current);
+    if (!m) return undefined;
+    return { topic: m.topic, words: m.words, knownWords: knownWordsBefore(modules, m.index) };
+  }, [modules]);
+
   const askTeacher = useCallback(
     async (history: ChatTurn[]) => {
       setBusy(true);
       setNotice(null);
-      const result = await teacherReply(language, history, settings.monthlyCapUsd);
+      const result = await teacherReply(language, history, settings.monthlyCapUsd, moduleContext());
       setBusy(false);
       if (result.kind === 'ok') {
         const next: ChatTurn[] = [...history, { role: 'teacher', text: result.text }];
@@ -136,10 +167,41 @@ export function TeacherScreen() {
         setNotice(`The teacher didn't answer (${result.message}). Tap retry.`);
       }
     },
-    [language, settings.monthlyCapUsd, persist, refreshSpend],
+    [language, settings.monthlyCapUsd, persist, refreshSpend, moduleContext],
   );
 
-  // Boot: key check, restore transcript, open the lesson if fresh.
+  /**
+   * Switch to a module: point at it, load its own transcript (revisits keep
+   * their history; a fresh module opens with the teacher's first turn).
+   */
+  const startModule = useCallback(
+    async (moduleId: string) => {
+      moduleIdRef.current = moduleId; // imperative: askTeacher below must see it now
+      setCurrentModuleId(moduleId);
+      void dbSetCurrentModule(language, moduleId);
+      const chatKey = chatKeyFor(moduleId);
+      const saved = await getSetting(chatKey, '');
+      let history: ChatTurn[] = [];
+      if (saved) {
+        try {
+          history = JSON.parse(saved) as ChatTurn[];
+        } catch {
+          history = [];
+        }
+      }
+      const digested = parseInt(await getSetting(`${chatKey}.digested`, '0'), 10);
+      digestedUpToRef.current = Number.isFinite(digested) ? Math.min(digested, history.length) : 0;
+      sittingStartRef.current = new Date().toISOString();
+      sittingTurnsRef.current = 0;
+      setInput('');
+      setTurns(history);
+      if (history.length === 0) void askTeacher([]);
+    },
+    [language, chatKeyFor, askTeacher],
+  );
+
+  // Boot: key check, resolve the current module, restore its transcript, open
+  // it if fresh. The module is the stored pointer, else the first incomplete.
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -150,9 +212,22 @@ export function TeacherScreen() {
         setStatus('no_key');
         return;
       }
+
+      const completed = new Set(await getCompletedModuleIds(language));
+      const mods = modulesFor(language);
+      let moduleId = await dbGetCurrentModule(language);
+      if (!moduleId || !mods.some((m) => m.id === moduleId)) {
+        moduleId = firstIncompleteId(mods, completed);
+        if (moduleId) void dbSetCurrentModule(language, moduleId);
+      }
+      if (cancelled) return;
+      moduleIdRef.current = moduleId; // set before askTeacher reads moduleContext()
+      setCurrentModuleId(moduleId);
       setStatus('ready');
       void refreshSpend();
-      const saved = await getSetting(storageKey, '');
+
+      const chatKey = chatKeyFor(moduleId);
+      const saved = await getSetting(chatKey, '');
       if (cancelled) return;
       let history: ChatTurn[] = [];
       if (saved) {
@@ -163,9 +238,9 @@ export function TeacherScreen() {
         }
       }
       setTurns(history);
-      const draft = await getSetting(`${storageKey}.draft`, '');
+      const draft = await getSetting(`${chatKey}.draft`, '');
       if (!cancelled && draft) setInput(draft); // restore a half-typed/spoken answer
-      const digested = parseInt(await getSetting(`${storageKey}.digested`, '0'), 10);
+      const digested = parseInt(await getSetting(`${chatKey}.digested`, '0'), 10);
       digestedUpToRef.current = Number.isFinite(digested) ? Math.min(digested, history.length) : 0;
       sittingStartRef.current = new Date().toISOString();
       sittingTurnsRef.current = 0;
@@ -183,19 +258,38 @@ export function TeacherScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
 
-  // Leaving mid-conversation still banks the progress.
+  // Leaving mid-conversation still banks the progress, under the live module.
   useEffect(() => {
     return () => {
+      const moduleId = moduleIdRef.current;
+      if (!moduleId) return;
+      const chatKey = chatKeyFor(moduleId);
       const all = turnsRef.current;
       const window = all.slice(digestedUpToRef.current);
       if (window.some((t) => t.role === 'learner')) {
         void digestProgress(language, window);
-        void setSetting(`${storageKey}.digested`, String(all.length));
+        void setSetting(`${chatKey}.digested`, String(all.length));
       }
-      void setSetting(`${storageKey}.draft`, inputRef.current); // leaving is safe
+      void setSetting(`${chatKey}.draft`, inputRef.current); // leaving is safe
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
+
+  /** Recap + Continue: bank the module, mark it done, open the next one. */
+  const onContinue = useCallback(async () => {
+    const finishing = moduleIdRef.current;
+    if (!finishing) return;
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    runDigest(turnsRef.current); // bank what this module taught
+    void markModuleComplete(language, finishing, new Date());
+    const next = nextModule(modules, finishing);
+    if (next) {
+      void startModule(next.id);
+    } else {
+      setNotice('That was the last module — you’ve reached the end. Revisit any from your map.');
+      setScreen('map');
+    }
+  }, [language, modules, runDigest, startModule, setScreen]);
 
   useEffect(() => {
     const t = setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 80);
@@ -208,7 +302,7 @@ export function TeacherScreen() {
     Haptics.selectionAsync();
     stopListening();
     setInput('');
-    void setSetting(`${storageKey}.draft`, ''); // sent → draft cleared
+    void setSetting(`${chatKeyFor(moduleIdRef.current)}.draft`, ''); // sent → draft cleared
     const next: ChatTurn[] = [...turns, { role: 'learner', text }];
     setTurns(next);
     persist(next);
@@ -423,22 +517,22 @@ export function TeacherScreen() {
   );
 
   const restart = useCallback(() => {
-    Alert.alert('Start a fresh lesson?', 'The current conversation will be cleared.', [
+    Alert.alert('Restart this module?', 'This module’s conversation will be cleared and reopened.', [
       { text: 'Keep going', style: 'cancel' },
       {
         text: 'Restart',
         style: 'destructive',
         onPress: () => {
-          runDigest(turnsRef.current); // bank what this lesson earned first
+          runDigest(turnsRef.current); // bank what this module earned first
           digestedUpToRef.current = 0;
-          void setSetting(`${storageKey}.digested`, '0');
+          void setSetting(`${chatKeyFor(moduleIdRef.current)}.digested`, '0');
           setTurns([]);
           persist([]);
           void askTeacher([]);
         },
       },
     ]);
-  }, [persist, askTeacher]);
+  }, [persist, askTeacher, chatKeyFor, runDigest]);
 
   // Refinement 5: only the latest teacher turn is focal; earlier ones recede.
   const lastTeacherIdx = useMemo(() => {
@@ -446,6 +540,12 @@ export function TeacherScreen() {
     return -1;
   }, [turns]);
   const sendReady = !listening && input.trim().length > 0;
+
+  // Module finished: the teacher's last turn carries a "= " recap → show the
+  // Recap + Continue affordance instead of waiting for the learner to type.
+  const lastTurn = turns[turns.length - 1];
+  const completionRecap =
+    !busy && lastTurn && lastTurn.role === 'teacher' ? moduleComplete(lastTurn.text) : null;
 
   if (status === 'no_key') {
     return (
@@ -467,7 +567,14 @@ export function TeacherScreen() {
         <Pressable onPress={() => setScreen('home')} hitSlop={12}>
           <SymbolView name="xmark" size={17} tintColor={p.dim} />
         </Pressable>
-        <Text style={styles.topTitle}>{LANGUAGE_NAMES[language]}</Text>
+        <View style={styles.topCenter}>
+          <Text style={styles.topTitle}>{LANGUAGE_NAMES[language]}</Text>
+          {activeModule && (
+            <Text style={styles.topSub} numberOfLines={1}>
+              {activeModule.topic}
+            </Text>
+          )}
+        </View>
         <View style={styles.topRight}>
           {settings.showSpendInLessons && <Text style={styles.spend}>{spendLabel}</Text>}
           <Pressable onPress={restart} hitSlop={12}>
@@ -489,6 +596,19 @@ export function TeacherScreen() {
               style={[styles.teacherTurn, idx !== lastTeacherIdx && styles.receded]}
             >
               {teacherLines(turn.text).flatMap((line, li) => {
+                // Module finished: a quiet checkpoint — the recap that sits
+                // above the Continue button (owner: Recap + Continue).
+                if (line.kind === 'complete') {
+                  return [
+                    <View key={`c${li}`} style={styles.checkpoint}>
+                      <View style={styles.checkpointRow}>
+                        <SymbolView name="checkmark.seal.fill" size={15} tintColor={p.accent} />
+                        <Text style={styles.checkpointLabel}>Section complete</Text>
+                      </View>
+                      <Text style={styles.checkpointRecap}>{line.recap}</Text>
+                    </View>,
+                  ];
+                }
                 // The line's role sets the narration style (owner typography
                 // spec): verdicts semibold + result-colored, the "now say"
                 // cue clearly second to the taught text, the rest ambient.
@@ -520,19 +640,18 @@ export function TeacherScreen() {
                   }
                   // Every card speaks for itself: the WHOLE card is the play
                   // target (Refinement 1), and it plays exactly its own «span»,
-                  // never the whole turn. Dual-script (zh/ja) shows the
-                  // romanization, speaks the script. Focal turn's card lifts
-                  // with the only lit play; receded turns' plays are unlit.
-                  const parts = spanParts(seg.text);
+                  // never the whole turn. Focal turn's card lifts with the only
+                  // lit play; receded turns' plays are unlit.
+                  const spoken = seg.text.trim();
                   const key = `${idx}:${li}:${si}`;
                   const focal = idx === lastTeacherIdx;
                   return (
                     <Pressable
                       key={`${li}:${si}`}
-                      onPress={() => playSpan(key, parts.speak)}
+                      onPress={() => playSpan(key, spoken)}
                       style={[styles.targetCard, focal && styles.targetCardFocal]}
                     >
-                      <Text style={styles.targetText}>{parts.show}</Text>
+                      <Text style={styles.targetText}>{spoken}</Text>
                       <View style={styles.playBtn}>
                         {playingKey === key ? (
                           <ActivityIndicator size="small" color={p.accent} />
@@ -568,40 +687,51 @@ export function TeacherScreen() {
         )}
       </ScrollView>
 
-      <View style={styles.inputBar}>
-        <TextInput
-          style={styles.input}
-          value={input}
-          onChangeText={setInput}
-          placeholder={micState === 'warming' ? 'opening…' : micState === 'live' ? 'listening…' : 'speak or type your answer'}
-          placeholderTextColor={p.faint}
-          multiline
-          editable={!busy}
-        />
-        {/* One primary action, bottom-right in the thumb arc (Refinement 1):
-            mic when empty, Send once words exist, finish when live. */}
-        <Pressable
-          onPress={() => (sendReady ? send() : toggleMic())}
-          disabled={busy}
-          style={[
-            styles.primaryBtn,
-            micState === 'live' && styles.primaryLive,
-            busy && { opacity: 0.4 },
-          ]}
-          hitSlop={6}
-        >
-          {micState === 'warming' && <WarmRing color={p.accent} />}
-          {micState === 'live' ? (
-            <MicLevelBars level={micLevel} color={p.onAccent} />
-          ) : (
-            <SymbolView
-              name={micState === 'warming' ? 'mic.fill' : sendReady ? 'arrow.up' : 'mic.fill'}
-              size={sendReady ? 26 : 24}
-              tintColor={p.onAccent}
-            />
-          )}
-        </Pressable>
-      </View>
+      {completionRecap ? (
+        // Recap + Continue (owner UX): one tap moves to the next module — no
+        // more typing "continue". The recap itself sits just above, in-chat.
+        <View style={styles.continueBar}>
+          <Pressable style={styles.continueBtn} onPress={() => void onContinue()} hitSlop={6}>
+            <Text style={styles.continueLabel}>Continue</Text>
+            <SymbolView name="arrow.right" size={18} tintColor={p.onAccent} />
+          </Pressable>
+        </View>
+      ) : (
+        <View style={styles.inputBar}>
+          <TextInput
+            style={styles.input}
+            value={input}
+            onChangeText={setInput}
+            placeholder={micState === 'warming' ? 'opening…' : micState === 'live' ? 'listening…' : 'speak or type your answer'}
+            placeholderTextColor={p.faint}
+            multiline
+            editable={!busy}
+          />
+          {/* One primary action, bottom-right in the thumb arc (Refinement 1):
+              mic when empty, Send once words exist, finish when live. */}
+          <Pressable
+            onPress={() => (sendReady ? send() : toggleMic())}
+            disabled={busy}
+            style={[
+              styles.primaryBtn,
+              micState === 'live' && styles.primaryLive,
+              busy && { opacity: 0.4 },
+            ]}
+            hitSlop={6}
+          >
+            {micState === 'warming' && <WarmRing color={p.accent} />}
+            {micState === 'live' ? (
+              <MicLevelBars level={micLevel} color={p.onAccent} />
+            ) : (
+              <SymbolView
+                name={micState === 'warming' ? 'mic.fill' : sendReady ? 'arrow.up' : 'mic.fill'}
+                size={sendReady ? 26 : 24}
+                tintColor={p.onAccent}
+              />
+            )}
+          </Pressable>
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 }
@@ -660,7 +790,9 @@ const makeStyles = (p: Palette) =>
       paddingHorizontal: space.l,
       paddingBottom: space.s,
     },
+    topCenter: { flex: 1, alignItems: 'center', paddingHorizontal: space.s },
     topTitle: { color: p.text, fontSize: type.body, fontWeight: '700' },
+    topSub: { color: p.dim, fontSize: type.caption, marginTop: 1, maxWidth: '100%' },
     topRight: { flexDirection: 'row', alignItems: 'center', gap: space.m },
     spend: { color: p.faint, fontSize: type.caption, fontVariant: ['tabular-nums'] },
 
@@ -672,6 +804,17 @@ const makeStyles = (p: Palette) =>
     ambient: { color: p.dim, fontSize: type.small, lineHeight: 21 },
     verdictText: { fontSize: type.verdict, fontWeight: '600', lineHeight: 22 },
     cueText: { color: p.dim, fontSize: type.cue, fontWeight: '500', lineHeight: 24 },
+    // Module-complete checkpoint: a quiet "you earned this" above Continue.
+    checkpoint: { gap: space.xs, paddingTop: space.s, alignSelf: 'stretch' },
+    checkpointRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+    checkpointLabel: {
+      color: p.accent,
+      fontSize: type.caption,
+      fontWeight: '800',
+      letterSpacing: 0.6,
+      textTransform: 'uppercase',
+    },
+    checkpointRecap: { color: p.text, fontSize: type.cue, fontWeight: '600', lineHeight: 23 },
     targetCard: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -753,6 +896,30 @@ const makeStyles = (p: Palette) =>
       shadowOpacity: 0.5,
       shadowRadius: 26,
     },
+
+    continueBar: {
+      paddingHorizontal: space.m,
+      paddingTop: space.s,
+      paddingBottom: 34,
+      backgroundColor: p.bg,
+      borderTopWidth: 1,
+      borderTopColor: p.stroke,
+    },
+    continueBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: space.s,
+      height: 56,
+      borderRadius: radii.m,
+      backgroundColor: p.accent,
+      shadowColor: p.accent,
+      shadowOpacity: 0.4,
+      shadowRadius: 18,
+      shadowOffset: { width: 0, height: 5 },
+      elevation: 5,
+    },
+    continueLabel: { color: p.onAccent, fontSize: type.body, fontWeight: '800' },
 
     h1: { color: p.text, fontSize: type.title, fontWeight: '800', marginBottom: space.s },
     dimBody: { color: p.dim, fontSize: type.body, lineHeight: 23, marginBottom: space.l },

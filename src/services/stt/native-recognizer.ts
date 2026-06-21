@@ -8,8 +8,8 @@ import type { SpeechRecognizer, SttAvailability, SttCallbacks, SttStartOptions }
  *
  * expo-speech-transcriber (Apple SpeechAnalyzer) was evaluated for the M0
  * bake-off and rejected at v0.1.9: it is hardcoded to en_US, so it cannot
- * judge Indonesian or Mandarin. Revisit if it ships locale support — only
- * this file and a sibling would change (stretch contract #1).
+ * judge Indonesian. Revisit if it ships locale support — only this file
+ * and a sibling would change (stretch contract #1).
  */
 export class NativeRecognizer implements SpeechRecognizer {
   readonly name = 'expo-speech-recognition (SFSpeechRecognizer)';

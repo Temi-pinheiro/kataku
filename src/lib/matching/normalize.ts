@@ -1,13 +1,12 @@
-export type LanguageCode = 'id' | 'zh' | 'fr' | 'it' | 'es' | 'ja';
+export type LanguageCode = 'id' | 'fr' | 'it' | 'es';
 
-/** Languages whose words are whitespace-delimited; zh/ja compare on script code points. */
+/** Every supported language is whitespace-delimited; kept as a map so the
+ * tokenizer stays data-driven if a non-space-delimited language ever returns. */
 const SPACE_DELIMITED: Record<LanguageCode, boolean> = {
   id: true,
-  zh: false,
   fr: true,
   it: true,
   es: true,
-  ja: false,
 };
 
 /**
@@ -15,8 +14,7 @@ const SPACE_DELIMITED: Record<LanguageCode, boolean> = {
  * validator (plan §3.3): lowercase, strip punctuation/symbols, collapse
  * whitespace, keep diacritics. Word-internal apostrophes survive ("c'est"
  * stays one token — iOS French STT produces them reliably); curly ’ folds
- * to straight '. Hyphens become token breaks. For zh, all whitespace is
- * removed and comparison happens on hanzi.
+ * to straight '. Hyphens become token breaks.
  */
 export function normalize(text: string, lang: LanguageCode): string {
   const stripped = text
@@ -31,9 +29,8 @@ export function normalize(text: string, lang: LanguageCode): string {
 }
 
 /**
- * Units for token-level edit distance: words for space-delimited languages,
- * individual code points (hanzi) for Mandarin. Input must already be
- * normalized.
+ * Units for token-level edit distance: words for space-delimited languages.
+ * Input must already be normalized.
  */
 export function tokenize(normalized: string, lang: LanguageCode): string[] {
   if (!SPACE_DELIMITED[lang]) {

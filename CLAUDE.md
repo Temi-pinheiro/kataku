@@ -10,7 +10,7 @@ F4 persona voices, F5 mastery map, protocol-week-as-spine — and supersedes
 S3 reframed into protocols/scenarios; stretch-spec's v1 hooks stay
 contractual). Read plan.md + final-spec.md before changing architecture.
 Final-spec features build only AFTER the pre-build roadmap (conversation
-mode signed off → protocols promoted → it/zh/ja → archive → push →
+mode signed off → protocols promoted → it → archive → push →
 first TestFlight build).
 
 ## Stack (decided — don't churn)

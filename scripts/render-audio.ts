@@ -51,11 +51,6 @@ const VOICES: Record<string, { premium: () => VoiceChoice; cheap: () => VoiceCho
     premium: () => ({ provider: 'elevenlabs', voice: ELEVEN_VOICE() }),
     cheap: () => ({ provider: 'openai', voice: 'alloy' }),
   },
-  zh: {
-    // Provisional: re-audition tone quality when Mandarin starts (M5/S2).
-    premium: () => ({ provider: 'elevenlabs', voice: ENV.ELEVENLABS_VOICE_ZH ?? ELEVEN_VOICE() }),
-    cheap: () => ({ provider: 'openai', voice: 'alloy' }),
-  },
   es: {
     premium: () => ({ provider: 'elevenlabs', voice: ELEVEN_VOICE() }),
     cheap: () => ({ provider: 'openai', voice: 'alloy' }),
@@ -99,12 +94,6 @@ const BAKEOFF_SAMPLES: { name: string; lang: string; text: string; slow?: boolea
     lang: 'id',
     text: "'Tomorrow' is 'besok'. Besok. Saya akan pergi besok — I will go tomorrow.",
   },
-  { name: 'zh-teach', lang: 'zh', text: '要。要。' },
-  { name: 'zh-answer-1', lang: 'zh', text: '我要吃饭。' },
-  { name: 'zh-answer-1-slow', lang: 'zh', text: '我要吃饭。', slow: true },
-  { name: 'zh-tone-pair', lang: 'zh', text: '买。卖。买卖。' },
-  { name: 'zh-answer-2', lang: 'zh', text: '我现在不能去，因为我要吃饭。' },
-  { name: 'zh-long', lang: 'zh', text: '我今天不能去市场，因为我要吃饭，但是我明天会去买。' },
   // Spanish / French (quality-baseline packs) — answer + slow + teach mix.
   { name: 'es-answer', lang: 'es', text: 'No puedo ir al mercado ahora porque tengo que comer.' },
   { name: 'es-answer-slow', lang: 'es', text: 'No puedo ir al mercado ahora porque tengo que comer.', slow: true },
@@ -119,7 +108,7 @@ const BAKEOFF_SAMPLES: { name: string; lang: string; text: string; slow?: boolea
   { name: 'fr-conv', lang: 'fr', text: "Tu as déjà mangé ? Je suis allé au marché ce matin, mais j'ai rien acheté parce que j'avais pas le temps." },
 ];
 
-const BCP47: Record<string, string> = { id: 'id-ID', zh: 'zh-CN', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', en: 'en-US' };
+const BCP47: Record<string, string> = { id: 'id-ID', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', en: 'en-US' };
 
 // ---- env ----------------------------------------------------------------
 
@@ -370,13 +359,13 @@ async function bakeoff(): Promise<void> {
   // Default audition voices per provider; swap freely before running.
   const eleven = ENV.ELEVENLABS_VOICE_ID ?? '';
   const candidates: { provider: ProviderName; voice: Record<string, string> }[] = [
-    { provider: 'openai', voice: { id: 'coral', zh: 'coral', es: 'coral', fr: 'coral' } },
+    { provider: 'openai', voice: { id: 'coral', es: 'coral', fr: 'coral' } },
     {
       provider: 'azure',
-      voice: { id: 'id-ID-GadisNeural', zh: 'zh-CN-XiaoxiaoNeural', es: 'es-ES-ElviraNeural', fr: 'fr-FR-DeniseNeural' },
+      voice: { id: 'id-ID-GadisNeural', es: 'es-ES-ElviraNeural', fr: 'fr-FR-DeniseNeural' },
     },
-    { provider: 'elevenlabs', voice: { id: eleven, zh: ENV.ELEVENLABS_VOICE_ZH ?? eleven, es: eleven, fr: eleven } },
-    { provider: 'google', voice: { id: '', zh: '', es: '', fr: '' } },
+    { provider: 'elevenlabs', voice: { id: eleven, es: eleven, fr: eleven } },
+    { provider: 'google', voice: { id: '', es: '', fr: '' } },
   ];
   // Blind listening: providers get shuffled letters; the mapping goes to
   // key.json, to be read only after picking winners. An existing key.json

@@ -8,48 +8,43 @@ import { OUTLINES } from '../content/outlines';
 import { useApp } from '../store';
 import { radii, space, type, type Palette } from '../theme';
 import { useTheme } from '../hooks/useTheme';
-import { masteredItemIds } from '../lib/scheduler/scheduler';
-import { isItemOfLanguage } from '../lib/progress/chat-items';
-import { getAllMastery, openDb } from '../db';
-
-/** Rough blocks-per-lesson, to place "you're here" from what's actually owned. */
-const BLOCKS_PER_LESSON = 4;
+import { modulesFor, moduleState } from '../lib/modules/manifest';
+import { getCompletedModuleIds, getCurrentModuleId, setCurrentModuleId, openDb } from '../db';
 
 type NodeState = 'done' | 'here' | 'ahead';
 
 /**
- * Your map (handoff F5): the protocol spine, browsable, a mirror not a
- * leaderboard. Done/here/ahead comes from how much you actually own; nothing
- * is ever locked — every lesson opens the teacher.
+ * Your map (handoff F5; modules 2026-06-21): the module spine, browsable, a
+ * mirror not a leaderboard. Done/here/ahead is real recorded completion — done
+ * modules are finished, "here" is the one you're on. Nothing is ever locked;
+ * tapping any module points the teacher at it.
  */
 export function MapScreen() {
   const { setScreen, language } = useApp();
   const { p } = useTheme();
   const styles = useMemo(() => makeStyles(p), [p]);
-  const [owned, setOwned] = useState(0);
+  const [completed, setCompleted] = useState<Set<string>>(new Set());
+  const [currentId, setCurrentId] = useState<string | null>(null);
+
+  const outline = OUTLINES[language];
+  const modules = useMemo(() => modulesFor(language), [language]);
 
   useEffect(() => {
     (async () => {
       await openDb();
-      const mastery = await getAllMastery();
-      setOwned(masteredItemIds(mastery).filter((id) => isItemOfLanguage(id, language)).length);
+      setCompleted(new Set(await getCompletedModuleIds(language)));
+      setCurrentId(await getCurrentModuleId(language));
     })();
   }, [language]);
 
-  const outline = OUTLINES[language];
-  // Flatten lessons in order so "you're here" is a single index along the path.
-  const flat = useMemo(() => {
-    const lessons: { mi: number; wi: number; li: number }[] = [];
-    outline.forEach((m, mi) => m.weeks.forEach((w, wi) => w.lessons.forEach((_, li) => lessons.push({ mi, wi, li }))));
-    return lessons;
-  }, [outline]);
-  const hereIdx = Math.min(flat.length - 1, Math.floor(owned / BLOCKS_PER_LESSON));
+  /** Open a module: point the teacher at it (nothing is ever locked). */
+  const openModule = (moduleId: string) => {
+    Haptics.selectionAsync();
+    void setCurrentModuleId(language, moduleId);
+    setScreen('teacher');
+  };
 
   let flatCursor = -1;
-  const stateOf = (): NodeState => {
-    flatCursor += 1;
-    return flatCursor < hereIdx ? 'done' : flatCursor === hereIdx ? 'here' : 'ahead';
-  };
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={{ paddingBottom: 80 }}>
@@ -60,7 +55,10 @@ export function MapScreen() {
       <Text style={styles.eyebrow}>{LANGUAGE_NAMES[language]}</Text>
       <Text style={styles.title}>Your map</Text>
       <Text style={styles.mirror}>
-        <Text style={styles.mirrorStrong}>{owned} blocks</Text> are yours so far · revisit any, any time
+        <Text style={styles.mirrorStrong}>
+          {completed.size} of {modules.length}
+        </Text>{' '}
+        done · revisit any, any time
       </Text>
 
       {outline.map((month, mi) => {
@@ -71,15 +69,14 @@ export function MapScreen() {
               <View key={wi}>
                 {week.label ? <Text style={styles.weekLabel}>{week.label}</Text> : null}
                 {week.lessons.map((lesson, li) => {
-                  const st = stateOf();
+                  flatCursor += 1;
+                  const module = modules[flatCursor];
+                  const st: NodeState = module ? moduleState(module, completed, currentId) : 'ahead';
                   return (
                     <Animated.View key={li} entering={FadeInDown.duration(180)}>
                       <Pressable
                         style={[styles.node, st === 'ahead' && styles.nodeAhead]}
-                        onPress={() => {
-                          Haptics.selectionAsync();
-                          setScreen('teacher'); // nothing locked — every lesson opens the teacher
-                        }}
+                        onPress={() => module && openModule(module.id)} // nothing locked
                       >
                         <Dot state={st} p={p} styles={styles} />
                         <View style={{ flex: 1 }}>

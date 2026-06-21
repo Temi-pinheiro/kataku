@@ -1,7 +1,7 @@
 import { monthToDateUsd } from '../lib/cost/meter';
 import { spendEvents } from '../db';
 import { chatComplete, type ChatTurn, type LlmResult } from './llm';
-import { teacherSystemPrompt, TEACHER_OPENING_USER_MSG } from './teacher-prompt';
+import { teacherSystemPrompt, TEACHER_OPENING_USER_MSG, type TeacherModuleContext } from './teacher-prompt';
 import type { InstalledLanguage } from '../packs';
 
 /**
@@ -12,17 +12,18 @@ import type { InstalledLanguage } from '../packs';
 
 const MAX_HISTORY_TURNS = 40; // the protocols keep teacher turns short; plenty of context
 
-export type { ChatTurn };
+export type { ChatTurn, TeacherModuleContext };
 export type TeacherResult = LlmResult;
 
 export function teacherReply(
   lang: InstalledLanguage,
   history: ChatTurn[],
   capUsd: number,
+  module?: TeacherModuleContext,
 ): Promise<TeacherResult> {
   return chatComplete({
     feature: 'teacher',
-    system: teacherSystemPrompt(lang),
+    system: teacherSystemPrompt(lang, module),
     turns: history.slice(-MAX_HISTORY_TURNS),
     openingUserMsg: TEACHER_OPENING_USER_MSG,
     maxTokens: 500,

@@ -28,7 +28,7 @@ export interface SttError {
 }
 
 export interface SttStartOptions {
-  /** BCP-47 locale: id-ID, zh-CN, fr-FR, it-IT, es-ES. */
+  /** BCP-47 locale: id-ID, fr-FR, it-IT, es-ES. */
   locale: string;
   /** Prefer the on-device model when the locale has one (plan §4.2). */
   preferOnDevice?: boolean;

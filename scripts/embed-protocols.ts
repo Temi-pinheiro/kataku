@@ -13,8 +13,6 @@ const FILES: Record<string, string> = {
   es: 'spanish-protocol.md',
   fr: 'french-protocol.md',
   it: 'italian-protocol.md',
-  zh: 'mandarin-protocol.md',
-  ja: 'japanese-protocol.md',
 };
 
 const dir = join(__dirname, '..', 'content', 'teacher');

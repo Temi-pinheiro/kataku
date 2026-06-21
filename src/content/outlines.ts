@@ -171,44 +171,4 @@ const it: CourseOutline = [
   { label: 'Months 3–6 — ahead', weeks: [{ label: '', lessons: [{ topic: 'Future, conditional, subjunctive doorway', words: 'farò · farei' }] }] },
 ];
 
-const zh: CourseOutline = [
-  {
-    label: 'Month 1 — Foundations',
-    weeks: [
-      {
-        label: 'Week 1',
-        lessons: [
-          { topic: 'Tones & who/what', words: 'wǒ · nǐ · tā · shì' },
-          { topic: 'The engine words', words: 'yào · xiǎng · kěyǐ · yǒu' },
-          { topic: 'No & completed le', words: 'bù · méiyǒu · le' },
-          { topic: 'Asking', words: 'ma · shénme · nǎr' },
-        ],
-      },
-      { label: 'Week 2', lessons: [{ topic: 'Measure words & first roleplay', words: 'ge · duōshǎo qián' }] },
-    ],
-  },
-  { label: 'Month 2 — Characters begin', weeks: [{ label: '', lessons: [{ topic: 'de, guo, recognition hanzi', words: 'de · guo' }] }] },
-  { label: 'Months 3–6 — ahead', weeks: [{ label: '', lessons: [{ topic: 'Result complements, bǎ, range', words: 'tīng de dǒng' }] }] },
-];
-
-const ja: CourseOutline = [
-  {
-    label: 'Month 1 — Foundations',
-    weeks: [
-      {
-        label: 'Week 1',
-        lessons: [
-          { topic: 'Verb-last & particles', words: 'wa · o · ni' },
-          { topic: 'The polite verbs', words: 'ikimasu · tabemasu · arimasu' },
-          { topic: 'This/that & asking', words: 'kore · sore · ka' },
-          { topic: 'Time & loanwords', words: 'ima · kyō · kōhī' },
-        ],
-      },
-      { label: 'Week 2', lessons: [{ topic: 'The te-form begins', words: '-te kudasai' }] },
-    ],
-  },
-  { label: 'Month 2–3 — te-form power', weeks: [{ label: '', lessons: [{ topic: 'te imasu, chaining, ta-form', words: '-te imasu · -ta' }] }] },
-  { label: 'Months 4–6 — ahead', weeks: [{ label: '', lessons: [{ topic: 'Plain form, giving/receiving, range', words: 'plain form' }] }] },
-];
-
-export const OUTLINES: Record<InstalledLanguage, CourseOutline> = { id, es, fr, it, zh, ja };
+export const OUTLINES: Record<InstalledLanguage, CourseOutline> = { id, es, fr, it };

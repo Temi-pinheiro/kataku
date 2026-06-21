@@ -24,8 +24,6 @@ const LANGUAGE_NAMES: Record<string, string> = {
   es: 'Spanish',
   fr: 'French',
   it: 'Italian',
-  zh: 'Mandarin Chinese',
-  ja: 'Japanese',
 };
 
 /**

@@ -1,4 +1,4 @@
-import { evaluate, type Evaluation, type EvaluateOptions, type LanguageCode, type MatchResult } from '../matching';
+import { evaluate, type Evaluation, type LanguageCode, type MatchResult } from '../matching';
 
 /**
  * The per-prompt voice loop (plan §3.1):
@@ -88,7 +88,7 @@ function feedbackAudio(result: MatchResult, prompt: PromptSpec): AudioKind[] {
   }
 }
 
-export function loopReducer(state: LoopState, event: LoopEvent, opts: EvaluateOptions = {}): LoopState {
+export function loopReducer(state: LoopState, event: LoopEvent): LoopState {
   switch (state.phase) {
     case 'idle':
       if (event.type === 'START') {
@@ -121,7 +121,7 @@ export function loopReducer(state: LoopState, event: LoopEvent, opts: EvaluateOp
         case 'FINAL_TRANSCRIPT':
         case 'LISTEN_TIMEOUT': {
           const transcript = event.type === 'FINAL_TRANSCRIPT' ? event.transcript : '';
-          const evaluation = evaluate(transcript, state.prompt.expected, state.prompt.lang, opts);
+          const evaluation = evaluate(transcript, state.prompt.expected, state.prompt.lang);
           return {
             ...state,
             phase: 'feedback',

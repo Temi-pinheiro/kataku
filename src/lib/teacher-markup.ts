@@ -33,29 +33,13 @@ export function parseMarked(text: string): MarkSegment[] {
   return segments.map((s) => ({ ...s, text: s.text })).filter((s) => s.text.trim().length > 0);
 }
 
-/**
- * Dual-script spans (Mandarin/Japanese): «你好|nǐ hǎo» — the part before
- * the | is the native script TTS must SPEAK; the part after is the
- * romanization the learner SHOWS. Single-script spans return both the same.
- */
-export function spanParts(span: string): { speak: string; show: string } {
-  const i = span.indexOf('|');
-  if (i === -1) {
-    const t = span.trim();
-    return { speak: t, show: t };
-  }
-  const speak = span.slice(0, i).trim();
-  const show = span.slice(i + 1).trim();
-  return { speak: speak || show, show: show || speak };
-}
-
 /** The speakable text: target segments only, separated by sentence beats. */
 export function targetOnly(text: string): string {
   return parseMarked(text)
     .filter((s) => s.target)
     .map((s) => {
-      const t = spanParts(s.text).speak;
-      return /[.!?…。？]$/.test(t) ? t : `${t}.`;
+      const t = s.text.trim();
+      return /[.!?…]$/.test(t) ? t : `${t}.`;
     })
     .join('\n');
 }
@@ -66,17 +50,22 @@ export function stripMarks(text: string): string {
 }
 
 /**
- * Line roles (owner typography spec, 2026-06-12): the teacher prefixes its
- * verdict line with +/~/- (how the attempt went) and its closing "now say"
- * cue line with >. The app strips the symbols and styles by role — verdicts
- * get semibold + result color, cues get the second-largest size. Untagged
- * lines (and whole pre-spec transcripts) render plain, unchanged.
+ * Line roles (owner typography spec, 2026-06-12; module marker added
+ * 2026-06-21): the teacher prefixes its verdict line with +/~/- (how the
+ * attempt went) and its closing "now say" cue line with >. When it finishes
+ * a module it ends with a "= " line whose text is a one-line recap of what
+ * the learner just earned — the app shows that recap above a Continue button
+ * instead of waiting for the learner to type. The app strips the symbols and
+ * styles by role — verdicts get semibold + result color, cues get the
+ * second-largest size. Untagged lines (and whole pre-spec transcripts) render
+ * plain, unchanged.
  */
 export type TeacherGrade = 'good' | 'close' | 'miss';
 
 export type TeacherLine =
   | { kind: 'verdict'; grade: TeacherGrade; text: string }
   | { kind: 'cue'; text: string }
+  | { kind: 'complete'; recap: string }
   | { kind: 'plain'; text: string };
 
 const GRADE_BY_MARK: Record<string, TeacherGrade> = {
@@ -101,7 +90,21 @@ export function teacherLines(text: string): TeacherLine[] {
       lines.push({ kind: 'cue', text: cue[1] });
       continue;
     }
+    const complete = line.match(/^=\s+(.+)$/);
+    if (complete) {
+      lines.push({ kind: 'complete', recap: complete[1] });
+      continue;
+    }
     lines.push({ kind: 'plain', text: line });
   }
   return lines;
+}
+
+/**
+ * The module-complete recap, if this teacher turn signalled the section is
+ * done (a "= " line), else null. Drives the Recap + Continue affordance.
+ */
+export function moduleComplete(text: string): string | null {
+  const line = teacherLines(text).find((l) => l.kind === 'complete');
+  return line && line.kind === 'complete' ? line.recap : null;
 }

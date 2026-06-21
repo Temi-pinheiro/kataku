@@ -19,14 +19,14 @@ levels that track the 6-month protocol arc:
 The same six **scene archetypes** run across all languages (so the
 catalog is comparable), each localized to that culture:
 
-| # | Archetype | Level | id (Bali) | es | fr | it | zh | ja |
-|---|---|---|---|---|---|---|---|---|
-| 1 | Arrival / a trip | Beg | Liburan ke Bali | Un viaje a la costa | Un voyage en Provence | Un viaggio in Toscana | 去海边 | 京都への旅 |
-| 2 | Market / bargaining | Beg | Di Pasar Tradisional | En el mercado | Au marché | Al mercato | 在市场 | 市場で |
-| 3 | Café / ordering food | Beg | Di Warung Kopi | En el café | À la boulangerie | Al bar | 在咖啡馆 | 喫茶店で |
-| 4 | Finding your way | Int | Mencari Alamat | Buscando la calle | Trouver le chemin | Cercando la via | 问路 | 道を探して |
-| 5 | Meeting people / a meal | Int | Makan Malam Bersama | Una cena con amigos | Un dîner ensemble | Una cena in famiglia | 一起吃饭 | 一緒に夕食 |
-| 6 | A small problem, resolved | Adv | Kunci yang Hilang | La llave perdida | La clé perdue | La chiave smarrita | 丢了钥匙 | 鍵をなくして |
+| # | Archetype | Level | id (Bali) | es | fr | it |
+|---|---|---|---|---|---|---|
+| 1 | Arrival / a trip | Beg | Liburan ke Bali | Un viaje a la costa | Un voyage en Provence | Un viaggio in Toscana |
+| 2 | Market / bargaining | Beg | Di Pasar Tradisional | En el mercado | Au marché | Al mercato |
+| 3 | Café / ordering food | Beg | Di Warung Kopi | En el café | À la boulangerie | Al bar |
+| 4 | Finding your way | Int | Mencari Alamat | Buscando la calle | Trouver le chemin | Cercando la via |
+| 5 | Meeting people / a meal | Int | Makan Malam Bersama | Una cena con amigos | Un dîner ensemble | Una cena in famiglia |
+| 6 | A small problem, resolved | Adv | Kunci yang Hilang | La llave perdida | La clé perdue | La chiave smarrita |
 
 (Titles are working drafts — finalized when scripts are written.)
 

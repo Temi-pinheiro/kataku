@@ -15,7 +15,7 @@ export interface ContentItem {
   type: ItemType;
   concept_en: string;
   target_text: string;
-  /** Pinyin for zh; null elsewhere. */
+  /** Optional romanization; null for the Latin-script languages. */
   romanization: string | null;
   teach_script: string;
   /**

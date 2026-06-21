@@ -15,8 +15,7 @@ import { LADDER_STORIES } from './story-ladders';
 export type StoryLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 
 export interface StoryLine {
-  target: string; // the spoken line (native script for zh/ja)
-  roman?: string; // pinyin/romaji for zh/ja read-along
+  target: string; // the spoken line
   en: string; // gloss — shown, never spoken
 }
 
@@ -160,57 +159,7 @@ const STORY_LIST: Story[] = [
     { target: 'Sì, eccole. Che fortuna!', en: 'Yes, here they are. What luck!' },
   ]),
 
-  // ============================ Mandarin ============================
-  S('zh', 'arrival', '去海边', 'Beginner', 'A trip to the seaside', '#E8945A', [
-    { target: '你好！我想去海边。', roman: 'nǐ hǎo! wǒ xiǎng qù hǎibiān.', en: 'Hello! I want to go to the seaside.' },
-    { target: '海边在哪儿？', roman: 'hǎibiān zài nǎr?', en: 'Where is the seaside?' },
-    { target: '在那儿，不远。', roman: 'zài nàr, bù yuǎn.', en: 'Over there, not far.' },
-    { target: '谢谢！', roman: 'xièxie!', en: 'Thank you!' },
-  ]),
-  S('zh', 'market', '在市场', 'Intermediate', 'A morning at the market', '#D98036', [
-    { target: '你好！苹果多少钱？', roman: 'nǐ hǎo! píngguǒ duōshǎo qián?', en: 'Hello! How much are the apples?' },
-    { target: '一斤五块。', roman: 'yì jīn wǔ kuài.', en: 'Five yuan per jin.' },
-    { target: '我要一斤。', roman: 'wǒ yào yì jīn.', en: 'I want one jin.' },
-    { target: '还要别的吗？', roman: 'hái yào bié de ma?', en: 'Anything else?' },
-    { target: '不要了，谢谢。', roman: 'bú yào le, xièxie.', en: 'Nothing more, thanks.' },
-    { target: '一共五块。', roman: 'yígòng wǔ kuài.', en: 'Five yuan altogether.' },
-  ]),
-  S('zh', 'lostkey', '丢了钥匙', 'Advanced', 'A small problem, calmly resolved', '#A88463', [
-    { target: '我的钥匙不见了！', roman: 'wǒ de yàoshi bú jiàn le!', en: 'My keys are gone!' },
-    { target: '别着急，你去过哪儿？', roman: 'bié zháojí, nǐ qù guo nǎr?', en: "Don't worry, where did you go?" },
-    { target: '我去了咖啡馆，然后去了公园。', roman: 'wǒ qù le kāfēiguǎn, ránhòu qù le gōngyuán.', en: 'I went to the café, then the park.' },
-    { target: '可能丢在咖啡馆了。', roman: 'kěnéng diū zài kāfēiguǎn le.', en: 'Maybe you lost them at the café.' },
-    { target: '我们去问问吧。', roman: 'wǒmen qù wènwen ba.', en: "Let's go ask." },
-    { target: '请问，有人捡到钥匙吗？', roman: 'qǐngwèn, yǒu rén jiǎndào yàoshi ma?', en: 'Excuse me, did anyone find keys?' },
-    { target: '找到了！真幸运。', roman: 'zhǎodào le! zhēn xìngyùn.', en: 'Found them! How lucky.' },
-  ]),
-
-  // ============================ Japanese ============================
-  S('ja', 'arrival', '京都への旅', 'Beginner', 'A journey to Kyoto', '#E8945A', [
-    { target: 'おはようございます！海に行きたいです。', roman: 'ohayō gozaimasu! umi ni ikitai desu.', en: 'Good morning! I want to go to the sea.' },
-    { target: '海はどこですか？', roman: 'umi wa doko desu ka?', en: 'Where is the sea?' },
-    { target: 'あそこです。近いです。', roman: 'asoko desu. chikai desu.', en: "Over there. It's near." },
-    { target: 'ありがとうございます！', roman: 'arigatō gozaimasu!', en: 'Thank you!' },
-  ]),
-  S('ja', 'market', '市場で', 'Intermediate', 'A morning at the market', '#D98036', [
-    { target: 'こんにちは！りんごはいくらですか？', roman: 'konnichiwa! ringo wa ikura desu ka?', en: 'Hello! How much are the apples?' },
-    { target: '一キロ三百円です。', roman: 'ichi kiro sanbyaku en desu.', en: 'Three hundred yen per kilo.' },
-    { target: '一キロください。', roman: 'ichi kiro kudasai.', en: 'One kilo, please.' },
-    { target: 'ほかに何かいりますか？', roman: 'hoka ni nanika irimasu ka?', en: 'Anything else?' },
-    { target: 'いいえ、けっこうです。', roman: 'iie, kekkō desu.', en: "No, that's all." },
-    { target: 'ぜんぶで三百円です。', roman: 'zenbu de sanbyaku en desu.', en: 'Three hundred yen altogether.' },
-  ]),
-  S('ja', 'lostkey', '鍵をなくして', 'Advanced', 'A small problem, calmly resolved', '#A88463', [
-    { target: '鍵がありません！', roman: 'kagi ga arimasen!', en: 'My key is gone!' },
-    { target: '落ち着いて。どこへ行きましたか？', roman: 'ochitsuite. doko e ikimashita ka?', en: 'Calm down. Where did you go?' },
-    { target: 'カフェへ行って、それから公園へ行きました。', roman: 'kafe e itte, sorekara kōen e ikimashita.', en: 'I went to the café, then the park.' },
-    { target: 'カフェに忘れたかもしれません。', roman: 'kafe ni wasureta kamoshiremasen.', en: 'Maybe you forgot it at the café.' },
-    { target: '聞きに行きましょう。', roman: 'kiki ni ikimashō.', en: "Let's go ask." },
-    { target: 'すみません、鍵を見つけましたか？', roman: 'sumimasen, kagi o mitsukemashita ka?', en: 'Excuse me, did you find a key?' },
-    { target: 'ありました！よかった。', roman: 'arimashita! yokatta.', en: 'Found it! What a relief.' },
-  ]),
-
-  // ===== Listening ladders (2/4/6/8 min × 6 languages) — src/content/story-ladders.ts =====
+  // ===== Listening ladders (2/4/6/8 min × 4 languages) — src/content/story-ladders.ts =====
   ...LADDER_STORIES,
 ];
 

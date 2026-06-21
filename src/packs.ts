@@ -6,10 +6,10 @@ import type { CoursePack } from './lib/content/types';
 /**
  * Every teachable language. The teacher chat and conversation mode need
  * only a protocol + an STT locale; the classic drill deck additionally
- * needs a rendered course pack — it/zh/ja packs are on the roadmap, so
- * those languages are chat/conversation-only for now.
+ * needs a rendered course pack — the it pack is on the roadmap, so it is
+ * chat/conversation-only for now.
  */
-export const LANGUAGES = ['id', 'es', 'fr', 'it', 'zh', 'ja'] as const;
+export const LANGUAGES = ['id', 'es', 'fr', 'it'] as const;
 export type InstalledLanguage = (typeof LANGUAGES)[number];
 
 /** Course packs for the deck; absent = no deck yet for that language. */
@@ -33,18 +33,14 @@ export const LANGUAGE_NAMES: Record<InstalledLanguage, string> = {
   es: 'Español',
   fr: 'Français',
   it: 'Italiano',
-  zh: '中文',
-  ja: '日本語',
 };
 
-/** English names (LLM prompts — "you are teaching Mandarin Chinese"). */
+/** English names (LLM prompts — "you are teaching Italian"). */
 export const LANGUAGE_NAMES_EN: Record<InstalledLanguage, string> = {
   id: 'Indonesian',
   es: 'Spanish',
   fr: 'French',
   it: 'Italian',
-  zh: 'Mandarin Chinese',
-  ja: 'Japanese',
 };
 
 export const INSTALLED_LANGUAGES = [...LANGUAGES] as InstalledLanguage[];

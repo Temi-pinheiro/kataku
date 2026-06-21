@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseMarked, spanParts, stripMarks, targetOnly, teacherLines } from './teacher-markup';
+import { moduleComplete, parseMarked, stripMarks, targetOnly, teacherLines } from './teacher-markup';
 
 describe('parseMarked', () => {
   it('splits english narration from target spans in order', () => {
@@ -48,32 +48,6 @@ describe('stripMarks', () => {
   });
 });
 
-describe('spanParts', () => {
-  it('returns the same text for single-script spans', () => {
-    expect(spanParts('saya mau kopi')).toEqual({ speak: 'saya mau kopi', show: 'saya mau kopi' });
-  });
-
-  it('splits dual-script spans into speak (script) and show (romanization)', () => {
-    expect(spanParts('你好|nǐ hǎo')).toEqual({ speak: '你好', show: 'nǐ hǎo' });
-    expect(spanParts('水|mizu')).toEqual({ speak: '水', show: 'mizu' });
-  });
-
-  it('falls back to the present half when one side is empty', () => {
-    expect(spanParts('|nǐ hǎo')).toEqual({ speak: 'nǐ hǎo', show: 'nǐ hǎo' });
-    expect(spanParts('你好|')).toEqual({ speak: '你好', show: '你好' });
-  });
-});
-
-describe('targetOnly with dual-script spans', () => {
-  it('speaks the native script, never the romanization', () => {
-    expect(targetOnly('The word for tea is «茶|chá». Now «我要茶|wǒ yào chá».')).toBe('茶.\n我要茶.');
-  });
-
-  it('keeps CJK terminal punctuation', () => {
-    expect(targetOnly('Ask: «你要茶吗？|nǐ yào chá ma?»')).toBe('你要茶吗？');
-  });
-});
-
 describe('teacherLines', () => {
   it('classifies verdict, plain, and cue lines and strips the markers', () => {
     const lines = teacherLines(
@@ -106,5 +80,28 @@ describe('teacherLines', () => {
   it('does not mistake hyphenated prose or bare symbols for verdicts', () => {
     expect(teacherLines('-makan is the verb')[0].kind).toBe('plain');
     expect(teacherLines('>')).toEqual([{ kind: 'plain', text: '>' }]);
+  });
+
+  it('classifies a "= " module-complete line and carries its recap', () => {
+    const lines = teacherLines('+ Perfect.\n= You can now order coffee and say where you are.');
+    expect(lines).toEqual([
+      { kind: 'verdict', grade: 'good', text: 'Perfect.' },
+      { kind: 'complete', recap: 'You can now order coffee and say where you are.' },
+    ]);
+  });
+
+  it('does not mistake an equation or bare = for a completion', () => {
+    expect(teacherLines('=')).toEqual([{ kind: 'plain', text: '=' }]);
+    expect(teacherLines('2+2=4')[0].kind).toBe('plain');
+  });
+});
+
+describe('moduleComplete', () => {
+  it('returns the recap when the turn finished a module', () => {
+    expect(moduleComplete('+ Nice.\n= You can want/can + a verb.')).toBe('You can want/can + a verb.');
+  });
+
+  it('is null for an ordinary mid-module turn', () => {
+    expect(moduleComplete('The word for tea is «teh».\n> Now say: "I want tea."')).toBeNull();
   });
 });

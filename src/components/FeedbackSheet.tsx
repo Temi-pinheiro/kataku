@@ -59,7 +59,7 @@ export function FeedbackSheet({ kind, answer, transcript, decompose, lang, retry
       <Text style={styles.answer}>
         {answerTokens.map((tok, i) => (
           <Text key={i} style={kind !== 'pass' && !said.has(tok) ? [styles.answerTok, { color: palette.tint }] : undefined}>
-            {(i > 0 && lang !== 'zh' ? ' ' : '') + (i === 0 ? sentenceCase(tok) : tok)}
+            {(i > 0 ? ' ' : '') + (i === 0 ? sentenceCase(tok) : tok)}
           </Text>
         ))}
       </Text>

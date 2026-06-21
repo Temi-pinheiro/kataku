@@ -15,16 +15,6 @@ export interface Evaluation {
 /** Plan §3.3: token-level similarity at or above this is a near-miss. */
 export const NEAR_THRESHOLD = 0.8;
 
-export interface EvaluateOptions {
-  /**
-   * Mandarin secondary check: fold hanzi to toneless pinyin (e.g. via
-   * pinyin-pro, bundled with the zh pack). Returns null when folding isn't
-   * available; matching then relies on hanzi comparison alone. Injected so
-   * src/lib stays dependency-free until Mandarin ships (M5).
-   */
-  pinyinFold?: (hanzi: string) => string | null;
-}
-
 /**
  * The intelligibility judge (plan §3.3). If the target-locale recognizer
  * heard the expected sentence, the learner was intelligible — that is the
@@ -34,7 +24,6 @@ export function evaluate(
   transcript: string,
   expected: readonly string[],
   lang: LanguageCode,
-  opts: EvaluateOptions = {},
 ): Evaluation {
   const transcriptNormalized = normalize(transcript, lang);
   const variants = expected.map((v) => normalize(v, lang));
@@ -60,19 +49,6 @@ export function evaluate(
 
   if (best >= NEAR_THRESHOLD) {
     return { result: 'near', similarity: best, bestVariant, transcriptNormalized };
-  }
-
-  // Mandarin: same toneless pinyin with different hanzi means the learner
-  // said the right syllables — near, not miss.
-  if (lang === 'zh' && opts.pinyinFold) {
-    const heardPinyin = opts.pinyinFold(transcriptNormalized);
-    if (heardPinyin !== null) {
-      for (const variant of variants) {
-        if (opts.pinyinFold(variant) === heardPinyin) {
-          return { result: 'near', similarity: best, bestVariant: variant, transcriptNormalized };
-        }
-      }
-    }
   }
 
   return { result: 'miss', similarity: best, bestVariant, transcriptNormalized };

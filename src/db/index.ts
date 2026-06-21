@@ -48,7 +48,7 @@ export async function loadPack(pack: CoursePack): Promise<void> {
 }
 
 export function sttLocaleFor(language: string): string {
-  const locales: Record<string, string> = { id: 'id-ID', zh: 'zh-CN', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', ja: 'ja-JP' };
+  const locales: Record<string, string> = { id: 'id-ID', fr: 'fr-FR', it: 'it-IT', es: 'es-ES' };
   return locales[language] ?? 'en-US';
 }
 
@@ -192,6 +192,37 @@ export async function setSetting(key: string, value: string): Promise<void> {
     'INSERT INTO settings (key, value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value = excluded.value',
     key, value,
   );
+}
+
+// ---- module progress (the fixed module spine drives map completion) ----
+
+/** Ids of the modules the learner has finished, for a language. */
+export async function getCompletedModuleIds(language: string): Promise<string[]> {
+  const d = await openDb();
+  const rows = await d.getAllAsync<{ module_id: string }>(
+    'SELECT module_id FROM module_progress WHERE language = ?', language,
+  );
+  return rows.map((r) => r.module_id);
+}
+
+/** Mark a module done (idempotent — re-completing just refreshes the timestamp). */
+export async function markModuleComplete(language: string, moduleId: string, now: Date): Promise<void> {
+  const d = await openDb();
+  await d.runAsync(
+    'INSERT INTO module_progress (language, module_id, completed_at) VALUES (?,?,?) ' +
+      'ON CONFLICT(language, module_id) DO UPDATE SET completed_at = excluded.completed_at',
+    language, moduleId, now.toISOString(),
+  );
+}
+
+/** The module the learner is currently on; null until one is chosen. */
+export async function getCurrentModuleId(language: string): Promise<string | null> {
+  const v = await getSetting(`current_module.${language}`, '');
+  return v || null;
+}
+
+export async function setCurrentModuleId(language: string, moduleId: string): Promise<void> {
+  await setSetting(`current_module.${language}`, moduleId);
 }
 
 // ---- export / import (plan §7: progress only; content reloads from packs) ----

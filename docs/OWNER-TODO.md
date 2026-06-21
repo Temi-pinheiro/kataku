@@ -60,9 +60,6 @@ credits covered everything — no Starter month needed). Remaining:
   ```bash
   npx expo run:ios --device
   ```
-- zh voice is provisional (same ElevenLabs voice) — re-audition tone
-  quality when Mandarin starts; slow-render naturalness is the criterion
-  that decided this bake-off (see m0-findings).
 - Content edits later: edit pack JSON → bump `"version"` → validate →
   re-render (hash manifest re-renders only changed lines) → rebuild.
 
@@ -95,5 +92,5 @@ Free EAS tier: ~15 iOS cloud builds/month — plenty.
 ## 5. Later milestones that will ask you again
 - **M3:** daily notification opt-in (time preference, default 8am).
 - **M4:** Anthropic API key for the Tier-1 coach (~$1–2/mo, plan §11).
-- **M5:** Mandarin + Italian packs; zh bake-off listen; fr-FR recognition
-  quality risk from M0 findings needs a real look before French is primary.
+- **M5:** Italian drill-deck pack; fr-FR recognition quality risk from M0
+  findings needs a real look before French is primary.

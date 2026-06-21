@@ -159,7 +159,6 @@ export function StoryPlayerScreen() {
             }}
           >
             <Text style={[styles.target, i === active && styles.targetActive]}>{line.target}</Text>
-            {line.roman ? <Text style={[styles.roman, i === active && styles.romanActive]}>{line.roman}</Text> : null}
             <Text style={styles.gloss}>{line.en}</Text>
           </Pressable>
         ))}

@@ -3,7 +3,7 @@
 A single snapshot of where the project is: what's built, the decisions behind
 it, what's deliberately not built yet, and what comes next. Source-of-truth
 companion to `plan.md` (v1 spec) and `final-spec.md` (the final app, F0–F5).
-Last updated 2026-06-13, at the first TestFlight build.
+Last updated 2026-06-21 (zh/ja removed; module spine + Recap/Continue added).
 
 ## What Kataku is
 
@@ -11,14 +11,17 @@ A voice-first, single-user, iPhone-first language tutor built on Michel Thomas
 method principles. The teacher carries the load; the learner just speaks. One
 user for now (the owner — learning Indonesian in Bali; conversational Spanish
 and some French as quality baselines). No accounts, no backend, no analytics,
-no gamification. Six languages: Indonesian, Spanish, French, Italian, Mandarin,
-Japanese.
+no gamification. Four Latin-script languages: Indonesian, Spanish, French,
+Italian. (Mandarin + Japanese were removed 2026-06-21 — non-Latin scripts
+didn't land well; the dual-script/pinyin machinery and the Mandarin-only F1
+pronunciation lab went with them.)
 
 ## Status: build-ready
 
-Typecheck clean · 81 unit tests green · content validates (0/0) · expo-doctor
-21/21 · app.json + eas.json configured. First TestFlight build is the next
-action (instructions at the bottom / in the chat that produced this).
+Typecheck clean · 90 unit tests green · content validates (0/0) · app.json +
+eas.json configured (re-run `expo-doctor` before building). First TestFlight
+build is the next action (instructions at the bottom / in the chat that
+produced this).
 
 ## Stack & hard invariants (do not regress)
 
@@ -54,7 +57,12 @@ action (instructions at the bottom / in the chat that produced this).
   pace; voice answers via the recognizer; chat hierarchy (taught card > cue >
   verdict > ambient English); honest mic states (warming → live w/ real level
   bars → done); one focal element (history recedes, current card lifts); STT
-  vocabulary hints; half-spoken answers persist across leaving.
+  vocabulary hints; half-spoken answers persist across leaving. **Modules
+  (2026-06-21):** every chat is scoped to one module of the course spine; the
+  teacher is told which module to run + what's already known, and ends a
+  finished section with a "= recap" marker → the app shows **Recap + Continue**
+  (one tap to the next module; no more typing "continue"). Each module keeps
+  its own transcript (jump to any from the map, revisit freely).
 - **Conversation mode** (`ConversationScreen`) — the only voice-to-voice surface;
   scenario + mood, recast corrections, spoken debrief; patience floors so the
   partner never jumps the gun; "tap when you're done."
@@ -62,8 +70,9 @@ action (instructions at the bottom / in the chat that produced this).
   synced bilingual transcript (active line glows teal); editorial cream/serif
   skin; auto-scroll to the spoken line; gapless playback; runtime voice until a
   track is rendered. See "Stories" below.
-- **Your map** (`MapScreen`) — the protocol spine, done/here/ahead from real
-  mastery, nothing locked.
+- **Your map** (`MapScreen`) — the module spine, done/here/ahead from **real
+  recorded module completion** (`module_progress` table), nothing locked;
+  tapping any module points the teacher at it.
 - **Weekly review** (`WeeklyReviewScreen`) — speakable-sentences counter + honest
   stats (spoken checkpoint + before/after replay still to come).
 - **Settings** — segmented Think time / Coach mood / 3-speed speaking pace /
@@ -75,27 +84,24 @@ action (instructions at the bottom / in the chat that produced this).
 - **Design system** — warm editorial light palette app-wide + dark; tokens in
   `src/theme.ts`; the full visual reference is `design_handoff_kataku/`.
 
-## Six languages
+## Four languages
 
-All six teach + converse. Protocols (6-month arcs) are promoted and embedded
-(`content/teacher/*.md` → `npm run embed-protocols`). Romanization-first for
-zh/ja (show pinyin/romaji, speak the script). The classic **drill-deck packs**
-exist only for id/es/fr; it/zh/ja are chat/conversation/stories only (they
-degrade gracefully — Home shows "words you own", the deck row hides). zh/ja
-voice was chosen on Indonesian — audition by playing a zh/ja story before
-rendering those.
+All four teach + converse. Protocols (6-month arcs) are promoted and embedded
+(`content/teacher/*.md` → `npm run embed-protocols`). The classic **drill-deck
+packs** exist only for id/es/fr; Italian is chat/conversation/stories only (it
+degrades gracefully — Home shows "words you own", the deck row hides).
 
 ## Stories
 
-- **Catalog** (`src/content/stories.ts`, `content/stories/CATALOG.md`): 44
+- **Catalog** (`src/content/stories.ts`, `content/stories/CATALOG.md`): 30
   stories. Standard scenes (arrival/market/etc.) plus a **listening ladder per
   language** (`src/content/story-ladders.ts`): 4 graduated rungs — 2 Beginner,
   1 Intermediate, 1 Advanced — at ~2/4/6/8 min, to harden the ear.
 - **Audio**: rendered + embedded **manually**, owner-gated. Until a track is
   rendered the player speaks each line with the runtime voice (same ElevenLabs
-  voice, gapless, cached) — so every story is playable today. Exact per-story
+  voice, gapless, cached) — so every story is playable today. Per-story
   character counts for ElevenLabs sizing: `content/stories/LADDER-COUNTS.md`
-  (all six ladders ≈ 69,922 chars ≈ $21 at $0.30/1k; real rate is plan-dependent).
+  (the four Latin-script ladders; real rate is plan-dependent).
 - **Illustrations**: `Story.thumb`/`Story.hero` fields are wired — commissioning
   art is a data-only drop-in (square ≥144² thumb, ~750×380 hero, warm/painterly).
   Gradient placeholder until then.
@@ -105,16 +111,15 @@ rendering those.
 ## Cost picture (steady state, metered)
 
 Teacher chat (Sonnet, cached) ~$3–10/mo · conversation (Haiku + ElevenLabs)
-~$1–4/mo · stories (one-time renders, paced) · pron lab (zh) ~$1–5/mo when
-built · digests/reviews < $1/mo. All-in ~$7–24/mo with 1–2 active languages.
-The cost meter, not estimates, is the truth.
+~$1–4/mo · stories (one-time renders, paced) · digests/reviews < $1/mo. All-in
+~$6–19/mo with 1–2 active languages. The cost meter, not estimates, is the
+truth. (Module switches re-send the system prompt uncached — a few cents/session,
+negligible.)
 
 ## Owner-gated / not built yet
 
 - **Stories**: render produced audio (per-episode, ~$ in LADDER-COUNTS);
-  commission illustrations; settle zh/ja voice.
-- **F1 Pronunciation lab** — A/B replay + Azure tone scoring (Mandarin). `.env`
-  has the Azure key; calibration spike gates it.
+  commission illustrations.
 - **F3 Live capture** — grab a phrase from real life → woven into the next lesson.
 - **F4 Persona voices** — distinct voices for conversation partners / story cast.
 - **F0 finishers** — daily notification, spoken checkpoint + before/after replay
@@ -129,10 +134,10 @@ The cost meter, not estimates, is the truth.
 1. **Live in the app for a week** on TestFlight — real Bali use surfaces what
    actually matters next better than guessing.
 2. **F3 live capture** — highest daily value for the owner's context.
-3. **F4 persona voices**, then **F1 pronunciation lab** (when Mandarin ramps).
+3. **F4 persona voices** — distinct voices for conversation partners / story cast.
 4. **F0 finishers** (notification, spoken checkpoint).
 5. **Stories production** — render + illustrate as desired.
-6. Re-audition zh/ja voice; extend non-id story catalogs if wanted.
+6. Extend the non-id story catalogs if wanted.
 
 ## Build & ship
 

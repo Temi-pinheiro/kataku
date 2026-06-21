@@ -32,8 +32,6 @@ const LEVEL: Record<InstalledLanguage, string> = {
   es: 'Assume only crash-course Spanish: es/está, cognates, quiero/puedo/tengo que/voy a/necesito/me gustaría + infinitives, no/también/pero/porque, question words, time and place anchors (hoy, mañana, ahora, aquí), tengo/hay.',
   fr: "Assume only early-protocol French: c'est/ce n'est pas, cognates, je voudrais/je veux/je peux/je dois/je vais + infinitives, ne…pas, est-ce que + question words, pour moi/avec/mais/parce que, time anchors (maintenant, aujourd'hui), vous forms and politeness.",
   it: "Assume only crash-course Italian: è/non è, cognates (-zione/-tà), vorrei/voglio/posso/devo + infinitives, e/ma/perché/anche, question words, time anchors (oggi, domani, adesso), c'è, ho/hai.",
-  zh: 'Assume only crash-course Mandarin: wǒ/nǐ/tā, yào/xiǎng/kěyǐ/yǒu/shì, bù/méiyǒu, common verbs (qù, chī, hē, mǎi, kàn), time words (xiànzài, jīntiān, míngtiān, zuótiān), le for completed actions, questions with ma and A-not-A, numbers with ge. Write your replies in ordinary Chinese characters (they are spoken aloud).',
-  ja: 'Assume only crash-course Japanese, polite -masu/desu register ONLY: SOV order, particles wa/o/ni/de/ka, verbs (ikimasu, tabemasu, nomimasu, kaimasu, mimasu, arimasu, wakarimasu), kore/sore, time words (ima, kyō, ashita, kinō), katakana loanwords (kōhī, hoteru, takushī), questions with ka. Write your replies in ordinary Japanese script (they are spoken aloud).',
 };
 
 function systemPrompt(lang: InstalledLanguage, scenario: Scenario, mood: Mood, whitelist: string[]): string {

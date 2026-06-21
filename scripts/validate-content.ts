@@ -64,9 +64,6 @@ function validatePack(path: string, requireAudio: boolean): void {
           checkAudio(`${item.id}-t-${i}`, where);
         });
       }
-      if (lang === 'zh' && item.type === 'block' && !item.romanization) {
-        err(`${where}: zh blocks need pinyin romanization`);
-      }
     }
     for (const item of lesson.items) seenItemIds.add(item.id);
 
@@ -110,19 +107,16 @@ function validatePack(path: string, requireAudio: boolean): void {
     });
   }
 
-  // Orthography drift: every block's target_text must appear as a token (or
-  // hanzi substring) of some canonical answer, or the pack teaches words no
-  // prompt ever exercises.
+  // Orthography drift: every block's target_text must appear as a token of
+  // some canonical answer, or the pack teaches words no prompt ever exercises.
   for (const lesson of lessons) {
     for (const item of lesson.items) {
       if (item.type !== 'block') continue;
       const target = normalize(item.target_text, lang);
       // Word-boundary phrase match so multi-word blocks ("tengo que",
-      // "je veux") count; zh matches on hanzi substring.
+      // "je veux") count.
       const appears = lessons.some((l) =>
-        l.prompts.some((p) =>
-          lang === 'zh' ? p.expected[0].includes(target) : ` ${p.expected[0]} `.includes(` ${target} `),
-        ),
+        l.prompts.some((p) => ` ${p.expected[0]} `.includes(` ${target} `)),
       );
       if (!appears) err(`item ${item.id}: target_text "${item.target_text}" never appears in any canonical answer`);
     }

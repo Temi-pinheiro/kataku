@@ -12,6 +12,7 @@
     "expo-notifications": "~56.0.17",
     "expo-secure-store": "~56.0.4",
     "expo-speech-recognition": "^56.0.1",
+    "expo-splash-screen": "~56.0.10",
     "expo-sqlite": "~56.0.5",
     "expo-status-bar": "~56.0.4",
     "expo-symbols": "~56.0.6",

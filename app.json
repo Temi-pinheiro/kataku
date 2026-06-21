@@ -22,9 +22,8 @@
     "android": {
       "package": "com.temitopepinheiro.kataku",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#F4F0E8",
         "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
@@ -56,7 +55,19 @@
       "expo-notifications",
       "expo-asset",
       "expo-font",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#F4F0E8",
+          "dark": {
+            "backgroundColor": "#0C1117"
+          }
+        }
+      ]
     ],
     "extra": {
       "eas": {

@@ -23,11 +23,6 @@ describe('normalize', () => {
     expect(normalize("'quoted' word", 'fr')).toBe('quoted word');
   });
 
-  it('removes all whitespace and fullwidth punctuation for Mandarin', () => {
-    expect(normalize('我 要 吃饭。', 'zh')).toBe('我要吃饭');
-    expect(normalize('你好，世界！', 'zh')).toBe('你好世界');
-  });
-
   it('round-trips already-normalized text unchanged', () => {
     const s = 'saya mau makan sekarang';
     expect(normalize(s, 'id')).toBe(s);
@@ -41,10 +36,6 @@ describe('tokenize', () => {
 
   it('returns empty array for empty string', () => {
     expect(tokenize('', 'id')).toEqual([]);
-  });
-
-  it('splits Mandarin into code points', () => {
-    expect(tokenize('我要吃饭', 'zh')).toEqual(['我', '要', '吃', '饭']);
   });
 });
 
@@ -95,24 +86,6 @@ describe('evaluate', () => {
   it('reports the closest variant for feedback', () => {
     const r = evaluate('aku mau makan', expected, 'id');
     expect(r.bestVariant).toBe('aku mau makan sekarang');
-  });
-
-  it('matches Mandarin on hanzi regardless of spacing/punctuation', () => {
-    expect(evaluate('我 要 吃饭。', ['我要吃饭'], 'zh').result).toBe('pass');
-  });
-
-  it('nears Mandarin per-character slips', () => {
-    // 3 of 4 hanzi right → 0.75 < 0.8 → miss without pinyin fold
-    expect(evaluate('我要吃面', ['我要吃饭'], 'zh').result).toBe('miss');
-    // 4 of 5 right → 0.8 → near
-    expect(evaluate('我想要吃面', ['我想要吃饭'], 'zh').result).toBe('near');
-  });
-
-  it('uses toneless pinyin fold as a secondary near check for zh', () => {
-    // Homophone hanzi: same syllables, different characters.
-    const fold = (s: string) => (s === '他要买马' || s === '他要买吗' ? 'ta yao mai ma' : s);
-    const r = evaluate('他要买吗', ['他要买马'], 'zh', { pinyinFold: fold });
-    expect(r.result).toBe('near');
   });
 
   it('never crashes on empty expected list', () => {

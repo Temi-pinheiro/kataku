@@ -82,6 +82,13 @@ CREATE TABLE IF NOT EXISTS settings (
   value TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS module_progress (
+  language TEXT NOT NULL,
+  module_id TEXT NOT NULL,
+  completed_at TEXT NOT NULL,
+  PRIMARY KEY (language, module_id)
+);
+
 CREATE INDEX IF NOT EXISTS idx_attempt_prompt ON attempt(prompt_id, at);
 CREATE INDEX IF NOT EXISTS idx_attempt_at ON attempt(at);
 CREATE INDEX IF NOT EXISTS idx_spend_at ON api_spend(at);
@@ -90,4 +97,4 @@ CREATE INDEX IF NOT EXISTS idx_prompt_language ON prompt(language);
 `;
 
 /** Progress tables included in JSON export/import (content tables reload from packs). */
-export const PROGRESS_TABLES = ['mastery', 'attempt', 'session', 'weekly_review', 'api_spend', 'settings'] as const;
+export const PROGRESS_TABLES = ['mastery', 'attempt', 'session', 'weekly_review', 'api_spend', 'settings', 'module_progress'] as const;

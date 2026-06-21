@@ -12,7 +12,7 @@ import { recognizer } from '../services/instances';
  * the locale. Findings go to docs/m0-findings.md.
  */
 
-const LOCALES = ['id-ID', 'zh-CN', 'fr-FR'] as const;
+const LOCALES = ['id-ID', 'es-ES', 'fr-FR'] as const;
 
 interface Trial {
   locale: string;
