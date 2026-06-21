@@ -115,6 +115,16 @@ export function HomeScreen() {
               <Pressable
                 onPress={() => {
                   Haptics.selectionAsync();
+                  setScreen('map');
+                }}
+                style={styles.iconBtn}
+                hitSlop={8}
+              >
+                <SymbolView name="square.stack.3d.up.fill" size={18} tintColor={p.dim} />
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  Haptics.selectionAsync();
                   setScreen('stories');
                 }}
                 style={styles.iconBtn}

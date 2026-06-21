@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { SymbolView } from 'expo-symbols';
@@ -8,8 +8,8 @@ import { OUTLINES } from '../content/outlines';
 import { useApp } from '../store';
 import { radii, space, type, type Palette } from '../theme';
 import { useTheme } from '../hooks/useTheme';
-import { modulesFor, moduleState } from '../lib/modules/manifest';
-import { getCompletedModuleIds, getCurrentModuleId, setCurrentModuleId, openDb } from '../db';
+import { modulesFor, moduleState, type Module } from '../lib/modules/manifest';
+import { getCompletedModuleIds, getCurrentModuleId, setCurrentModuleId, markModulesComplete, openDb } from '../db';
 
 type NodeState = 'done' | 'here' | 'ahead';
 
@@ -29,19 +29,52 @@ export function MapScreen() {
   const outline = OUTLINES[language];
   const modules = useMemo(() => modulesFor(language), [language]);
 
-  useEffect(() => {
-    (async () => {
-      await openDb();
-      setCompleted(new Set(await getCompletedModuleIds(language)));
-      setCurrentId(await getCurrentModuleId(language));
-    })();
+  const reload = useCallback(async () => {
+    await openDb();
+    setCompleted(new Set(await getCompletedModuleIds(language)));
+    setCurrentId(await getCurrentModuleId(language));
   }, [language]);
+
+  useEffect(() => {
+    void reload();
+  }, [reload]);
 
   /** Open a module: point the teacher at it (nothing is ever locked). */
   const openModule = (moduleId: string) => {
     Haptics.selectionAsync();
     void setCurrentModuleId(language, moduleId);
     setScreen('teacher');
+  };
+
+  /**
+   * Catch-up: mark every module before this one as done and land here — so the
+   * map reflects where you already are without redoing the work. Stays on the
+   * map so the change is visible.
+   */
+  const catchUpTo = async (module: Module) => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    const earlier = modules.filter((m) => m.index < module.index).map((m) => m.id);
+    await markModulesComplete(language, earlier, new Date());
+    await setCurrentModuleId(language, module.id);
+    await reload();
+  };
+
+  /** A module ahead of you offers a choice: catch the map up to it, or just open it. */
+  const onPressModule = (module: Module, st: NodeState) => {
+    if (st !== 'ahead') {
+      openModule(module.id);
+      return;
+    }
+    const n = module.index; // count of modules before this one
+    Alert.alert(
+      'Catch up to here?',
+      `“${module.topic}” is ${n} module${n === 1 ? '' : 's'} ahead. Mark the ones before it as done so the map matches where you already are? Nothing locks — you can still revisit any of them.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Just open it', onPress: () => openModule(module.id) },
+        { text: 'Mark earlier as done', onPress: () => void catchUpTo(module) },
+      ],
+    );
   };
 
   let flatCursor = -1;
@@ -76,7 +109,7 @@ export function MapScreen() {
                     <Animated.View key={li} entering={FadeInDown.duration(180)}>
                       <Pressable
                         style={[styles.node, st === 'ahead' && styles.nodeAhead]}
-                        onPress={() => module && openModule(module.id)} // nothing locked
+                        onPress={() => module && onPressModule(module, st)} // nothing locked
                       >
                         <Dot state={st} p={p} styles={styles} />
                         <View style={{ flex: 1 }}>
@@ -100,7 +133,9 @@ export function MapScreen() {
         );
       })}
 
-      <Text style={styles.footer}>nothing locked — wander ahead or back whenever you like</Text>
+      <Text style={styles.footer}>
+        nothing locked — tap a module ahead to jump there, or mark everything before it done
+      </Text>
     </ScrollView>
   );
 }

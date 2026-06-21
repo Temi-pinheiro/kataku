@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { INSTALLED_LANGUAGES, packFor } from './src/packs';
+import { INSTALLED_LANGUAGES, packFor, type InstalledLanguage } from './src/packs';
 import { useApp } from './src/store';
 import { useTheme } from './src/hooks/useTheme';
-import { loadPack, openDb } from './src/db';
+import { loadPack, openDb, getSetting, setSetting } from './src/db';
 import { voiceEngine } from './src/services/instances';
 import { HomeScreen } from './src/screens/HomeScreen';
 import { LessonBoundary } from './src/components/LessonBoundary';
@@ -19,7 +19,7 @@ import { SettingsScreen, loadPersistedSettings } from './src/screens/SettingsScr
 import { M0SpikeScreen } from './src/screens/M0SpikeScreen';
 
 export default function App() {
-  const { screen, setSettings } = useApp();
+  const { screen, setSettings, language, setLanguage } = useApp();
   const { p, scheme } = useTheme();
   const [ready, setReady] = useState(false);
   const [lessonEpoch, setLessonEpoch] = useState(0);
@@ -27,6 +27,11 @@ export default function App() {
   useEffect(() => {
     (async () => {
       const db = await openDb();
+      // Restore the last language practiced, so reopening doesn't reset to id.
+      const savedLang = await getSetting('current_language', '');
+      if (savedLang && (INSTALLED_LANGUAGES as string[]).includes(savedLang)) {
+        setLanguage(savedLang as InstalledLanguage);
+      }
       for (const lang of INSTALLED_LANGUAGES) {
         const pack = packFor(lang);
         if (!pack) continue; // chat/conversation-only language (no deck pack yet)
@@ -48,6 +53,11 @@ export default function App() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Remember the language across launches (persist only after boot restored it).
+  useEffect(() => {
+    if (ready) void setSetting('current_language', language);
+  }, [ready, language]);
 
   if (!ready) {
     return (

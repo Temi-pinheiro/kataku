@@ -215,6 +215,22 @@ export async function markModuleComplete(language: string, moduleId: string, now
   );
 }
 
+/** Mark several modules done at once (catch-up: skip ahead to where you were). */
+export async function markModulesComplete(language: string, moduleIds: string[], now: Date): Promise<void> {
+  if (moduleIds.length === 0) return;
+  const d = await openDb();
+  const at = now.toISOString();
+  await d.withTransactionAsync(async () => {
+    for (const id of moduleIds) {
+      await d.runAsync(
+        'INSERT INTO module_progress (language, module_id, completed_at) VALUES (?,?,?) ' +
+          'ON CONFLICT(language, module_id) DO UPDATE SET completed_at = excluded.completed_at',
+        language, id, at,
+      );
+    }
+  });
+}
+
 /** The module the learner is currently on; null until one is chosen. */
 export async function getCurrentModuleId(language: string): Promise<string | null> {
   const v = await getSetting(`current_module.${language}`, '');
