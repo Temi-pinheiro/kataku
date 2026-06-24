@@ -38,7 +38,8 @@
     "typecheck": "tsc --noEmit",
     "validate-content": "tsx scripts/validate-content.ts",
     "render-audio": "tsx scripts/render-audio.ts",
-    "embed-protocols": "tsx scripts/embed-protocols.ts"
+    "embed-protocols": "tsx scripts/embed-protocols.ts",
+    "generate-verb-seed": "tsx scripts/generate-verb-seed.ts"
   },
   "private": true
 }

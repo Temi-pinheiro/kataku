@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, Share, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, ScrollView, Share, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { SymbolView } from 'expo-symbols';
 import { BigButton } from '../components/BigButton';
@@ -8,6 +8,7 @@ import { hasPack } from '../packs';
 import { radii, space, type, type Palette } from '../theme';
 import { useTheme } from '../hooks/useTheme';
 import { exportProgress, getSetting, setSetting, spendEvents } from '../db';
+import { recoverPastVocabulary } from '../services/progress';
 import { formatUsd, monthToDateUsd } from '../lib/cost/meter';
 import {
   getAnthropicKey,
@@ -34,6 +35,7 @@ export function SettingsScreen() {
   const styles = useMemo(() => makeStyles(p), [p]);
   const [mtd, setMtd] = useState<string>('…');
   const [mtdNum, setMtdNum] = useState(0);
+  const [recovering, setRecovering] = useState(false);
 
   useEffect(() => {
     const monthStart = new Date();
@@ -60,6 +62,40 @@ export function SettingsScreen() {
   const onExport = async () => {
     const json = await exportProgress();
     await Share.share({ message: json }, { dialogTitle: 'Kataku progress export' });
+  };
+
+  const onRecover = () => {
+    if (recovering) return;
+    Alert.alert(
+      'Recover past vocabulary?',
+      'Re-scans your earlier teacher lessons so your progress and verbs reflect them. Makes a few small AI calls (counts toward your monthly spend).',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Recover',
+          onPress: async () => {
+            setRecovering(true);
+            try {
+              const r = await recoverPastVocabulary(settings.monthlyCapUsd);
+              if (r.capped && r.histories === 0) {
+                Alert.alert('Spend cap reached', 'Raise the monthly cap and try again to recover your vocabulary.');
+              } else if (r.histories === 0) {
+                Alert.alert('Nothing to recover yet', 'No saved teacher lessons were found.');
+              } else {
+                Alert.alert(
+                  'Vocabulary recovered',
+                  `Re-scanned ${r.histories} lesson${r.histories === 1 ? '' : 's'}.${r.capped ? ' Stopped early at your spend cap — raise it and run again to finish.' : ''} Your progress and verbs now reflect them.`,
+                );
+              }
+            } catch {
+              Alert.alert('Couldn’t finish', 'Something went wrong — try again in a moment.');
+            } finally {
+              setRecovering(false);
+            }
+          },
+        },
+      ],
+    );
   };
 
   const capPct = Math.min(100, (mtdNum / settings.monthlyCapUsd) * 100);
@@ -103,7 +139,7 @@ export function SettingsScreen() {
         />
         <View style={{ height: space.m }} />
         <Text style={styles.label}>Speaking pace</Text>
-        <Text style={styles.cardNote}>a beat of air between taught words — native speed lives in conversation</Text>
+        <Text style={styles.cardNote}>Natural is native speed; Slow/Teaching are gently slower with natural phrasing — try them and keep what you like</Text>
         <Segmented
           styles={styles}
           options={[
@@ -220,6 +256,13 @@ export function SettingsScreen() {
 
       <Text style={styles.section}>Data</Text>
       <BigButton label="Export progress (JSON)" kind="ghost" onPress={onExport} />
+      <View style={{ height: space.s }} />
+      <BigButton
+        label={recovering ? 'Recovering…' : 'Recover past vocabulary'}
+        kind="ghost"
+        onPress={onRecover}
+      />
+      <Text style={styles.cardNote}>Re-scans earlier teacher lessons so your verbs and progress reflect them — run once after updating.</Text>
 
       <Text style={styles.section}>Developer</Text>
       <Pressable

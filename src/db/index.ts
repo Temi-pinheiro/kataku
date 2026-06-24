@@ -6,6 +6,8 @@ import { allLessons } from '../lib/content/types';
 import type { MasteryState } from '../lib/scheduler/scheduler';
 import type { SpendEvent } from '../lib/cost/meter';
 import type { MatchResult } from '../lib/matching';
+import type { Lexeme, VerbEntry } from '../lib/verbs/types';
+import { VERB_SCHEMA_VERSION } from '../lib/verbs/types';
 
 let db: SQLiteDatabase | null = null;
 
@@ -194,6 +196,16 @@ export async function setSetting(key: string, value: string): Promise<void> {
   );
 }
 
+/** All settings rows whose key starts with `prefix` (LIKE wildcards escaped). */
+export async function getSettingsByPrefix(prefix: string): Promise<{ key: string; value: string }[]> {
+  const d = await openDb();
+  const escaped = prefix.replace(/[\\%_]/g, (c) => `\\${c}`);
+  return d.getAllAsync<{ key: string; value: string }>(
+    "SELECT key, value FROM settings WHERE key LIKE ? ESCAPE '\\'",
+    `${escaped}%`,
+  );
+}
+
 // ---- module progress (the fixed module spine drives map completion) ----
 
 /** Ids of the modules the learner has finished, for a language. */
@@ -239,6 +251,76 @@ export async function getCurrentModuleId(language: string): Promise<string | nul
 
 export async function setCurrentModuleId(language: string, moduleId: string): Promise<void> {
   await setSetting(`current_module.${language}`, moduleId);
+}
+
+// ---- verbs reference caches (regenerable content; not exported, not in packs) ----
+
+/** Every classified surface for a language (surface → lemma + pos + gloss). */
+export async function getLexemes(language: string): Promise<Lexeme[]> {
+  const d = await openDb();
+  const rows = await d.getAllAsync<{ surface: string; lemma: string; pos: string; gloss_en: string }>(
+    'SELECT surface, lemma, pos, gloss_en FROM lexeme WHERE language = ?',
+    language,
+  );
+  return rows.map((r) => ({
+    language,
+    surface: r.surface,
+    lemma: r.lemma,
+    pos: r.pos as Lexeme['pos'],
+    glossEn: r.gloss_en,
+  }));
+}
+
+/** Cache a batch of classifications (idempotent per surface). */
+export async function upsertLexemes(
+  language: string,
+  rows: readonly Omit<Lexeme, 'language'>[],
+  now: Date,
+): Promise<void> {
+  if (rows.length === 0) return;
+  const d = await openDb();
+  const at = now.toISOString();
+  await d.withTransactionAsync(async () => {
+    for (const r of rows) {
+      await d.runAsync(
+        'INSERT INTO lexeme (language, surface, lemma, pos, gloss_en, classified_at) VALUES (?,?,?,?,?,?) ' +
+          'ON CONFLICT(language, surface) DO UPDATE SET lemma = excluded.lemma, pos = excluded.pos, gloss_en = excluded.gloss_en, classified_at = excluded.classified_at',
+        language, r.surface, r.lemma, r.pos, r.glossEn, at,
+      );
+    }
+  });
+}
+
+/** The cached verb page, or null if absent or on a stale schema (→ regenerate). */
+export async function getVerbEntry(language: string, lemma: string): Promise<VerbEntry | null> {
+  const d = await openDb();
+  const row = await d.getFirstAsync<{ payload_json: string; schema_version: number }>(
+    'SELECT payload_json, schema_version FROM verb_entry WHERE language = ? AND lemma = ?',
+    language,
+    lemma,
+  );
+  if (!row || row.schema_version !== VERB_SCHEMA_VERSION) return null;
+  try {
+    return JSON.parse(row.payload_json) as VerbEntry;
+  } catch {
+    return null;
+  }
+}
+
+/** Store a generated verb page so it never costs tokens again on this device. */
+export async function putVerbEntry(
+  language: string,
+  lemma: string,
+  entry: VerbEntry,
+  model: string,
+  now: Date,
+): Promise<void> {
+  const d = await openDb();
+  await d.runAsync(
+    'INSERT INTO verb_entry (language, lemma, payload_json, model, schema_version, generated_at) VALUES (?,?,?,?,?,?) ' +
+      'ON CONFLICT(language, lemma) DO UPDATE SET payload_json = excluded.payload_json, model = excluded.model, schema_version = excluded.schema_version, generated_at = excluded.generated_at',
+    language, lemma, JSON.stringify(entry), model, VERB_SCHEMA_VERSION, now.toISOString(),
+  );
 }
 
 // ---- export / import (plan §7: progress only; content reloads from packs) ----

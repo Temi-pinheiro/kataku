@@ -28,8 +28,23 @@ export const PRICES: Record<string, PriceEntry> = {
   'elevenlabs:tts_runtime': { unitPrice: 0.3, unit: '1k_chars' },
   'openai:tts_runtime': { unitPrice: 0.012, unit: '1k_chars' },
   // Progress digest: extracts taught/solid/shaky vocab from chat transcripts.
+  // Anthropic-first (Haiku 4.5 — one key runs the whole app), OpenAI fallback.
+  'anthropic:progress_input': { unitPrice: 0.001, unit: '1k_tokens' },
+  'anthropic:progress_output': { unitPrice: 0.005, unit: '1k_tokens' },
   'openai:progress_input': { unitPrice: 0.00015, unit: '1k_tokens' },
   'openai:progress_output': { unitPrice: 0.0006, unit: '1k_tokens' },
+  // Verbs reference. Classification (which surfaces are verbs + their lemma) is
+  // a cheap batched pass — Anthropic Haiku first, gpt-4o-mini fallback; detail-
+  // page generation prefers Claude Sonnet (accuracy, generated once then cached
+  // forever), gpt-4.1-mini fallback.
+  'anthropic:verb_classify_input': { unitPrice: 0.001, unit: '1k_tokens' },
+  'anthropic:verb_classify_output': { unitPrice: 0.005, unit: '1k_tokens' },
+  'openai:verb_classify_input': { unitPrice: 0.00015, unit: '1k_tokens' },
+  'openai:verb_classify_output': { unitPrice: 0.0006, unit: '1k_tokens' },
+  'anthropic:verb_detail_input': { unitPrice: 0.003, unit: '1k_tokens' },
+  'anthropic:verb_detail_output': { unitPrice: 0.015, unit: '1k_tokens' },
+  'openai:verb_detail_input': { unitPrice: 0.0004, unit: '1k_tokens' },
+  'openai:verb_detail_output': { unitPrice: 0.0016, unit: '1k_tokens' },
   // Cloud STT fallback (plan §4.2).
   'openai:stt_fallback': { unitPrice: 0.003, unit: 'minute' },
   // One-off runtime TTS for coach replies when device TTS is too rough.

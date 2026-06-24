@@ -135,6 +135,16 @@ export function HomeScreen() {
               <Pressable
                 onPress={() => {
                   Haptics.selectionAsync();
+                  setScreen('verbs');
+                }}
+                style={styles.iconBtn}
+                hitSlop={8}
+              >
+                <SymbolView name="character.book.closed.fill" size={18} tintColor={p.dim} />
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  Haptics.selectionAsync();
                   setPickerOpen(true);
                 }}
                 style={styles.langBubble}

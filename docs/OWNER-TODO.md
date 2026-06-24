@@ -94,3 +94,35 @@ Free EAS tier: ~15 iOS cloud builds/month — plenty.
 - **M4:** Anthropic API key for the Tier-1 coach (~$1–2/mo, plan §11).
 - **M5:** Italian drill-deck pack; fr-FR recognition quality risk from M0
   findings needs a real look before French is primary.
+
+## 6. Verbs reference — seed pack + (optional) shared cache [added 2026-06-23]
+
+The Verbs page generates each verb's page once and caches it forever on the
+device; a bundled seed (`src/generated/verb-seed.ts`) makes common verbs free
+even on first view. Two owner actions:
+
+- **Expand + verify the seed (recommended, free for users):**
+  ```bash
+  npm run generate-verb-seed            # all langs in CURATED, or -- --lang es
+  ```
+  Needs `ANTHROPIC_API_KEY` (preferred) or `OPENAI_API_KEY` in `.env`. It's
+  cost-metered (logged in the run). **Spot-check a few conjugations** before
+  committing — you're the editor of generated reference content (hard rule #6).
+  Edit the `CURATED` list in `scripts/generate-verb-seed.ts` to add verbs.
+
+- **Phase C — shared verb cache (designed, ships DISABLED):** a small backend so
+  the *first* device to view a verb pays once and every other device/install gets
+  it free, with `x-user-id` soft-auth (a pseudonymous per-device id — no login),
+  like the "suara" project. This is a deliberate departure from the app's
+  "no backend / local-first" rule, so it's off until you provision it:
+  1. Stand up any KV/Postgres + one endpoint implementing the contract in
+     `src/services/verb-remote.ts`:
+     `GET /v1/verbs/{lang}/{lemma}` → `200 {VerbEntry}` | `404`;
+     `POST /v1/verbs/{lang}/{lemma}` (body `VerbEntry`) → `204`. Read the
+     `x-user-id` header for per-id rate limiting; the page is deterministic so
+     writes are idempotent.
+  2. Set `EXPO_PUBLIC_VERB_CACHE_BASE_URL=https://…` and rebuild. The app's
+     lookup chain (local → seed → remote → generate) picks it up automatically;
+     nothing else changes. With it unset, no verb data ever leaves the device.
+  3. Note the architecture shift in `plan.md` / `final-spec.md` when you commit
+     to it (it adds the project's first backend + soft identity).

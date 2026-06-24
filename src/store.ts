@@ -10,6 +10,7 @@ export type Screen =
   | 'map'
   | 'stories'
   | 'story'
+  | 'verbs'
   | 'settings'
   | 'm0spike';
 
@@ -29,7 +30,7 @@ export const DEFAULT_SETTINGS: Settings = {
   monthlyCapUsd: 10,
   theme: 'system',
   defaultMood: 'gentle',
-  speakingPace: 'teaching',
+  speakingPace: 'natural',
   showSpendInLessons: true,
 };
 

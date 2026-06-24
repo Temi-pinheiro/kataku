@@ -15,6 +15,7 @@ import { WeeklyReviewScreen } from './src/screens/WeeklyReviewScreen';
 import { MapScreen } from './src/screens/MapScreen';
 import { StoriesScreen } from './src/screens/StoriesScreen';
 import { StoryPlayerScreen } from './src/screens/StoryPlayerScreen';
+import { VerbsScreen } from './src/screens/VerbsScreen';
 import { SettingsScreen, loadPersistedSettings } from './src/screens/SettingsScreen';
 import { M0SpikeScreen } from './src/screens/M0SpikeScreen';
 
@@ -90,6 +91,7 @@ export default function App() {
       {screen === 'map' && <MapScreen />}
       {screen === 'stories' && <StoriesScreen />}
       {screen === 'story' && <StoryPlayerScreen />}
+      {screen === 'verbs' && <VerbsScreen />}
       {screen === 'settings' && <SettingsScreen />}
       {screen === 'm0spike' && <M0SpikeScreen />}
     </View>

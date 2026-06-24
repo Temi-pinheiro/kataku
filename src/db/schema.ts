@@ -89,6 +89,30 @@ CREATE TABLE IF NOT EXISTS module_progress (
   PRIMARY KEY (language, module_id)
 );
 
+-- Verbs-reference caches (regenerable content, NOT progress: excluded from
+-- export/import and untouched by loadPack). lexeme = cheap surface→lemma+pos
+-- classification; verb_entry = the generated detail page, keyed by lemma so a
+-- verb is only ever generated/paid for once per device.
+CREATE TABLE IF NOT EXISTS lexeme (
+  language TEXT NOT NULL,
+  surface TEXT NOT NULL,
+  lemma TEXT NOT NULL,
+  pos TEXT NOT NULL,
+  gloss_en TEXT NOT NULL,
+  classified_at TEXT NOT NULL,
+  PRIMARY KEY (language, surface)
+);
+
+CREATE TABLE IF NOT EXISTS verb_entry (
+  language TEXT NOT NULL,
+  lemma TEXT NOT NULL,
+  payload_json TEXT NOT NULL,
+  model TEXT NOT NULL,
+  schema_version INTEGER NOT NULL,
+  generated_at TEXT NOT NULL,
+  PRIMARY KEY (language, lemma)
+);
+
 CREATE INDEX IF NOT EXISTS idx_attempt_prompt ON attempt(prompt_id, at);
 CREATE INDEX IF NOT EXISTS idx_attempt_at ON attempt(at);
 CREATE INDEX IF NOT EXISTS idx_spend_at ON api_spend(at);

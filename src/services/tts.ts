@@ -27,21 +27,23 @@ const LANGUAGE_NAMES: Record<string, string> = {
 };
 
 /**
- * Delivery speed (owner rule): the learner is still parsing sounds, so
- * teacher-mode playback breathes between words — each word articulated
- * naturally, separated by a real pause (NOT slowed playback, which the
- * bake-off proved sounds fake). Native flow is conversation mode's job.
+ * Delivery speed (owner rule, revised 2026-06-23): native flow by default.
+ * The earlier "breathe between every word" rule made the tutor sound robotic
+ * ("one word per second"), so per-word pauses are gone for ALL paces. Pace is
+ * now just a gentle tempo toggle — Slow/Teaching trim the rate a touch but keep
+ * natural phrasing; the learner can A/B it in Settings. Native flow is the norm.
  */
 export type TtsPace = 'natural' | 'teaching' | 'slow';
 
-/** Per-pace breath between words (seconds); 0 = native flow, no break tags. */
-function breathSecs(pace: TtsPace): number {
-  return pace === 'slow' ? 0.6 : pace === 'teaching' ? 0.4 : 0;
+/** Per-pace breath between words (seconds). 0 everywhere now: no staccato gaps. */
+function breathSecs(_pace: TtsPace): number {
+  return 0;
 }
 
-/** ElevenLabs playback speed; undefined = the voice's natural rate. */
+/** ElevenLabs playback speed; undefined = the voice's natural rate. A gentle
+ * tempo trim only — never enough to sound slowed/fake (bake-off lesson). */
 function paceSpeed(pace: TtsPace): number | undefined {
-  return pace === 'slow' ? 0.8 : pace === 'teaching' ? 0.9 : undefined;
+  return pace === 'slow' ? 0.9 : pace === 'teaching' ? 0.95 : undefined;
 }
 
 /** Multi-word phrases get an audible breath between words at teaching/slow pace. */
@@ -60,9 +62,9 @@ function instructionsFor(lang: string, pace: TtsPace): string {
   const name = LANGUAGE_NAMES[lang] ?? 'the target language';
   const pacing =
     pace === 'slow'
-      ? `Speak slowly and deliberately for a beginner, with a clear breath between every word. `
+      ? `Speak a touch slower than usual and very clearly, but keep natural phrasing and word flow — never word by word. `
       : pace === 'teaching'
-        ? `Speak for a beginner: each word pronounced naturally but with a clear breath pause between every word. `
+        ? `Speak clearly at a calm, natural pace for a learner, with natural phrasing — never word by word. `
         : `Speak at a natural conversational pace. `;
   return (
     `You are a native ${name} speaker and language teacher. The text is ${name} only — ` +
@@ -86,7 +88,9 @@ function hash(s: string): string {
 export async function ttsToFile(text: string, lang: string, pace: TtsPace = 'natural'): Promise<string | null> {
   const trimmed = text.trim();
   if (!trimmed) return null;
-  const paceKey = pace === 'natural' ? '' : `${pace}|`;
+  // 'r2' busts the old robotic teaching/slow clips so the de-robotized pacing
+  // takes effect; natural was never robotic, so its cache stays valid (no re-spend).
+  const paceKey = pace === 'natural' ? '' : `${pace}|r2|`;
   try {
     const dir = cacheDir();
     if (!dir.exists) dir.create({ intermediates: true });
